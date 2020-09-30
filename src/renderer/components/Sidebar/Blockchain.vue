@@ -2,11 +2,11 @@
     <section class="blockchain">
         <div
             class="status"
-            :class="{ 'is-synced': getIsSynced }"
+            :class="{ 'is-synced': isBlockchainSynced }"
         >
             <base-popover
                 trigger="hover"
-                :disabled="getIsSynced"
+                :disabled="isBlockchainSynced"
                 boundaries-element="body"
                 :popover-class="['advice', connectionPopoverClass]"
                 placement="bottom-start"
@@ -15,7 +15,7 @@
             >
                 <blockchain-sync-progress-popover slot="content" />
                 <template slot="target">
-                    <template v-if="getIsSynced">
+                    <template v-if="isBlockchainSynced">
                         <tick-icon class="icon" />
                         <span>{{ $t('navigation.network.label__synced') }}</span>
                     </template>
@@ -64,7 +64,7 @@
         <div class="sync-progress-wrap">
             <base-popover
                 trigger="hover"
-                :disabled="getIsSynced"
+                :disabled="isBlockchainSynced"
                 boundaries-element="body"
                 :popover-class="['advice', blockchainPopoverClass]"
                 placement="bottom-start"
@@ -75,10 +75,10 @@
                 <template slot="target">
                     <div
                         class="sync-progress"
-                        :class="{ 'is-synced': getIsSynced }"
+                        :class="{ 'is-synced': isBlockchainSynced }"
                     >
                         <div
-                            v-show="!getIsSynced"
+                            v-show="!isBlockchainSynced"
                             class="wrap"
                         >
                             <div
@@ -133,206 +133,152 @@ export default {
             connectedViaTor: 'Settings/isConnectedViaTor'
         }),
 
-        getIsSynced () {
-            return this.isBlockchainSynced
-        },
-
         progress () {
             return this.currentBlockHeight / this.estimatedBlockHeight * 100
         },
 
         connectionPopoverClass () {
-            if (!this.hasConnections) {
-                return 'error'
-            }
-
-            if (!this.connectedViaTor) {
-                return 'orange'
-            }
-
+            if (!this.hasConnections) return 'error';
+            if (!this.connectedViaTor) return 'orange';
             return 'green'
         },
 
         blockchainPopoverClass () {
-            if (!this.hasConnections) {
-                return 'error'
-            }
-
-            return 'green'
+            return this.hasConnections ? 'green' : 'error';
         },
 
         connectionClass () {
-            if (!this.hasConnections) {
-                return 'error'
-            }
-
-            if (!this.connectedViaTor) {
-                return 'public'
-            }
-
-            return 'private'
+            if (!this.hasConnections) return 'error';
+            if (!this.connectedViaTor) return 'public';
+            return 'private';
         }
     }
 }
 </script>
 
 <style lang="scss">
-    $loaded-background: $color--green;
-    section.blockchain {
-        position: relative;
-        display: grid !important;
-        grid-template-areas: "status connections"
-        "sync sync";
-        grid-template-rows: 1fr auto;
-        grid-row-gap: emRhythm(1);
-        /*
-        display: flex !important;
-        flex-direction: row;
-        align-items: flex-end;
-        */
+$loaded-background: $color--green;
 
-        .status {
-            grid-area: status;
+section.blockchain {
+    position: relative;
+    display: grid !important;
+    grid-template-areas: "status connections"
+    "sync sync";
+    grid-template-rows: 1fr auto;
+    grid-row-gap: emRhythm(1);
+    width: available !important;
 
-            .trigger {
-                justify-self: start;
-                align-self: end;
-                margin-left: emRhythm(3);
+    .status {
+        grid-area: status;
 
-                color: $color--comet;
-                font-style: italic;
-                // border: 1px solid red;
-                display: flex !important;
-                align-items: baseline;
-                width: 100%;
-            }
-
-            .icon {
-                transform: translate(0px, 20%);
-            }
-
-            span {
-                //@include setType(2);
-                //padding: 0.25em 0 0.5rem;
-                display: inline-block;
-            }
-
-            .icon + span {
-                margin-left: emRhythm(0.75, $silent: true);
-            }
-        }
-
-        .connections {
-            grid-area: connections;
-            justify-self: end;
+        .trigger {
+            justify-self: start;
             align-self: end;
-            margin-right: emRhythm(3);
-            margin-left: emRhythm(2);
+            margin-left: emRhythm(3);
 
-            /*
-            &.error .connections-badge {
-                background: $gradient--red-vertical;
-                color: $color--white;
-            }
-
-            &.public .connections-badge {
-                background: $gradient--orange-vertical;
-                color: $color--dark;
-            }
-
-            &.private .connections-badge {
-                background: $gradient--green-bright;
-                color: $color--dark;
-            }
-
-            .connections-badge {
-                @include font-heavy();
-                @include setType(2.5, $ms-down1, $silent: true);
-                display: inline-block;
-                border-radius: 50%;
-                background: $color--comet-dark;
-                min-width: emRhythm(2.5, $ms-down1, $silent: true);
-                transition: color .25s ease-in-out, background .25s ease-in-out;
-                cursor: help;
-            }
-            */
-        }
-
-        .sync-progress-wrap {
-            grid-area: sync;
-
-            & .trigger {
-                display: block !important;
-                padding-top: 1rem;
-                margin-top: -1rem;
-            }
-        }
-
-        .sync-progress {
-            background: $color--comet-dark;
-            height: emRhythm(1);
+            color: $color--comet;
+            font-style: italic;
+            display: flex !important;
+            align-items: baseline;
             width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            transition: height 0.5s ease-in-out, background 0.5s ease-in-out;
+        }
 
-            &.is-synced {
-                height: emRhythm(0.25, $silent: true);
-                background: $loaded-background;
+        .icon {
+            transform: translate(0px, 20%);
+        }
 
-                .loaded {
-                    background: $color--green;
-                }
-            }
+        span {
+            display: inline-block;
+        }
 
-            .wrap {
-                flex-grow: 1;
-                width: 100%;
-                display: flex;
-            }
+        .icon + span {
+            margin-left: emRhythm(0.75, $silent: true);
+        }
+    }
+
+    .connections {
+        grid-area: connections;
+        justify-self: end;
+        align-self: end;
+        margin-right: emRhythm(3);
+        margin-left: emRhythm(2);
+    }
+
+    .sync-progress-wrap {
+        grid-area: sync;
+
+        & .trigger {
+            display: block !important;
+            padding-top: 1rem;
+            margin-top: -1rem;
+        }
+    }
+
+    .sync-progress {
+        background: $color--comet-dark;
+        height: emRhythm(1);
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        transition: height 0.5s ease-in-out, background 0.5s ease-in-out;
+
+        &.is-synced {
+            height: emRhythm(0.25, $silent: true);
+            background: $loaded-background;
 
             .loaded {
-                background: $gradient--green-bright;
-                transition: width 1s ease-in-out;
+                background: $color--green;
+            }
+        }
 
-                .loading {
-                    position: relative;
-                    overflow: hidden;
-                    display: block;
-                    height: 100%;
-                    mix-blend-mode: multiply;
-                    opacity: 0.5;
+        .wrap {
+            flex-grow: 1;
+            width: 100%;
+            display: flex;
+        }
 
-                    .bg {
-                        position: absolute;
-                        left: -2.875rem;
-                        right: 0;
-                        top: 0;
-                        bottom: 0;
-                        //z-index: -1;
-                        animation: barberpole 1s linear infinite;
+        .loaded {
+            background: $gradient--green-bright;
+            transition: width 1s ease-in-out;
 
-                        background: repeating-linear-gradient(
-                                        -45deg,
-                                        $color--green 0,
-                                        transparent 0.01rem,
-                                        transparent 0.49rem,
-                                        $color--green 0.5rem,
-                                        $color--green 1rem
-                        );
-                    }
+            .loading {
+                position: relative;
+                overflow: hidden;
+                display: block;
+                height: 100%;
+                mix-blend-mode: multiply;
+                opacity: 0.5;
+
+                .bg {
+                    position: absolute;
+                    left: -2.875rem;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    //z-index: -1;
+                    animation: barberpole 1s linear infinite;
+
+                    background: repeating-linear-gradient(
+                                    -45deg,
+                                    $color--green 0,
+                                    transparent 0.01rem,
+                                    transparent 0.49rem,
+                                    $color--green 0.5rem,
+                                    $color--green 1rem
+                    );
                 }
             }
         }
     }
+}
 
-    @keyframes barberpole {
-        0% {
-            transform: translateX(0);
-        }
-        100% {
-            transform: translateX(2.875rem);
-        }
+@keyframes barberpole {
+    0% {
+        transform: translateX(0);
     }
+    100% {
+        transform: translateX(2.875rem);
+    }
+}
 </style>

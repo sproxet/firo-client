@@ -32,4 +32,9 @@ export default {
 <style>
 @import '../../node_modules/lato-font/css/lato-font.css';
 @import '../../node_modules/typeface-overpass-mono/index.css';
+
+#app {
+    max-height: 100vh;
+    overflow: hidden;
+}
 </style>

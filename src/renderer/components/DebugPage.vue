@@ -370,9 +370,7 @@ export default {
 
 <style scoped lang="scss">
 .debug-page {
-    // override styles defined globally
-    padding-right: 0;
-
+    height: 100vh;
     word-break: break-all;
 
     background-color: $color--dark;

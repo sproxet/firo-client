@@ -1,8 +1,3 @@
-<i18n>
-    en:
-        heading: "Zcoin Balance"
-</i18n>
-
 <template>
     <section class="balance">
         <div id="available-xzc">
@@ -54,20 +49,13 @@ export default {
 
 <style lang="scss" scoped>
 .balance {
-    display: block;
-    @include setType(3);
-
-    margin-top: emRhythm(1);
-    opacity: .8;
-    transition: all .15s ease-in-out;
-    //text-shadow: 0 0 10px $color--green-bright;
-    cursor: default;
-
+    opacity: 0.8;
+    text-align: right;
     margin: {
+        top: 1em;
         right: 1em;
         left: 1em;
     }
-    text-align: right;
 
     .ticker {
         color: #23B852;
