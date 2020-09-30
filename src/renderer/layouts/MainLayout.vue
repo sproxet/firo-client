@@ -46,11 +46,9 @@ export default {
     .main-layout.wrapper {
         position: relative;
         display: grid;
-        //grid-template-areas: "sidebar header header header header header header header header"
         grid-template-areas: "sidebar main main main main main main main main"
         "sidebar main main main main main main main main"
         "sidebar main main main main main main main main";
-        // "sidebar footer footer footer footer footer footer footer footer";
         grid-template-rows: emRhythm(3*$base-line-multi) auto emRhythm($base-line-multi);
         grid-template-columns: minmax(min-content, 14rem) auto;
 
@@ -102,7 +100,6 @@ export default {
     .main {
         position: relative;
         background: $color--polo-light;
-        // padding: 0 emRhythm(5);
 
         @include lato-font('light');
         color: $color--dark;
@@ -112,12 +109,9 @@ export default {
             box-sizing: border-box;
         }
 
-        @include typography();
-
         .child {
             width: 100%;
             height: 100vh;
-            //overflow-y: scroll;
             padding-right: $overlay--blur-offset;
         }
     }

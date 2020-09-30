@@ -2,12 +2,6 @@
     .field {
         margin-bottom: emRhythm(3);
 
-        &.has-error {
-            input[type="text"] {
-                // border-bottom-color: $color--red-bright;
-            }
-        }
-
         & > label {
             display: block;
             @include font-heavy();
@@ -15,7 +9,6 @@
         }
 
         & > .description {
-            //@include font-medium();
             display: block;
             @include description(100%);
             color: $color--comet;
