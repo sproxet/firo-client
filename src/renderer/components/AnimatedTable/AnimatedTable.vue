@@ -207,290 +207,70 @@ export default {
                 pagination: pagination,
                 data: _.slice(local, from, to)
             }
-        },
-        onActionClicked (action, data) {
-            this.$log.debug('slot actions: on-click', data.name)
         }
     }
 }
 </script>
 
 <style lang="scss">
-    .animated-table {
-        .vuetable-body-wrapper {
-            & > table {
-                width: 100%;
-                border-collapse: collapse;
-            }
+@import "src/renderer/styles/colors";
+@import "src/renderer/styles/sizes";
+
+.animated-table {
+    .vuetable-body-wrapper {
+        & > table {
+            width: 100%;
+            border-collapse: collapse;
         }
+    }
 
-        thead {
-            text-align: left;
+    thead {
+        text-align: left;
 
-            th {
-                color: $color--comet-dark;
-                padding-bottom: emRhythm(2);
-
-                &.sortable {
-                    transition: color 0.15s ease-out;
-                    position: relative;
-
-                    &:hover {
-                        color: $color--dark;
-
-                        .sort-icon {
-                            color: $color--comet-dark;
-                        }
-                    }
-
-                    .sort-icon {
-                        float: none !important;
-                        display: inline-block;
-                        color: $color--comet;
-                        padding-left: 0.5rem;
-                        // border: 1px solid blue;
-                        position: absolute !important;
-
-                        font-style: normal;
-                        //transition: transform 0.25s ease-in-out;
-
-                        &:after {
-                            transition: all 0.25s ease-in-out;
-                        }
-
-
-                        &.sort {
-                            top: 0.75rem;
-                            padding-left: 0.35rem;
-
-                            &:after {
-                                // border: 1px solid red;
-
-                                display: block;
-                                content: '‹›';
-                                transform: rotate(90deg);
-                            }
-                        }
-
-                        &.up,
-                        &.down {
-                            //height: 1.25rem;
-                            top: 0.45rem;
-                            padding-left: 0.75rem;
-                            box-sizing: border-box;
-                            position: relative;
-
-
-                            &:after {
-                                top: 50%;
-                                left: 50%;
-                                display: block;
-                                position: absolute;
-                                //border: 1px solid red;
-                                width: 0.5rem;
-                                height: 0.75rem;
-                                content: '‹';
-                                transform: rotate(270deg);
-                            }
-                        }
-
-                        &.down {
-                            &:after {
-                                transform: rotate(90deg);
-                            }
-                        }
-
-                    }
-
-                }
-            }
+        th {
+            color: $color-table-heading;
+            padding-bottom: 1em;
         }
+    }
 
-        .vuetable-body {
-            tr {
-                $padding: 1;
-                $border-size: 1px;
+    .vuetable-body {
+        tr {
+            cursor: pointer;
 
-                $hover-opacity: .35;
-                $hover-background-color: $color--polo-medium;
+            // alternating colours for different rows
+            &:nth-child(odd) {
+                background: darken($color-table-background, 10%);
+            }
+            &:nth-child(even) {
+                background: $color-table-background;
+            }
 
-                $odd-opacity: .15;
-                $odd-background-color: $color--polo-medium;
-
-                cursor: pointer;
-                position: relative;
-                @include glow-transition-start($color--green);
-
-                transition: box-shadow 0.15s ease-out;
-
-                &.is-reused {
-                    @include glow-transition-start($color--orange);
+            // highlight on hover
+            &:hover {
+                &:nth-child(odd) {
+                    td {
+                        background: lighten($color-table-background, 20%);
+                    }
                 }
 
                 td {
-                    position: relative;
-                    border-color: $color--polo-medium;
-                    // border-color: #fff;
-                    border-top-style: solid;
-                    @include rhythmBorderTop($border-size, $padding);
-                    padding-bottom: emRhythm($padding);
-                    transition: background-color .15s ease-in-out;
-
-                    &:first-child {
-                        margin-left: -1rem;
-                        padding-left: 1rem;
-                    }
-                    /*&:after {
-                        border-bottom: 1px solid #fff;
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-                        z-index: 1;
-
-                        content: '';
-                        width: 100%;
-                    }*/
-                }
-
-                &:last-child td {
-                    border-bottom-style: solid;
-                    @include rhythmBorderBottom($border-size, $padding);
-                }
-
-                &:nth-child(odd) {
-                    background: rgba($odd-background-color, $odd-opacity);
-                }
-
-                &:hover {
-                    &:nth-child(odd) {
-                        td {
-                            background: rgba($hover-background-color, $hover-opacity + $odd-opacity);
-                        }
-                    }
-
-                    td {
-                        background: rgba($hover-background-color, $hover-opacity);
-                    }
-                }
-
-                &.selected {
-                    position: relative;
-                    z-index: 1000;
-
-                    /*&:before {
-                        position: absolute;
-                        top: 0;
-                        left: 0;
-
-                        content: '';
-                        width: 100%;
-                        //height: 100%;
-                        background: red;
-                        border: 10px solid blue;
-                    }*/
-                    @include glow-small-box($color--comet-dark-mixed);
-
-                    &.is-fulfilled {
-                        @include glow-small-box($color--green);
-
-                        td {
-                            background: $color--green;
-                        }
-
-                        & .tag {
-                            border-color: mix($color--comet-dark-mixed, $color--comet-dark);
-                        }
-
-                        &:hover td {
-                            background: mix($color--green-bright, $color--green, (100% * $hover-opacity));
-                        }
-
-                        &:nth-child(odd) {
-                            td {
-                                background: mix($color--green-bright, $color--green, (100% * $odd-opacity / 2));
-                            }
-
-                            &:hover td {
-                                background: mix($color--green-bright, $color--green, (100% * ($hover-opacity + $odd-opacity) / 2));
-                            }
-                        }
-                    }
-
-                    &.is-incoming {
-                        .payment-request-table-status path {
-                            fill: $color--white;
-                        }
-                    }
-
-                    &.is-reused {
-                        @include glow-small-box($color--orange);
-
-                        td {
-                            background: $color--orange;
-                        }
-
-                        & .tag {
-                            border-color: mix($color--orange, $color--orange-dark);
-                        }
-
-                        &:hover td {
-                            background: mix($color--orange-bright, $color--orange, (100% * $hover-opacity));
-                        }
-
-                        &:nth-child(odd) {
-                            td {
-                                background: mix($color--orange-bright, $color--orange, (100% * $odd-opacity / 2));
-                            }
-
-                            &:hover td {
-                                background: mix($color--orange-bright, $color--orange, (100% * ($hover-opacity + $odd-opacity) / 2));
-                            }
-                        }
-                    }
-
-                    & .tag {
-                        border-color: mix($color--green, $color--green-dark);
-                    }
-
-                    & .payment-request-table-status {
-                        &.is-fulfilled path {
-                            stroke: $color--white;
-                        }
-
-                        &:not(.is-fulfilled) g {
-                            fill: $color--white;
-                        }
-                    }
-
-                    td {
-                        background: $color--comet-dark-mixed;
-                        color: $color--white;
-                    }
-
-                    &:hover td {
-                        background: mix($color--comet-dark-mixed, $color--polo, (100% * $hover-opacity));
-                    }
-
-                    &:nth-child(odd) {
-                        td {
-                            background: rgba($color--comet-dark-mixed, (100% * $odd-opacity / 2));
-                        }
-
-                        &:hover td {
-                            background: mix($color--comet-dark-mixed, $color--polo, (100% * ($hover-opacity + $odd-opacity) / 2));
-                        }
-                    }
+                    background: $color-table-background;
                 }
             }
 
-            &.fade-enter,
-            &.fade-enter-active {
-                background: red;
-            }
+            td {
+                border-top: {
+                    color: $color-table-border;
+                    style: solid;
+                    width: 1px;
+                }
 
-            &.fade-leave-to {
-                background: blue;
+                padding: {
+                    top: $size-tiny-space;
+                    bottom: $size-tiny-space;
+                }
             }
         }
     }
+}
 </style>

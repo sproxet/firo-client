@@ -8,25 +8,13 @@
                 <div class="grid">
                     <div class="form">
                         <header>
-                            <h2>
-                                Send Zcoin {{ privateOrPublic[0].toUpperCase() + privateOrPublic.substr(1) }}ly
-                            </h2>
+                            <h1>
+                                Send Firo
+                            </h1>
                         </header>
 
-                        <p
-                            v-if="privateOrPublic === 'public'"
-                            class="description"
-                        >
-                            Zcoin you send with Public Send will be visible by everyone. Maybe you want to use
-                            Private Send instead?
-                        </p>
-
-                        <p
-                            v-else
-                            class="description"
-                        >
-                            No one will know the origin of Zcoin you send privately. Note that you may only send
-                            multiples of 0.05 XZC.
+                        <p class="description">
+                            All transactions you make with Firo are private.
                         </p>
 
 
@@ -729,6 +717,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/renderer/styles/inputs";
+
 .send-zcoin-form {
     height: 100vh;
 
@@ -800,10 +790,8 @@ fieldset {
     padding: 0;
     border: none;
 
-    input[type="text"],
-    select,
-    .message {
-        @include light-input();
+    input[type="text"] {
+        @include rounded-input();
     }
 
     .prefix {

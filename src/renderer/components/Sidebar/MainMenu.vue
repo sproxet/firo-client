@@ -7,13 +7,8 @@
                 </router-link>
             </li>
             <li>
-                <router-link to="/send/public">
-                    Public Send
-                </router-link>
-            </li>
-            <li>
                 <router-link to="/send/private">
-                    Private Send
+                    Send
                 </router-link>
             </li>
             <div class="divider" />
@@ -74,9 +69,6 @@ ul {
             border-radius: 0.25rem;
             text-decoration: none;
             color: inherit;
-
-            &.router-link-active {
-            }
         }
     }
 

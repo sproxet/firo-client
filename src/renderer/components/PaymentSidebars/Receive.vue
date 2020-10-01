@@ -1,7 +1,7 @@
 <template>
     <div class="receive">
         <h1>
-            Receive Zcoin
+            Receive Firo
         </h1>
 
         <div ref="qrCode" class="qr-code" />

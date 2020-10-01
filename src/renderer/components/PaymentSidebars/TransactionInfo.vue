@@ -1,8 +1,8 @@
 <template>
     <section class="tx-info">
-        <div class="title">
+        <h1>
             {{ title }}
-        </div>
+        </h1>
 
         <div class="details">
             <div class="amount">
@@ -30,7 +30,7 @@
             </div>
 
             <div class="address">
-                <label>Address:</label>
+                <h2>Address:</h2>
 
                 <div class="value">
                     {{ tx.address }}
@@ -38,7 +38,7 @@
             </div>
 
             <div class="txid">
-                <label>Transaction ID:</label>
+                <h2>Transaction ID:</h2>
 
                 <div class="value">
                     {{ tx.txid }}
@@ -133,78 +133,71 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "src/renderer/styles/typography";
+@import "src/renderer/styles/sizes";
+
+
 .tx-info {
-    height: 100%;
-    background: $color--comet-light;
-    color: $color--comet-dark;
+    height: 100vh;
+    background: $color-detail-background;
+    color: $color-text-light;
 
     padding: {
-        top: 2em;
+        top: $size-detail-top-margin;
         left: 2em;
         right: 2em;
     }
 
-    font-size: 1.5em;
-
-    .title {
-        font-size: 2em;
-    }
-
-    .confirmations {
-        font-size: 0.6em;
-        font-style: italic;
-        text-align: right;
-    }
-
     .unconfirmed-warning {
-        padding-top: 1em;
-        padding-bottom: 2em;
-        font-size: 0.6em;
+        padding-top: $size-small-space;
+        @include small();
         font-style: italic;
         text-align: center;
     }
 
-    .details {
-        @include detail-header();
+    h2 {
+        margin-bottom: $size-tiny-space;
+    }
 
+    .details {
         .amount {
-            font-size: 1.5em;
+            @include large();
             text-align: right;
+            margin-bottom: $size-tiny-space;
 
             .incoming-amount {
-                color: green;
+                color: $color-amount-positive;
             }
 
             .outgoing-amount {
-                color: red;
+                color: $color-amount-negative;
             }
         }
 
         .address {
-            padding-top: 0.5em;
-            padding-bottom: 0.5em;
+            margin-top: $size-large-space;
+        }
 
-            .value {
-                font-family: monospace;
-                font-style: italic;
-                font-size: 0.9em;
-            }
+        .confirmations {
+            @include small();
+            text-align: right;
+            font-style: italic;
         }
 
         .txid {
-            padding-top: 0.5em;
+            margin: {
+                top: $size-small-space;
+                bottom: $size-tiny-space;
+            }
 
             .value {
-                font-size: 0.5em;
-                font-family: monospace;
-                font-style: italic;
+                @include monospace();
+                @include mini();
             }
         }
 
         .block-explorer {
-            font-size: 0.7em;
-            font-style: italic;
-            text-underline: none;
+            @include small();
         }
     }
 

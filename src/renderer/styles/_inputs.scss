@@ -3,9 +3,10 @@
 @mixin rounded-input() {
     background-color: $color-input-background;
     font-family: "Source Sans Pro";
+    opacity: 0.7;
 
     &, &::placeholder {
-        //color: $color-input-text;
+        outline: none;
     }
 
     border: {

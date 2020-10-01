@@ -7,6 +7,7 @@
             >
                 <payments-list />
             </section>
+
             <section
                 v-if="isShowingCustomInputs"
                 class="overlay centered"
