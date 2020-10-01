@@ -147,6 +147,8 @@ export default {
     .qr-code {
         width: fit-content;
         margin: {
+            top: $size-medium-space;
+            bottom: $size-medium-space;
             left: auto;
             right: auto;
         }
@@ -155,7 +157,6 @@ export default {
     .address {
         width: fit-content;
         margin: {
-            top: 2em;
             left: auto;
             right: auto;
         }
@@ -172,10 +173,11 @@ export default {
         }
 
         .add-label {
-            margin-top: 1.5em;
+            margin-top: $size-medium-space;
 
             label {
                 display: block;
+                margin-bottom: $size-tiny-space;
             }
 
             input[type="text"] {
