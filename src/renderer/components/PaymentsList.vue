@@ -26,7 +26,7 @@
             :on-row-select="onTableRowSelect"
             :sort-order="sortOrder"
             :compare-elements="comparePayments"
-            :per-page="13"
+            :per-page="17"
             :on-page-change="(pageNumber) => this.currentPage = pageNumber"
         />
     </section>
