@@ -83,104 +83,61 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .pagination {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        margin-top: emRhythm(5);
-        text-align: center;
-        user-select: none;
+@import "src/renderer/styles/colors";
 
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: emRhythm(5);
+    text-align: center;
+    user-select: none;
+
+}
+
+a {
+    display: inline-block;
+    color: $color-text-light;
+    cursor: pointer;
+}
+
+.icon {
+    padding: emRhythm(0.5);
+
+    &:not(.disabled) {
+        color: $color-text-light;
+
+        &:hover,
+        &:focus {
+            color: $color-text-dark;
+        }
     }
+
+    &.disabled {
+        color: $color-text-medium;
+        cursor: default;
+    }
+}
+
+.numbers {
+    background: lighten($color-main-background, 20%);
+    border-radius: emRhythm(1);
+    overflow: hidden;
+    margin-left: emRhythm(1.5);
+    margin-right: emRhythm(1.5);
 
     a {
-        display: inline-block;
-        color: $color--comet;
-        cursor: pointer;
-    }
-
-    .icon {
         padding: emRhythm(0.5);
+        color: $color-text-light;
 
-        &:not(.disabled) {
-            color: $color--comet;
-
-            &:hover,
-            &:focus {
-                color: $color--dark;
-            }
+        &:hover,
+        &:focus {
+            background: $color-input-background;
         }
 
-        &.disabled {
-            color: $color--comet-medium;
-            cursor: default;
+        &.active {
+            background: darken($color-main-background, 5%);
         }
     }
-
-    .numbers {
-        background: $color--white-light;
-        border-radius: emRhythm(1);
-        overflow: hidden;
-        margin-left: emRhythm(1.5);
-        margin-right: emRhythm(1.5);
-
-        a {
-            padding: emRhythm(0.5);
-            color: $color--polo;
-
-            &:hover,
-            &:focus {
-                background: $color--white;
-                color: $color--polo-dark;
-            }
-
-            &.active {
-                background: $color--polo;
-                color: $color--white;
-            }
-        }
-    }
-
-    .pagination.dark {
-        a {
-            color: $color--comet-medium;
-            color: blue;
-        }
-
-        .icon {
-            &:not(.disabled) {
-                color: $color--dark;
-                //color: $color--comet;
-
-                &:hover,
-                &:focus {
-                    color: $color--white;
-                    //color: $color--dark;
-                }
-            }
-
-            &.disabled {
-                color: $color--comet-dark-mixed;
-            }
-        }
-
-        .numbers {
-            background: $color--comet-dark-mixed;
-
-            a {
-                color: mix($color--comet-dark, $color--comet);
-
-                &:hover,
-                &:focus {
-                    background: $color--comet-medium;
-                    color: $color--dark;
-                }
-
-                &.active {
-                    background: $color--comet-light;
-                    color: $color--dark;
-                }
-            }
-        }
-    }
+}
 </style>

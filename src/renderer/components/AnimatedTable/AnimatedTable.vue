@@ -247,14 +247,8 @@ export default {
 
             // highlight on hover
             &:hover {
-                &:nth-child(odd) {
-                    td {
-                        background: lighten($color-table-background, 20%);
-                    }
-                }
-
                 td {
-                    background: $color-table-background;
+                    background: lighten($color-table-background, 20%);
                 }
             }
 

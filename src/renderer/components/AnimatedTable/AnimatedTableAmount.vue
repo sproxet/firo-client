@@ -63,19 +63,22 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "src/renderer/styles/colors";
+@import "src/renderer/styles/typography";
+
 .vuetable-td-component-amount {
-    font-family: monospace;
+    @include monospace();
 
     .outgoing {
-        color: red;
+        color: $color-amount-negative;
     }
 
     .incoming {
-        color: green;
+        color: $color-amount-positive;
     }
 
     .mint, .payment-request {
-        color: grey;
+        color: $color-amount-neutral;
     }
 }
 </style>
