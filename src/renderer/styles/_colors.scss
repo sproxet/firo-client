@@ -25,8 +25,9 @@ $color-text-light: $firo-wild-sand;
 $color-text-medium: $firo-mine-shaft;
 $color-text-dark: $firo-creole;
 
-$color-input-text: $firo-wild-sand;
+$color-input-text: $color-text-medium;
+$color-input-placeholder: $color-text-medium;
 $color-input-background: $firo-silver;
 
 $color-menu-divider: $firo-creole;
-$color-menu-highlighted-element: darken
+$color-menu-highlighted-element: darken($color-menu-background, 10%);

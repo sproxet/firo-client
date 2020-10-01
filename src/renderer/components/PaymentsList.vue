@@ -277,7 +277,7 @@ export default {
 
     .table-filter-input {
         width: 45%;
-        @include search-input();
+        @include rounded-input();
     }
 }
 

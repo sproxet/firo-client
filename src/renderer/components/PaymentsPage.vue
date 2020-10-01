@@ -102,6 +102,7 @@ export default {
 
 .tx-page-sidebar {
     background: $color-detail-background;
+    height: 100vh;
 }
 
 .payment-page-window{

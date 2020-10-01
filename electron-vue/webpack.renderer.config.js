@@ -141,7 +141,8 @@ let rendererConfig = {
 
         new CopyPlugin({
             patterns: [
-                {from: 'assets/fonts', to: 'assets/fonts'}
+                {from: 'assets/fonts', to: 'assets/fonts'},
+                {from: 'src/renderer/assets/FiroSymbolDark.svg', to: 'assets/FiroSymbolDark.svg'}
             ]
         }),
         new webpack.HotModuleReplacementPlugin()
