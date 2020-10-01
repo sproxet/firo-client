@@ -2,7 +2,7 @@
     <div class="sidebar">
         <div class="logo">
             <router-link to="/main">
-                <zcoin-logo-text />
+                <firo-logo />
             </router-link>
         </div>
 
@@ -24,7 +24,7 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ZcoinLogoText from "./Icons/ZcoinLogoText";
+import FiroLogo from 'renderer/assets/FiroLogoDark.svg';
 import Balance from 'renderer/components/Sidebar/Balance'
 import MainMenu from 'renderer/components/Sidebar/MainMenu'
 import Blockchain from 'renderer/components/Sidebar/Blockchain'
@@ -33,7 +33,7 @@ export default {
     name: 'Sidebar',
 
     components: {
-        ZcoinLogoText,
+        FiroLogo,
         Balance,
         MainMenu,
         Blockchain
@@ -46,11 +46,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import '../styles/colors';
+@import 'src/renderer/styles/colors';
+@import 'src/renderer/styles/sizes';
 
 .sidebar {
-    background-image: linear-gradient(to top right, $color--dark, $color--comet-dark-mixed);
-    color: #fff;
+    background-color: $color-menu-background;
+    color: $color-text-light;
     height: 100vh;
 
     .logo, .network-badge {
@@ -62,15 +63,17 @@ export default {
     }
 
     .logo {
-        margin-top: 4em;
+        margin-top: $size-menu-top-margin;
 
         svg {
-            height: 3em;
+            height: $size-menu-logo;
         }
     }
 
     .network-badge {
-        color: red;
+        color: $firo-silver;
+        font-size: 0.8em;
+        @include monospace();
     }
 
     .main-menu {

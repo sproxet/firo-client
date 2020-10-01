@@ -28,17 +28,19 @@ export default {
 </script>
 
 <style lang="scss">
+@import "src/renderer/styles/colors";
+
 .main-layout {
     .sidebar {
         float: left;
         width: fit-content;
+        background: $color-menu-background;
     }
 
     .main {
         width: available;
         height: 100vh;
-        background: $color--polo-light;
-        color: $color--dark;
+        background: $color-main-background;
     }
 }
 </style>

@@ -1,29 +1,27 @@
 <template>
     <div class="receive">
-        <div class="inner">
-            <div class="title">
-                Receive Zcoin
+        <h1>
+            Receive Zcoin
+        </h1>
+
+        <div ref="qrCode" class="qr-code" />
+
+        <div v-if="address" class="address monospace loaded">
+            <a @click.prevent="copyAddress" id="receive-address" href="#" title="Click to copy address">
+                {{ address }}
+            </a>
+
+            <div class="add-label">
+                <label>
+                    Add label:
+                </label>
+
+                <input type="text" v-model="label" @keydown.enter="addLabel" />
+                <input type="button" value="Go!" @click="addLabel" />
             </div>
-
-            <div ref="qrCode" class="qr-code" />
-
-            <div v-if="address" class="address loaded">
-                <a @click.prevent="copyAddress" id="receive-address" href="#" title="Click to copy address">
-                    {{ address }}
-                </a>
-
-                <div class="add-label">
-                    <label>
-                        Add label:
-                    </label>
-
-                    <input type="text" v-model="label" @keydown.enter="addLabel" />
-                    <input type="button" value="Go!" @click="addLabel" />
-                </div>
-            </div>
-            <div v-else class="address loading">
-                Loading...
-            </div>
+        </div>
+        <div v-else class="address loading">
+            Loading...
         </div>
     </div>
 </template>
@@ -130,87 +128,70 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "src/renderer/styles/sizes";
+
 .receive {
     height: 100%;
-    background: $color--comet-light;
-    color: $color--comet-dark;
 
     padding: {
-        top: 2em;
+        top: $size-detail-top-margin;
         left: 2em;
         right: 2em;
     }
 
-    .inner {
-        height: fit-content;
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+    h1 {
+        text-align: center;
+    }
 
-        .title {
-            text-align: center;
-            font: {
-                size: 3em;
+    .qr-code {
+        width: fit-content;
+        margin: {
+            top: 5em;
+            bottom: 5em;
+            left: auto;
+            right: auto;
+        }
+    }
+
+    .address {
+        width: fit-content;
+        margin: auto;
+
+        &.loading {
+            font-style: italic;
+        }
+
+        &.loaded {
+            a {
+                text-decoration: none;
+                color: inherit;
             }
         }
 
-        .qr-code {
-            width: fit-content;
-            margin: {
-                top: 5em;
-                bottom: 5em;
-                left: auto;
-                right: auto;
-            }
-        }
+        .add-label {
+            margin-top: 1.5em;
 
-        .address {
-            width: fit-content;
-            margin: auto;
-
-            font: {
-                family: monospace;
-                weight: bold;
-                size: 1.3em;
+            label {
+                display: block;
             }
 
-            &.loading {
-                font-style: italic;
+            input[type="text"] {
+                border: none;
+                border-radius: 25px;
+                outline: none;
             }
 
-            &.loaded {
-                a {
-                    text-decoration: none;
-                    color: inherit;
-                }
-            }
+            input[type="button"] {
+                cursor: pointer;
+                background-color: inherit;
+                border-radius: 25px;
+                border-width: 0;
 
-            .add-label {
-                margin-top: 1.5em;
-
-                label {
-                    display: block;
-                }
-
-                input[type="text"] {
-                    border: none;
-                    border-radius: 25px;
+                &:focus {
                     outline: none;
                 }
 
-                input[type="button"] {
-                    cursor: pointer;
-                    background-color: inherit;
-                    border-radius: 25px;
-                    border-width: 0;
-
-                    &:focus {
-                        outline: none;
-                    }
-
-                    font-weight: bold;
-                }
+                font-weight: bold;
             }
         }
     }

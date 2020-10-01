@@ -1,7 +1,9 @@
 @import '~normalize-scss/sass/normalize/import-now';
+
+@import 'styles/typography';
+
 @import 'styles/variables';
 @import 'styles/legacy';
-@import 'styles/typography';
 @import 'styles/transitions';
 @import 'styles/mixins';
 @import 'styles/globals';

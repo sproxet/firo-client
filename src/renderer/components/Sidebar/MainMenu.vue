@@ -6,13 +6,6 @@
                     {{ $t('navigation.menu.button__receive') }}
                 </router-link>
             </li>
-            <li class="has-divider">
-                <router-link to="/anonymize">
-                    <percentage-to-hold-in-zerocoin-notification>
-                        {{ $t('navigation.menu.button__mint') }}
-                    </percentage-to-hold-in-zerocoin-notification>
-                </router-link>
-            </li>
             <li>
                 <router-link to="/send/public">
                     Public Send
@@ -23,12 +16,14 @@
                     Private Send
                 </router-link>
             </li>
-            <li class ="has-divider">
+            <div class="divider" />
+            <li>
                 <router-link to="/znodes">
                     Znodes
                 </router-link>
             </li>
-            <li class="has-divider">
+            <div class="divider" />
+            <li>
                 <router-link to="/settings">
                     {{ $t('navigation.menu.button__settings') }}
                 </router-link>
@@ -55,71 +50,39 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-$bleed: 2;
-$bleed-active: 3;
-$padding: 3;
+@import "src/renderer/styles/colors";
 
 ul {
     list-style: none;
     margin: 0;
     padding: 0;
-}
 
-li {
-    padding-left: emRhythm($bleed-active + $padding);
-    padding-right: emRhythm($bleed-active + $padding);
+    li {
+        padding: {
+            top: 1em;
+            bottom: 1em;
+            left: 3.5em;
+            right: 3.5em;
+        }
 
-    &.has-divider {
-        border: 0px solid $color--comet-dark;
-        @include rhythmBorderTop(1px, 2);
-        margin-top: emRhythm(2);
-    }
-}
+        &:hover {
+            background-color: $color-menu-highlighted-element;
+        }
 
-a {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-    position: relative;
-    margin-bottom: emRhythm(1);
-    border-radius: 0.25rem;
-    color: $color--white-light;
-    text-decoration: none;
-    @include bleed-h($bleed);
-    transition: padding .1s ease-in-out, margin .1s ease-in-out;
+        a {
+            margin: 1em;
+            border-radius: 0.25rem;
+            text-decoration: none;
+            color: inherit;
 
-    &:after {
-        position: absolute;
-        content: '';
-        display: block;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        z-index: 1;
-        background: $gradient--polo-vertical;
-        opacity: 0;
-        transition: opacity 0.15s ease-out;
-
-    }
-
-    &:hover,
-    &:focus {
-        &:after {
-            opacity: .15;
+            &.router-link-active {
+            }
         }
     }
 
-    &.router-link-active {
-        @include bleed-h($bleed-active);
-        &:after {
-            opacity: .3;
-        }
-    }
-
-    .popover {
-        width: 100%;
+    .divider {
+        height: 1px;
+        background-color: $color-menu-divider;
     }
 }
 </style>

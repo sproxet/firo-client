@@ -1,38 +1,44 @@
 @import "./fonts";
+@import "./colors";
 
-$font-multiplier: 0.8;
+// Firo brand guidelines specify a base font of 16pt, but that's too large for our UI.
+$font-size-normal: 12pt;
 
 h1 {
+    color: $color-text-dark;
     font: {
         family: "Saira Semi Condensed";
         weight: bold;
-        size: 40pt * $font-multiplier;
+        size: $font-size-normal * 2.5;
     }
 }
 
 h2 {
+    color: $color-text-dark;
     font: {
         family: "Saira Semi Condensed";
         weight: 300;
-        size: 24pt * $font-multiplier;
+        size: $font-size-normal * 1.5;
     }
 }
 
 h3 {
+    color: $color-text-dark;
     font: {
         family: "Source Sans Pro";
         weight: bold;
-        size: 18pt * $font-multiplier;
+        size: $font-size-normal * 1.125;
     }
 }
 
 body {
+    color: $color-text-light;
     font: {
         family: "Source Sans Pro";
-        size: 16pt * $font-multiplier;
+        size: $font-size-normal;
     }
 }
 
-.monospace {
+@mixin monospace {
     font-family: "Robot Mono";
 }

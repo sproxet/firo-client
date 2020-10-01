@@ -74,35 +74,37 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-    .tx-page {
-        display: grid;
-        box-sizing: border-box;
-        grid-template-columns: 1fr $detail-view--min-width;
+@import "src/renderer/styles/colors";
 
-        .scrollable {
-            position: relative;
-            z-index: 1;
-            box-sizing: border-box;
-            overflow: scroll;
-            height: 100vh;
-        }
-    }
+.tx-page {
+    display: grid;
+    box-sizing: border-box;
+    grid-template-columns: 1fr $detail-view--min-width;
 
-    .payment-list-container,
-    .tx-page-sidebar {
+    .scrollable {
         position: relative;
-    }
-
-    .payment-list-container {
-        padding: emRhythm(5) emRhythm(4);
+        z-index: 1;
         box-sizing: border-box;
-        height: 100%;
+        overflow: scroll;
+        height: 100vh;
     }
+}
 
-    .tx-page-sidebar {
-        background: $color--white;
-    }
-    .payment-page-window{
-        position: relative
-    }
+.payment-list-container, .tx-page-sidebar {
+    position: relative;
+}
+
+.payment-list-container {
+    padding: emRhythm(5) emRhythm(4);
+    box-sizing: border-box;
+    height: 100%;
+}
+
+.tx-page-sidebar {
+    background: $color-detail-background;
+}
+
+.payment-page-window{
+    position: relative
+}
 </style>

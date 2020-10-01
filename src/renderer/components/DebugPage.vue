@@ -7,12 +7,11 @@
         @keypress="focusInput"
         @mouseup="focusInputUnlessTextIsSelected"
     >
-        <div class="console">
+        <div class="console monospace">
             <div class="output">
                 <div class="info">
                     Hello, welcome to the Zcoin Client debug console. Here you can interact with zcoind directly. Write
-                    <span class="bold">help</span> and see the list of commands, or <span class="bold">clear</span> to
-                    clear the console.
+                    <b>help</b> and see the list of commands, or <b>clear</b> to clear the console.
                 </div>
 
                 <div
@@ -381,11 +380,6 @@ export default {
     }
 
     .console {
-        font: {
-            family: monospace;
-            size: 1.3em;
-        }
-
         padding: {
             top: 4em;
             left: 2%;

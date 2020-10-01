@@ -269,13 +269,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/renderer/styles/inputs";
+
 .table-filter-input-wrap {
     text-align: right;
-    margin-top: emRhythm(-3);
     margin-bottom: emRhythm(5);
 
     .table-filter-input {
         width: 45%;
+        @include search-input();
     }
 }
 
@@ -298,32 +300,5 @@ export default {
 
 .show-unsynced-warning {
     color: red;
-}
-
-input {
-    border: none;
-    width: 100%;
-    box-sizing: border-box;
-
-    @include rhythmBorderBottom(1px, 0);
-
-    padding: 0 emRhythm($input-bleed);
-    background: $color--white-light;
-    border-bottom-style: solid;
-    border-bottom-color: $color--polo-medium;
-    outline: none;
-    transition: background 0.15s ease-out, border-color 0.15s ease-out;
-    color: $color--comet-dark;
-
-    &::placeholder {
-        color: $color--comet;
-        font-style: italic;
-    }
-
-    &:hover,
-    &:focus {
-        background-color: $color--white;
-        border-bottom-color: $color--polo;
-    }
 }
 </style>
