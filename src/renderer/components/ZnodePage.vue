@@ -201,15 +201,12 @@ export default {
             max-width: 15rem;
 
             .value {
-                @include font-black();
-                @include setType(4, $ms-up2);
                 margin: 0;
                 text-align: center;
                 color: $color--polo-light;
             }
 
             .desc {
-                @include font-medium();
                 font-style: italic;
                 color: $color--polo;
             }

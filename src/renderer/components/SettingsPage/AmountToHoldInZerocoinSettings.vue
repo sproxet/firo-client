@@ -97,8 +97,7 @@ export default {
 
             span {
                 display: inline-block;
-                padding: 0 emRhythm(0.5, $silent: true);
-                @include font-heavy();
+                padding: 0 emRhythm(0.5);
             }
 
             span:first-child {
@@ -116,7 +115,6 @@ export default {
         display: flex;
         justify-content: space-between;
 
-        @include font-heavy();
 
         span:first-child {
             color: $color--comet-dark-mixed;

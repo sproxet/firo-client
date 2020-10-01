@@ -80,7 +80,6 @@ export default {
     .blockchain {
         position: absolute;
         bottom: 0;
-        width: max-content;
     }
 }
 </style>

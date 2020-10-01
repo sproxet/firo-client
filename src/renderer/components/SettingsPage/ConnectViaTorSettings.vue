@@ -58,7 +58,7 @@ code {
     background: $color--polo-medium;
     //color: $color--white;
     color: mix($color--comet-dark, $color--comet);
-    padding: 0 emRhythm(0.5, $silent: true);
+    padding: 0 emRhythm(0.5);
     border-radius: 0.125rem;
 }
 

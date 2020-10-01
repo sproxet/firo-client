@@ -66,7 +66,6 @@ export default {
             @include rhythmBorderTop(1px, 1);
             border-color: rgba($color--white, 0.3);
             border-top-style: dashed;
-            @include font-medium();
 
             display: grid;
             grid-template-columns: $amount-width auto $unit-width;
@@ -81,8 +80,6 @@ export default {
             }
 
             .label {
-                // @include setType(2, $ms-up1);
-                @include font-heavy();
 
                 & > div {
                     display: flex;
@@ -96,7 +93,6 @@ export default {
                     .cost {
                         position: relative;
                         //color: $color--comet-medium;
-                        @include font-medium();
                         opacity: .8;
 
                         .unit {
@@ -113,8 +109,8 @@ export default {
                         //display: table-cell;
                         flex-grow: 1;
                         background: $color--comet-light;
-                        height: emRhythm(0.75, $silent: true);
-                        margin-bottom: emRhythm(1.25, $silent: true);
+                        height: emRhythm(0.75);
+                        margin-bottom: emRhythm(1.25);
                         margin-right: emRhythm(1);
                         transition: width 0.25s ease-out;
 

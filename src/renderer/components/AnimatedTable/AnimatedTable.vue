@@ -228,7 +228,6 @@ export default {
             text-align: left;
 
             th {
-                @include font-heavy();
                 color: $color--comet-dark;
                 padding-bottom: emRhythm(2);
 
@@ -252,7 +251,6 @@ export default {
                         // border: 1px solid blue;
                         position: absolute !important;
 
-                        @include setType(1);
                         font-style: normal;
                         //transition: transform 0.25s ease-in-out;
 
@@ -268,7 +266,6 @@ export default {
                             &:after {
                                 // border: 1px solid red;
 
-                                //@include setType(1, $ms-up1);
                                 display: block;
                                 content: '‹›';
                                 transform: rotate(90deg);
@@ -277,7 +274,6 @@ export default {
 
                         &.up,
                         &.down {
-                            @include setType(1, $ms-up2);
                             //height: 1.25rem;
                             top: 0.45rem;
                             padding-left: 0.75rem;

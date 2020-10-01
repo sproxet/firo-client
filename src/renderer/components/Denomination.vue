@@ -192,7 +192,6 @@ export default {
                 position: absolute;
                 top: 0;
                 right: emRhythm(1);
-                @include font-heavy();
                 font-style: italic;
             }
         }
@@ -209,7 +208,6 @@ export default {
             span {
                 position: absolute;
                 right: emRhythm(1);
-                @include font-regular();
                 font-style: italic;
             }
         }
@@ -248,8 +246,6 @@ export default {
         }
 
         label {
-            @include font-black();
-            @include setType(3, $ms-up3);
 
             position: absolute;
             bottom: -0.125rem;

@@ -271,7 +271,7 @@ export default {
 <style lang="scss" scoped>
 .table-filter-input-wrap {
     text-align: right;
-    margin-top: emRhythm(3) * -1;
+    margin-top: emRhythm(-3);
     margin-bottom: emRhythm(5);
 
     .table-filter-input {
@@ -305,8 +305,6 @@ input {
     width: 100%;
     box-sizing: border-box;
 
-    @include lato-font('normal');
-    @include setType(5);
     @include rhythmBorderBottom(1px, 0);
 
     padding: 0 emRhythm($input-bleed);

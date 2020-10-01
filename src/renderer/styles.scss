@@ -1,9 +1,9 @@
+@import '~normalize-scss/sass/normalize/import-now';
 @import 'styles/variables';
-@import './styles/typography';
-@import '~typesettings/typesettings';
+@import 'styles/legacy';
+@import 'styles/typography';
 @import 'styles/transitions';
 @import 'styles/mixins';
-@import '~normalize-scss/sass/normalize/import-now';
 @import 'styles/globals';
 @import 'styles/elements/scrollbar';
 @import 'styles/elements/overlay';

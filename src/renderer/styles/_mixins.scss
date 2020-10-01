@@ -1,28 +1,16 @@
-@mixin color-gradient ($gradient) {
-    color: transparent;
-    background-image: $gradient;
-    -webkit-background-clip: text;
-    background-clip: text;
-    display: inline-block;
+@mixin drop-shadow () {
+    filter: drop-shadow(0 2px 2px rgba($color--dark, 0.5));
 }
 
-@mixin drop-shadow ($color: $color--dark) {
-    filter: drop-shadow(0 2px 2px rgba($color, 0.5));
+@mixin box-shadow () {
+    box-shadow: 0 2px 2px rgba($color--dark, 0.5);
 }
 
-@mixin box-shadow ($color: $color--dark) {
-    box-shadow: 0 2px 2px rgba($color, 0.5);
+@mixin box-shadow-large () {
+    box-shadow: 0 2px 4px rgba($color--dark, 0.5);
 }
 
-@mixin drop-shadow-large ($color: $color--dark) {
-    filter: drop-shadow(0 2px 4px rgba($color, 0.5));
-}
-
-@mixin box-shadow-large ($color: $color--dark) {
-    box-shadow: 0 2px 4px rgba($color, 0.5);
-}
-
-@mixin glow-transition-start ($color: $color--dark) {
+@mixin glow-transition-start ($color) {
     box-shadow: 0 0 0 rgba($color, 0);
 }
 
@@ -30,52 +18,25 @@
     box-shadow: 0 $yOff $blur rgba($color, 0.3);
 }
 
-@mixin glow-huge-box ($color: $color--dark, $yOff: 2rem, $blur: 6rem) {
-    box-shadow: 0 $yOff $blur rgba($color, 0.5);
-}
-@mixin glow-huge-icon ($color: $color--dark) {
-    text-shadow: 0 2rem 6rem rgba($color, 0.5);
-}
-
-@mixin font-regular () {
-    @include lato-font('normal');
-}
-
-@mixin font-medium () {
-    @include lato-font('semibold');
-}
-
-@mixin font-heavy () {
-    @include lato-font('heavy');
-    letter-spacing: 0.025em;
-}
-
-@mixin font-black () {
-    @include lato-font('black');
-    letter-spacing: -0.025em;
-}
-
-@mixin font-monospace () {
-    font-family: 'Overpass Mono';
-    font-weight: bold;
+@mixin glow-huge-box ($color) {
+    box-shadow: 0 2rem 6rem rgba($color, 0.5);
 }
 
 @mixin description ($description-width: emRhythm(40), $description-color: inherit) {
     max-width: $description-width;
-    @include font-medium();
     font-style: italic;
     color: $description-color;
     margin: 0;
 }
 
-@mixin h2-with-description ($heading-color: inherit, $description-color: inherit, $description-width: emRhythm(40)) {
+@mixin h2-with-description ($heading-color: inherit, $description-color: inherit) {
     h2 {
-        margin-bottom: emRhythm(2, $ms-up2);
+        margin-bottom: emRhythm(2);
         color: $heading-color;
     }
 
     p {
-        @include description($description-width, $description-color);
+        @include description(emRhythm(40), $description-color);
     }
 }
 
@@ -94,15 +55,15 @@
 }
 
 @mixin bleed-h ($value) {
-    margin-left: emRhythm($value) * -1;
-    margin-right: emRhythm($value) * -1;
+    margin-left: -#{emRhythm($value)};
+    margin-right: -#{emRhythm($value)};
     padding-left: emRhythm($value);
     padding-right: emRhythm($value);
 }
 
 @mixin bleed-v ($value) {
-    margin-top: emRhythm($value) * -1;
-    margin-bottom: emRhythm($value) * -1;
+    margin-top: -#{emRhythm($value)};
+    margin-bottom: -#{emRhythm($value)};
     padding-top: emRhythm($value);
     padding-bottom: emRhythm($value);
 }
@@ -113,7 +74,6 @@
 }
 
 @mixin placeholder-base() {
-    @include font-medium();
     font-style: italic;
     transition: color .15s ease-in-out;
 }
@@ -191,7 +151,6 @@
     color: $color--dark-light;
 
     & /deep/ .dropdown-toggle {
-        @include font-regular();
         position: relative;
         padding: emRhythm(1) 0 emRhythm(1) emRhythm(1);
         border: none;
@@ -227,8 +186,6 @@
         border-radius: 0;
 
         li {
-            @include setType(3);
-            @include font-regular();
 
             & > a {
                 padding: emRhythm(1) emRhythm(2);

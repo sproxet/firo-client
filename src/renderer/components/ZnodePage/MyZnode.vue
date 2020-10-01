@@ -385,7 +385,6 @@ export default {
 
             p {
                 margin: emRhythm(1) 0 0;
-                @include font-medium();
                 font-style: italic;
                 color: $color--comet;
             }
@@ -401,7 +400,6 @@ export default {
             grid-row-gap: emRhythm(1);
 
             header {
-                @include font-medium();
                 font-style: italic;
                 color: $color--comet;
             }

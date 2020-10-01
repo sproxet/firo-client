@@ -22,6 +22,5 @@ export default {
         background-color: transparent;
         background: $gradient--green-bright;
         vertical-align: text-top;
-        @include font-black()
     }
 </style>

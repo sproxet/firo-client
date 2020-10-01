@@ -24,13 +24,11 @@
         mix-blend-mode: multiply;
 
         /deep/ h2 {
-            @include typo-headline();
-            margin: emRhythm(1, $ms-up2) 0;
+            margin: emRhythm(1);
             mix-blend-mode: multiply;
         }
 
         & > span {
-            @include font-medium();
             font-style: italic;
             color: $color--comet-dark;
         }
@@ -52,13 +50,13 @@
 
     .status {
         width: emRhythm(15);
-        margin-left: emRhythm(-1.25, $silent: true);
+        margin-left: emRhythm(-1.25);
         margin-bottom: emRhythm(-1);
 
         &.outgoing-icon {
             &> div {
-                margin-top: emRhythm(-4, $silent: true);
-                margin-bottom: emRhythm(4, $silent: true);
+                margin-top: emRhythm(-4);
+                margin-bottom: emRhythm(4);
             }
         }
     }

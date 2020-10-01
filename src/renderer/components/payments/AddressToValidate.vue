@@ -64,7 +64,6 @@ export default {
 
     //.wrap
     .address {
-        @include font-monospace();
         font-size: 3.65vw;
     }
 
@@ -72,7 +71,6 @@ export default {
         display: flex;
         justify-content: space-between;
         margin-bottom: emRhythm(-2);
-        @include font-heavy();
         color: $color--comet;
 
         &.has-meta {

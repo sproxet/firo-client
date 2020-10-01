@@ -39,7 +39,6 @@ export default {
         height: 100vh;
         background: $color--polo-light;
         color: $color--dark;
-        @include lato-font('light');
     }
 }
 </style>

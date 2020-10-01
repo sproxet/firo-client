@@ -84,7 +84,7 @@ export default {
 
     .interactive .tag {
         background: transparent;
-        // border-bottom: emRhythm(0.5, $silent: true) solid $color--polo;
+        // border-bottom: emRhythm(0.5);
         color: inherit;
         transition: background-color 0.15s ease-in, border-color 0.15s ease-in;
         cursor: pointer;
@@ -99,13 +99,13 @@ export default {
         transition: border-color 0.15s ease-in;
 
         &.tag-medium {
-            border-bottom: emRhythm(0.25, $silent: true) solid $color--polo;
-            margin-bottom: emRhythm(-0.25, $silent: true);
+            border-bottom: emRhythm(0.25) solid $color--polo;
+            margin-bottom: emRhythm(-0.25);
         }
 
         &.tag-large {
-            border-bottom: emRhythm(0.5, $silent: true) solid $color--polo;
-            margin-bottom: emRhythm(-0.5, $silent: true)
+            border-bottom: emRhythm(0.5) solid $color--polo;
+            margin-bottom: emRhythm(-0.5);
         }
     }
 </style>

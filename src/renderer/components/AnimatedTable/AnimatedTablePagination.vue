@@ -96,13 +96,11 @@ export default {
     a {
         display: inline-block;
         color: $color--comet;
-        @include font-heavy();
         cursor: pointer;
     }
 
     .icon {
-        @include setType(1, $ms-up1);
-        padding: emRhythm(0.5, $silent: true) emRhythm(0.5, $silent: true);
+        padding: emRhythm(0.5);
 
         &:not(.disabled) {
             color: $color--comet;
@@ -123,11 +121,11 @@ export default {
         background: $color--white-light;
         border-radius: emRhythm(1);
         overflow: hidden;
-        margin-left: emRhythm(1.5, $silent: true);
-        margin-right: emRhythm(1.5, $silent: true);
+        margin-left: emRhythm(1.5);
+        margin-right: emRhythm(1.5);
 
         a {
-            padding: emRhythm(0.5, $silent: true) emRhythm(1.5, $silent: true);
+            padding: emRhythm(0.5);
             color: $color--polo;
 
             &:hover,

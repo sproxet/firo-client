@@ -192,7 +192,7 @@ section.blockchain {
         }
 
         .icon + span {
-            margin-left: emRhythm(0.75, $silent: true);
+            margin-left: emRhythm(0.75);
         }
     }
 
@@ -224,7 +224,7 @@ section.blockchain {
         transition: height 0.5s ease-in-out, background 0.5s ease-in-out;
 
         &.is-synced {
-            height: emRhythm(0.25, $silent: true);
+            height: emRhythm(0.25);
             background: $loaded-background;
 
             .loaded {

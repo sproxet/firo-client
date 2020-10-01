@@ -100,7 +100,7 @@ export default {
         margin: 0;
 
         li {
-            margin-bottom: emRhythm(2.25, $silent: true);
+            margin-bottom: emRhythm(2.25);
             display: grid;
             grid-template-columns: emRhythm(3) auto;
 
@@ -117,14 +117,11 @@ export default {
                     display: inline-block;
 
                     .name {
-                        @include font-heavy();
                     }
                 }
 
                 .unit,
                 .timestamp {
-                    // @include font-medium();
-                    @include font-regular();
                     color: $color--comet;
                 }
 
@@ -136,7 +133,6 @@ export default {
                 /*.eta {
                     display: inline-block;
                     padding-left: emRhythm(1);
-                    @include font-medium();
                     font-style: italic;
                     color: $color--comet;
                 }*/

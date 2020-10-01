@@ -82,7 +82,6 @@ a {
     align-items: center;
     justify-content: space-between;
     position: relative;
-    @include setType(5);
     margin-bottom: emRhythm(1);
     border-radius: 0.25rem;
     color: $color--white-light;

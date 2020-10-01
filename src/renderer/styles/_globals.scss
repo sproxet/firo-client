@@ -5,24 +5,19 @@ html, body {
 
 body {
     min-height: 100%;
-    @include lato-font('regular');
     letter-spacing: 0.00125em;
     -webkit-font-smoothing: antialiased;
 
     h1 {
-        @include font-black();
-        @include setType(7, $ms-up5);
         margin-top: 0;
-        margin-bottom: emRhythm(7, $ms-up5);
+        margin-bottom: emRhythm(7);
         //@include setLeading(3);
     }
 
     h2 {
-        @include font-black();
-        @include setType(4, $ms-up2);
-        padding-top: emRhythm(2, $ms-up2);
+        padding-top: emRhythm(2);
         margin-top: 0;
-        margin-bottom: emRhythm(4, $ms-up2);
+        margin-bottom: emRhythm(4);
     }
 
     .debug {
@@ -34,7 +29,6 @@ body {
     .internal-only {
         background: $color--red-bright;
         color: $color--white;
-        @include font-heavy();
         @include box-shadow-large();
         padding: emRhythm(2) emRhythm(4);
     }

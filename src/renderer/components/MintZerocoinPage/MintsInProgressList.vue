@@ -114,13 +114,11 @@ export default {
                 }
 
                 .name {
-                    @include font-heavy();
                 }
 
                 .eta {
                     display: block;
                     padding-left: emRhythm(1);
-                    @include font-regular();
                     font-style: italic;
                     color: $color--comet;
                     text-align: right;
@@ -137,8 +135,8 @@ export default {
                     //display: table-cell;
                     flex-grow: 1;
                     background: $color--comet-light;
-                    height: emRhythm(0.75, $silent: true);
-                    margin-bottom: emRhythm(1.25, $silent: true);
+                    height: emRhythm(0.75);
+                    margin-bottom: emRhythm(1.25);
                     margin-right: emRhythm(1);
                     transition: width 0.25s ease-out;
                     box-sizing: border-box;
@@ -152,7 +150,7 @@ export default {
                         height: 100%;
                         background: $color--green;
                         transition: width 1s ease-out;
-                        min-width: emRhythm(0.5, $silent: true);
+                        min-width: emRhythm(0.5);
                     }
                 }
             }

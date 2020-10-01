@@ -109,14 +109,11 @@ export default {
         padding: emRhythm(2) 0;
 
         .value {
-            @include font-heavy();
-            @include setType(3, $ms-up1);
             margin: 0;
             text-align: center;
             color: $color--comet-dark;
 
             span {
-                @include font-regular();
                 color: $color--comet-medium;
             }
         }

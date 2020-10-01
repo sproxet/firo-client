@@ -1,57 +1,38 @@
-@import '~lato-font/scss/public-api';
+@import "./fonts";
 
-$lato-font-path: ''; // font-faces are loaded directly via App.vue -> styles.
+$font-multiplier: 0.8;
 
-// Your settings for Typesettings :)
-$font-sans: Lato, Helvetica, Arial, sans-serif;
-$font-serif: Georgia, 'Times New Roman', serif;
-$font-mono: 'Lucida Console', Monaco, monospace;
-$text-color: #000;
-$base-vertical-unit: 8px;
-$base-line-multi: 3;
-$base-font-size: 15px;
-$ms-ratio: 1.25;
-$paragraph-indent: true;
-$paragraph-justify: true;
-$load-typesetted: false;
-$global-init: true; // By default set to false, loaded with typesetted
-
-// Lato font weights overview
-// @see https://github.com/betsol/lato-font/blob/master/scss/internal/_variables.scss
-$weight--headline: 'black';
-$weight--label: 'heavy';
-$weight--button: 'heavy'; //$weight--label;
-
-@mixin typo-headline() {
-    @include lato-font($weight--headline);
-}
-
-@mixin typo-label() {
-    @include lato-font($weight--label, italic);
-}
-
-@mixin typo-button() {
-    @include lato-font($weight--btton);
-}
-
-@mixin popover-inline-button() {
-    color: $color--white-light;
-    font-style: normal;
-    text-decoration: none;
-    background-color: rgba($color--dark, 0.3);
-    @include setType(2, $ms-down2);
-    text-transform: uppercase;
-    letter-spacing: 0.025rem;
-    display: inline-block;
-    padding: emRhythm(0.75, $silent: true) emRhythm(1);
-    margin: -1 * emRhythm(0.75, $silent: true) 0;
-    border-radius: emRhythm(0.25, $silent: true);
-
-    transition: color 0.15s ease-out, background 0.15s ease-out;
-
-    &:hover,
-    &:focus {
-        color: $color--white;
-        background: rgba($color--dark, 0.85);
+h1 {
+    font: {
+        family: "Saira Semi Condensed";
+        weight: bold;
+        size: 40pt * $font-multiplier;
     }
+}
+
+h2 {
+    font: {
+        family: "Saira Semi Condensed";
+        weight: 300;
+        size: 24pt * $font-multiplier;
+    }
+}
+
+h3 {
+    font: {
+        family: "Source Sans Pro";
+        weight: bold;
+        size: 18pt * $font-multiplier;
+    }
+}
+
+body {
+    font: {
+        family: "Source Sans Pro";
+        size: 16pt * $font-multiplier;
+    }
+}
+
+.monospace {
+    font-family: "Robot Mono";
 }
