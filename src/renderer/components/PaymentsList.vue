@@ -22,7 +22,7 @@
             :fields="tableFields"
             track-by="id"
             :selected-row="selectedPayment"
-            no-data-message="No Payments made yet."
+            :no-data-message="tableData.length ? 'No transactions matched your search criterion' : 'No Payments made yet.'"
             :on-row-select="onTableRowSelect"
             :sort-order="sortOrder"
             :compare-elements="comparePayments"
