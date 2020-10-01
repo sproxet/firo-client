@@ -39,3 +39,6 @@ $color-table-border: $firo-merlot;
 $color-amount-positive: $firo-creole;
 $color-amount-negative: $firo-white;
 $color-amount-neutral: $firo-mine-shaft;
+
+$color-debug-background: darken($color-menu-background, 5%);
+$color-debug-text: $firo-gray;

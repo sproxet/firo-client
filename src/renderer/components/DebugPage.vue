@@ -7,7 +7,7 @@
         @keypress="focusInput"
         @mouseup="focusInputUnlessTextIsSelected"
     >
-        <div class="console monospace">
+        <div class="console">
             <div class="output">
                 <div class="info">
                     Hello, welcome to the Zcoin Client debug console. Here you can interact with zcoind directly. Write
@@ -368,18 +368,24 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "src/renderer/styles/colors";
+@import "src/renderer/styles/typography";
+
+
 .debug-page {
     height: 100vh;
     word-break: break-all;
 
-    background-color: $color--dark;
-    color: $color--green;
+    background-color: $color-debug-background;
+    color: $color-debug-text;
 
     &:focus {
         outline: none;
     }
 
     .console {
+        @include monospace();
+
         padding: {
             top: 4em;
             left: 2%;
