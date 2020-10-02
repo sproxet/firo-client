@@ -1,9 +1,16 @@
-$size-menu-top-margin: 60pt;
+$size-menu-top-margin: 15pt;
 $size-menu-logo: 60pt;
-
-$size-detail-top-margin: 60pt;
+$size-top-section: $size-menu-top-margin + $size-menu-logo;
 
 $size-tiny-space: 5pt;
 $size-small-space: 14pt;
 $size-medium-space: 21pt;
 $size-large-space: 28pt;
+
+// Align child elements to the same height as the bottom of our logo.
+@mixin top-section {
+    height: $size-top-section;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+}

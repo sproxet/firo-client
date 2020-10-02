@@ -96,9 +96,12 @@ export default {
 }
 
 .payment-list-container {
-    padding: emRhythm(5) emRhythm(4);
+    padding: {
+        left: 2em;
+        right: 2em;
+    }
     box-sizing: border-box;
-    height: 100%;
+    height: 100vh;
 }
 
 .tx-page-sidebar {

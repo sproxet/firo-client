@@ -1,8 +1,10 @@
 <template>
     <section class="tx-info">
-        <h1>
-            {{ title }}
-        </h1>
+        <div class="top-section">
+            <h1>
+                {{ title }}
+            </h1>
+        </div>
 
         <div class="details">
             <div class="amount">
@@ -143,7 +145,6 @@ export default {
     color: $color-text-light;
 
     padding: {
-        top: $size-detail-top-margin;
         left: 2em;
         right: 2em;
     }

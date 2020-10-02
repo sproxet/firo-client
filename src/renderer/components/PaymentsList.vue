@@ -1,20 +1,20 @@
 <template>
     <section class="payments-list">
-        <div class="table-filter-input-wrap">
+        <div class="top-section">
             <input
                 v-model="filter"
                 type="text"
                 class="table-filter-input"
                 :placeholder="$t('send.table__outgoing-payments.placeholder__filter')"
             />
-        </div>
 
-        <div v-if="showUnsyncedWarning" class="show-unsynced-warning">
-            The blockchain is not yet synced. Payment information may be incomplete or inaccurate.
-        </div>
+            <div v-if="showUnsyncedWarning" class="show-unsynced-warning">
+                The blockchain is not yet synced. Payment information may be incomplete or inaccurate.
+            </div>
 
-        <div v-if="newTableData.length" class="awaiting-updates">
-            New payments have arrived. <a href='#' @click="reloadTable">Click here</a> to load new transactions.
+            <div v-if="newTableData.length" class="awaiting-updates">
+                New payments have arrived. <a href='#' @click="reloadTable">Click here</a> to load new transactions.
+            </div>
         </div>
 
         <animated-table
@@ -270,13 +270,19 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/renderer/styles/inputs";
+@import "src/renderer/styles/sizes";
 
-.table-filter-input-wrap {
-    text-align: right;
-    margin-bottom: emRhythm(5);
+.top-section {
+    @include top-section();
+    margin-bottom: $size-small-space;
 
     .table-filter-input {
         width: 45%;
+        margin: {
+            left: auto;
+            right: 0;
+        }
+
         @include rounded-input();
     }
 }

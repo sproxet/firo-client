@@ -1,8 +1,10 @@
 <template>
     <div class="receive">
-        <h1>
-            Receive Firo
-        </h1>
+        <div class="top-section">
+            <h1>
+                Receive Firo
+            </h1>
+        </div>
 
         <div ref="qrCode" class="qr-code" />
 
@@ -135,13 +137,16 @@ export default {
     height: 100%;
 
     padding: {
-        top: $size-detail-top-margin;
         left: 2em;
         right: 2em;
     }
 
-    h1 {
-        text-align: center;
+    .top-section {
+        @include top-section();
+
+        h1 {
+            text-align: center;
+        }
     }
 
     .qr-code {
