@@ -17,20 +17,21 @@ $firo-wild-sand: #f4f4f4;
 
 // These are the colors we should actually use in the project, in order to be able to easily change them.
 
-$color-main-background: lighten($firo-merlot, 10%);
-$color-menu-background: darken($firo-merlot, 10%);
-$color-detail-background: $firo-merlot;
+$color-main-background: white;
+$color-menu-background: #e1ebf1;
+$color-detail-background: #f6f8fc;
 
-$color-text-light: $firo-wild-sand;
-$color-text-medium: $firo-mine-shaft;
-$color-text-dark: $firo-creole;
+$color-text-light: black;
+$color-text-medium: black;
+$color-text-dark: black;
 
 $color-input-text: $color-text-medium;
 $color-input-placeholder: $color-text-medium;
 $color-input-background: $firo-silver;
 
-$color-menu-divider: $firo-creole;
-$color-menu-highlighted-element: darken($color-menu-background, 10%);
+$color-menu-link-text: black;
+$color-menu-link-text-highlighted: white;
+$color-menu-highlighted-element: $firo-brick-red;
 
 $color-table-background: $color-main-background;
 $color-table-heading: $color-text-dark;

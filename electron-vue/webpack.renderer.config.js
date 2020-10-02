@@ -142,7 +142,9 @@ let rendererConfig = {
         new CopyPlugin({
             patterns: [
                 {from: 'assets/fonts', to: 'assets/fonts'},
-                {from: 'src/renderer/assets/FiroSymbolDark.svg', to: 'assets/FiroSymbolDark.svg'}
+                {from: 'src/renderer/assets/', to: 'assets/'},
+                {from: 'src/renderer/assets/FiroSymbolDark.svg', to: 'assets/FiroSymbolDark.svg'},
+                {from: 'src/renderer/assets/FiroLogoDark.svg', to: 'assets/FiroLogoDark.svg'}
             ]
         }),
         new webpack.HotModuleReplacementPlugin()

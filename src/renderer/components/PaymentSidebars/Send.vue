@@ -4,15 +4,15 @@
         :class="privateOrPublic + '-send'"
     >
         <div v-scrollable>
+            <div class="top-section">
+                <h1>
+                    Send Firo
+                </h1>
+            </div>
+
             <form class="send">
                 <div class="grid">
                     <div class="form">
-                        <header>
-                            <h1>
-                                Send Firo
-                            </h1>
-                        </header>
-
                         <p class="description">
                             All transactions you make with Firo are private.
                         </p>

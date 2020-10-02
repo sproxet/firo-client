@@ -29,11 +29,14 @@ export default {
 
 <style lang="scss">
 @import "src/renderer/styles/colors";
+@import "src/renderer/styles/sizes";
+
 
 .main-layout {
     .sidebar {
         float: left;
-        width: fit-content;
+        width: $size-sidebar-width;
+        height: 100vh;
         background: $color-menu-background;
     }
 

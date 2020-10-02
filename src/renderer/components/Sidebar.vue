@@ -2,7 +2,7 @@
     <div class="sidebar">
         <div class="logo">
             <router-link to="/main">
-                <firo-logo />
+                <img src="/assets/FiroLogoDark.svg" />
             </router-link>
         </div>
 
@@ -53,6 +53,7 @@ export default {
     background-color: $color-menu-background;
     color: $color-text-light;
     height: 100vh;
+    width: $size-sidebar-width;
 
     .logo, .network-badge {
         width: fit-content;
@@ -65,7 +66,7 @@ export default {
     .logo {
         margin-top: $size-menu-top-margin;
 
-        svg {
+        img {
             height: $size-menu-logo;
         }
     }

@@ -1,34 +1,40 @@
 <template>
     <nav class="main-menu">
-        <ul>
-            <li>
-                <router-link to="/receive">
-                    {{ $t('navigation.menu.button__receive') }}
-                </router-link>
-            </li>
-            <li>
-                <router-link to="/send/private">
-                    Send
-                </router-link>
-            </li>
-            <div class="divider" />
-            <li>
-                <router-link to="/znodes">
-                    Znodes
-                </router-link>
-            </li>
-            <div class="divider" />
-            <li>
-                <router-link to="/settings">
-                    {{ $t('navigation.menu.button__settings') }}
-                </router-link>
-            </li>
-            <li>
-                <router-link to="/debugconsole">
-                    Debug Console
-                </router-link>
-            </li>
-        </ul>
+        <router-link to="/send/private">
+            <div class="inner">
+                Send
+            </div>
+        </router-link>
+
+        <router-link to="/receive">
+            <div class="inner">
+                Receive
+            </div>
+        </router-link>
+
+        <a href="#">
+            <div class="inner">
+                Transactions
+            </div>
+        </a>
+
+        <router-link to="/znodes">
+            <div class="inner">
+                Znodes
+            </div>
+        </router-link>
+
+        <router-link to="/settings">
+            <div class="inner">
+                Settings
+            </div>
+        </router-link>
+
+        <router-link to="/debugconsole">
+            <div class="inner">
+                Debug Console
+            </div>
+        </router-link>
     </nav>
 </template>
 
@@ -46,35 +52,33 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/renderer/styles/colors";
+@import "src/renderer/styles/sizes";
 
-ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
 
-    li {
+nav {
+    a {
+        display: block;
+
+        color: $color-menu-link-text;
+        text-decoration: none;
+
         padding: {
-            top: 1em;
-            bottom: 1em;
-            left: 3.5em;
-            right: 3.5em;
+            left: $size-sidebar-link-horizontal-padding;
+            right: $size-sidebar-link-horizontal-padding;
+            top: $size-sidebar-link-vertical-padding;
+            bottom: $size-sidebar-link-vertical-padding;
         }
 
-        &:hover {
-            background-color: $color-menu-highlighted-element;
-        }
+        .inner {
+            padding: $size-sidebar-link-inner-padding;
+            border-radius: $size-sidebar-border-radius;
 
-        a {
-            margin: 1em;
-            border-radius: 0.25rem;
-            text-decoration: none;
-            color: inherit;
+            &:hover {
+                color: $color-menu-link-text-highlighted;
+                background-color: $color-menu-highlighted-element;
+                font-weight: bold;
+            }
         }
-    }
-
-    .divider {
-        height: 1px;
-        background-color: $color-menu-divider;
     }
 }
 </style>
