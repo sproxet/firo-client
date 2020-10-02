@@ -185,16 +185,7 @@ export default {
             }
 
             input[type="button"] {
-                cursor: pointer;
-                background-color: inherit;
-                border-radius: 25px;
-                border-width: 0;
-
-                &:focus {
-                    outline: none;
-                }
-
-                font-weight: bold;
+                @include undecorated-button();
             }
         }
     }

@@ -25,3 +25,16 @@
         border: none;
     }
 }
+
+@mixin undecorated-button() {
+    cursor: pointer;
+    background-color: inherit;
+    border-radius: 25px;
+    border-width: 0;
+
+    &:focus {
+        outline: none;
+    }
+
+    font-weight: bold;
+}
