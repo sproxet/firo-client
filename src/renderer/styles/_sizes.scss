@@ -1,3 +1,5 @@
+@import "typography";
+
 $size-menu-top-margin: 15pt;
 $size-menu-logo: 60pt;
 $size-top-section: $size-menu-top-margin + $size-menu-logo;
@@ -13,6 +15,9 @@ $size-sidebar-link-horizontal-padding: 15pt;
 $size-sidebar-link-vertical-padding: 5pt;
 $size-sidebar-link-inner-padding: 5pt;
 $size-sidebar-border-radius: 30pt;
+
+$size-table-row-height: 70px;
+$size-table-row-vertical-padding: calc((#{$size-table-row-height} - #{$font-size-normal}) / 2);
 
 // Align child elements to the same height as the bottom of our logo.
 @mixin top-section {

@@ -1,23 +1,25 @@
 <template>
     <div class="animated-table">
-        <vuetable
-            ref="vuetable"
-            :class="theme"
-            :api-mode="false"
-            :fields="getFieldsWithLocalizedTitle"
-            :per-page="perPage"
-            :track-by="trackBy"
-            :data-manager="dataManager"
-            pagination-path="pagination"
-            :row-transition-name="rowTransition"
-            :row-class="getRowClass"
-            :no-data-template="noDataMessage"
-            v-bind="{ scopedSlots: $scopedSlots }"
-            @vuetable:pagination-data="onPaginationData"
-            @vuetable:row-clicked="onRowClick"
-        />
+        <div class="table-container" ref="table-container">
+            <vuetable
+                ref="vuetable"
+                :class="theme"
+                :api-mode="false"
+                :fields="getFieldsWithLocalizedTitle"
+                :per-page="perPage"
+                :track-by="trackBy"
+                :data-manager="dataManager"
+                pagination-path="pagination"
+                :row-transition-name="rowTransition"
+                :row-class="getRowClass"
+                :no-data-template="noDataMessage"
+                v-bind="{ scopedSlots: $scopedSlots }"
+                @vuetable:pagination-data="onPaginationData"
+                @vuetable:row-clicked="onRowClick"
+            />
+        </div>
 
-        <div>
+        <div class="table-pagination">
             <animated-table-pagination
                 ref="pagination"
                 :theme="theme"
@@ -60,10 +62,6 @@ export default {
                 }
             ]
         },
-        perPage: {
-            type: Number,
-            default: 10
-        },
         noDataMessage: {
             type: String,
             default: ''
@@ -97,7 +95,8 @@ export default {
     data () {
         return {
             interval: null,
-            rowTransition: 'fade'
+            rowTransition: 'fade',
+            perPage: 0
         }
     },
 
@@ -134,7 +133,32 @@ export default {
         }
     },
 
+    mounted() {
+        window.addEventListener("resize", this.setPerPage);
+
+        this.$nextTick(() => {
+            this.setPerPage();
+        });
+    },
+
+    destroyed() {
+        window.removeEventListener("resize", this.setPerPage);
+    },
+
     methods: {
+        setPerPage() {
+            this.perPage = 0;
+            this.$nextTick(() => {
+                const tableContainer = document.querySelector('.table-container');
+                const tableHeader = document.querySelector('.table-container th');
+                const tableRow = document.querySelector('.table-container td');
+                if (tableContainer && tableHeader && tableRow) {
+                    this.perPage = Math.floor((tableContainer.clientHeight - tableHeader.clientHeight) / tableRow.clientHeight);
+                    this.$refs.vuetable.refresh();
+                }
+            });
+        },
+
         getRowClass (item, index) {
             const classes = []
 
@@ -217,6 +241,21 @@ export default {
 @import "src/renderer/styles/sizes";
 
 .animated-table {
+    display: flex;
+    flex-flow: column;
+    justify-content: flex-end;
+}
+
+.table-container {
+    flex-grow: 1;
+}
+
+.table-pagination {
+    flex-grow: 0;
+    flex-basis: $size-table-row-height;
+}
+
+.animated-table {
     .vuetable-body-wrapper {
         & > table {
             width: 100%;
@@ -253,15 +292,9 @@ export default {
             }
 
             td {
-                border-top: {
-                    color: $color-table-border;
-                    style: solid;
-                    width: 1px;
-                }
-
                 padding: {
-                    top: $size-tiny-space;
-                    bottom: $size-tiny-space;
+                    top: $size-table-row-vertical-padding;
+                    bottom: $size-table-row-vertical-padding;
                 }
             }
         }
