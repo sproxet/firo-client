@@ -40,34 +40,14 @@ import { mapGetters } from 'vuex';
 import AnimatedTable from 'renderer/components/AnimatedTable/AnimatedTable';
 import RelativeDate from 'renderer/components/AnimatedTable/AnimatedTableRelativeDate';
 import Amount from 'renderer/components/AnimatedTable/AnimatedTableAmount';
-import PaymentStatus from 'renderer/components/AnimatedTable/AnimatedTablePaymentStatus';
 import Label from 'renderer/components/AnimatedTable/AnimatedTableLabel';
 
 import { convertToCoin } from "lib/convert";
 
 const tableFields = [
-    {
-        name: PaymentStatus,
-        width: '2em'
-    },
-    {
-        name: RelativeDate,
-        title: 'send.table__outgoing-payments.label__sent',
-        dateField: 'data',
-        sortField: 'date',
-        width: '25%'
-    },
-    {
-        name: Label,
-        title: 'send.table__outgoing-payments.label__label',
-        sortField: 'label'
-    },
-    {
-        name: Amount,
-        title: 'send.table__outgoing-payments.label__amount',
-        sortField: 'amount',
-        width: '20%'
-    }
+    {name: RelativeDate},
+    {name: Label},
+    {name: Amount}
 ];
 
 export default {

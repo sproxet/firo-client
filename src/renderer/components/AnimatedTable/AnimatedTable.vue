@@ -3,7 +3,6 @@
         <div class="table-container" ref="table-container">
             <vuetable
                 ref="vuetable"
-                :class="theme"
                 :api-mode="false"
                 :fields="getFieldsWithLocalizedTitle"
                 :per-page="perPage"
@@ -11,7 +10,6 @@
                 :data-manager="dataManager"
                 pagination-path="pagination"
                 :row-transition-name="rowTransition"
-                :row-class="getRowClass"
                 :no-data-template="noDataMessage"
                 v-bind="{ scopedSlots: $scopedSlots }"
                 @vuetable:pagination-data="onPaginationData"
@@ -159,26 +157,6 @@ export default {
             });
         },
 
-        getRowClass (item, index) {
-            const classes = []
-
-            if (item[this.trackBy] === this.selectedRow) {
-                classes.push('selected')
-            }
-
-            if (item.isFulfilled) {
-                classes.push('is-fulfilled')
-            }
-            if (item.isIncoming) {
-                classes.push('is-incoming')
-            }
-            if (item.isReused) {
-                classes.push('is-reused')
-            }
-
-            return classes.join(' ')
-        },
-
         onRowClick (rowData) {
             const { data, index, event } = rowData
 
@@ -263,12 +241,23 @@ export default {
         }
     }
 
-    thead {
+    tr {
         text-align: left;
 
+        td, th {
+            &:first-child {
+                padding-left: $size-small-space;
+            }
+
+            &:last-child {
+                padding-right: $size-small-space;
+            }
+        }
+
         th {
-            color: $color-table-heading;
             padding-bottom: 1em;
+            font-weight: bold;
+            color: $color-table-heading;
         }
     }
 

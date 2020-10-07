@@ -3,8 +3,10 @@
         v-if="isHeader"
         class="vuetable-th-component-amount"
         @click="$emit('click', rowField, $event)"
-        v-html="title"
-    />
+    >
+        Amount
+    </th>
+
     <td
         v-else
         class="vuetable-td-component-amount"
@@ -13,25 +15,25 @@
             v-if="['spendOut', 'send'].includes(category)"
             class="outgoing"
         >
-            -{{ amount }}
+            -{{ amount }} XFR
         </span>
         <span
             v-else-if="['spendIn', 'receive', 'mined', 'znode'].includes(category)"
             class="incoming"
         >
-            +{{ amount }}
+            +{{ amount }} XFR
         </span>
         <span
             v-else-if="category === 'mint'"
             class="mint"
         >
-            ({{ amount }})
+            ({{ amount }} XFR)
         </span>
         <span
             v-else-if="category === 'payment-request'"
             class="payment-request"
         >
-            ({{ amount }})
+            ({{ amount }} XFR)
         </span>
         <span v-else>
             This is a bug.

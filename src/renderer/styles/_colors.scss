@@ -27,19 +27,19 @@ $color-text-dark: black;
 
 $color-input-text: $color-text-medium;
 $color-input-placeholder: $color-text-medium;
-$color-input-background: $firo-silver;
+$color-input-background: white;
+$color-input-shadow: rgba(0, 0, 0, 0.25);
 
 $color-menu-link-text: black;
 $color-menu-link-text-highlighted: white;
 $color-menu-highlighted-element: $firo-brick-red;
 
-$color-table-background: $color-main-background;
+$color-table-background: #F6F8FC;
 $color-table-heading: $color-text-dark;
-$color-table-border: $firo-merlot;
 
-$color-amount-positive: $firo-creole;
-$color-amount-negative: $firo-white;
-$color-amount-neutral: $firo-mine-shaft;
+$color-amount-positive: $color-text-medium;
+$color-amount-negative: $color-text-medium;
+$color-amount-neutral: $color-text-medium;
 
 $color-debug-background: darken($color-menu-background, 5%);
 $color-debug-text: $firo-gray;
