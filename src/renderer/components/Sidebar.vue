@@ -18,7 +18,7 @@
 
         <balance />
         <main-menu />
-        <blockchain />
+        <blockchain-status />
     </div>
 </template>
 
@@ -27,7 +27,7 @@ import { mapGetters } from 'vuex'
 import FiroLogo from 'renderer/assets/FiroLogoDark.svg';
 import Balance from 'renderer/components/Sidebar/Balance'
 import MainMenu from 'renderer/components/Sidebar/MainMenu'
-import Blockchain from 'renderer/components/Sidebar/Blockchain'
+import BlockchainStatus from 'renderer/components/Sidebar/BlockchainStatus'
 
 export default {
     name: 'Sidebar',
@@ -36,7 +36,7 @@ export default {
         FiroLogo,
         Balance,
         MainMenu,
-        Blockchain
+        BlockchainStatus
     },
 
     computed: mapGetters({
@@ -80,7 +80,7 @@ export default {
         margin-top: 1em;
     }
 
-    .blockchain {
+    .blockchain-status {
         position: absolute;
         bottom: 0;
     }
