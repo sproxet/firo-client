@@ -97,11 +97,6 @@ export default new Router({
                 },
 
                 {
-                    path: '/anonymize',
-                    component: require('renderer/components/AnonymizePage').default
-                },
-
-                {
                     path: '/znodes',
                     component: require('renderer/components/EvoZnodesContainer').default
                 },

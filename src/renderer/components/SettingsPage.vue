@@ -11,15 +11,6 @@
                         </div>
                     </h1>
 
-                    <section class="interface">
-                        <h2>{{ $t('settings.form.interface.title') }}</h2>
-                        <div class="form">
-                            <language-settings class="language-settings" />
-
-                            <blockchain-explorer-settings class="blockchain-explorer-settings" />
-                        </div>
-                    </section>
-
                     <section class="privacy">
                         <h2>{{ $t('settings.form.privacy.title') }}</h2>
                         <div class="form">
@@ -27,8 +18,6 @@
                                 class="connection-settings"
                                 @toggle-tor="restartDaemon"
                             />
-
-                            <amount-to-hold-in-zerocoin-settings />
                         </div>
                     </section>
 
@@ -184,10 +173,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import {remote} from 'electron';
-import BlockchainExplorerSettings from 'renderer/components/SettingsPage/BlockchainExplorerSettings'
-import LanguageSettings from 'renderer/components/SettingsPage/LanguageSettings'
 import ConnectViaTorSettings from 'renderer/components/SettingsPage/ConnectViaTorSettings'
-import AmountToHoldInZerocoinSettings from 'renderer/components/SettingsPage/AmountToHoldInZerocoinSettings'
 import ShowMnemonicSettings from 'renderer/components/SettingsPage/ShowMnemonicSettings'
 
 const zcoinClientVersion = require('../../../package.json').version;
@@ -196,10 +182,7 @@ export default {
     name: 'SettingsPage',
 
     components: {
-        AmountToHoldInZerocoinSettings,
         ConnectViaTorSettings,
-        LanguageSettings,
-        BlockchainExplorerSettings,
         ShowMnemonicSettings
     },
 

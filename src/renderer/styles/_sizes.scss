@@ -16,7 +16,7 @@ $size-sidebar-link-vertical-padding: 5pt;
 $size-sidebar-link-inner-padding: 5pt;
 $size-sidebar-border-radius: 30pt;
 
-$size-table-row-height: 70px;
+$size-table-row-height: $font-size-normal * 3;
 $size-table-row-vertical-padding: calc((#{$size-table-row-height} - #{$font-size-normal}) / 2);
 
 // Align child elements to the same height as the bottom of our logo.

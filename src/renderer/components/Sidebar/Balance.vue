@@ -1,20 +1,13 @@
 <template>
     <section class="balance">
-        <div id="available-xzc">
-            <amount :amount="availableXzc" />&nbsp;<span class="ticker">XZC</span>
+        <div id="available">
+            <amount :amount="available" />&nbsp;<span class="ticker">XFR</span>
         </div>
-        <div v-if="lockedXzc > 0" id="locked-xzc">
-            +&nbsp;<amount :amount="lockedXzc" />&nbsp;<span class="ticker">XZC</span>&nbsp;locked
+        <div v-if="locked > 0" id="locked">
+            +&nbsp;<amount :amount="locked" />&nbsp;locked
         </div>
-        <div v-if="pendingXzc > 0" id="pending-xzc">
-            +&nbsp;<amount :amount="pendingXzc" />&nbsp;<span class="ticker">XZC</span>&nbsp;pending
-        </div>
-
-        <div id="available-private-xzc">
-            <amount :amount="availableZerocoin" />&nbsp;<span class="ticker" title="Private XZC">ⓩ</span>
-        </div>
-        <div v-if="unconfirmedZerocoin > 0" id="pending-private-xzc">
-            +&nbsp;<amount :amount="unconfirmedZerocoin" />&nbsp;<span class="ticker" title="Private XZC">ⓩ</span>&nbsp;pending
+        <div v-if="pendingAndPublic > 0" id="pending">
+            +&nbsp;<amount :amount="pendingAndPublic" />&nbsp;pending
         </div>
     </section>
 </template>
@@ -32,22 +25,17 @@ export default {
 
     computed: {
         ...mapGetters({
-            availableXzc: 'Balance/availableXzc',
-            unconfirmedXzc: 'Balance/unconfirmedXzc',
-            immatureXzc: 'Balance/immatureXzc',
-            lockedXzc: 'Balance/lockedXzc',
-            availableZerocoin: 'Balance/availableZerocoin',
-            unconfirmedZerocoin: 'Balance/unconfirmedZerocoin'
-        }),
-
-        pendingXzc () {
-            return this.immatureXzc + this.unconfirmedXzc
-        }
+            available: 'Balance/available',
+            locked: 'Balance/locked',
+            pendingAndPublic: 'Balance/pendingAndPublic'
+        })
     }
 }
 </script>
 
 <style lang="scss" scoped>
+@import "src/renderer/styles/colors";
+
 .balance {
     opacity: 0.8;
     text-align: right;
@@ -58,7 +46,7 @@ export default {
     }
 
     .ticker {
-        color: #23B852;
+        color: $color-text-accent;
     }
 }
 </style>

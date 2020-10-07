@@ -71,7 +71,7 @@ export default {
     }
 
     .network-badge {
-        color: $firo-silver;
+        color: $color-text-accent;
         font-size: 0.8em;
         @include monospace();
     }
