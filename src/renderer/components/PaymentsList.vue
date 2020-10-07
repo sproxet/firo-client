@@ -1,34 +1,36 @@
 <template>
     <section class="payments-list">
-        <div class="top-section">
-            <input
-                v-model="filter"
-                type="text"
-                class="table-filter-input"
-                :placeholder="$t('send.table__outgoing-payments.placeholder__filter')"
+        <div class="inner">
+            <div class="top-section">
+                <input
+                    v-model="filter"
+                    type="text"
+                    class="table-filter-input"
+                    :placeholder="$t('send.table__outgoing-payments.placeholder__filter')"
+                />
+
+                <div v-if="showUnsyncedWarning" class="show-unsynced-warning">
+                    The blockchain is not yet synced. Payment information may be incomplete or inaccurate.
+                </div>
+
+                <div v-if="newTableData.length" class="awaiting-updates">
+                    New payments have arrived. <a href='#' @click="reloadTable">Click here</a> to load new transactions.
+                </div>
+            </div>
+
+            <animated-table
+                :data="filteredTableData"
+                :fields="tableFields"
+                track-by="id"
+                :selected-row="selectedPayment"
+                :no-data-message="tableData.length ? 'No transactions matched your search criterion' : 'No Payments made yet.'"
+                :on-row-select="onTableRowSelect"
+                :sort-order="sortOrder"
+                :compare-elements="comparePayments"
+                :per-page="17"
+                :on-page-change="(pageNumber) => this.currentPage = pageNumber"
             />
-
-            <div v-if="showUnsyncedWarning" class="show-unsynced-warning">
-                The blockchain is not yet synced. Payment information may be incomplete or inaccurate.
-            </div>
-
-            <div v-if="newTableData.length" class="awaiting-updates">
-                New payments have arrived. <a href='#' @click="reloadTable">Click here</a> to load new transactions.
-            </div>
         </div>
-
-        <animated-table
-            :data="filteredTableData"
-            :fields="tableFields"
-            track-by="id"
-            :selected-row="selectedPayment"
-            :no-data-message="tableData.length ? 'No transactions matched your search criterion' : 'No Payments made yet.'"
-            :on-row-select="onTableRowSelect"
-            :sort-order="sortOrder"
-            :compare-elements="comparePayments"
-            :per-page="17"
-            :on-page-change="(pageNumber) => this.currentPage = pageNumber"
-        />
     </section>
 </template>
 
@@ -272,39 +274,54 @@ export default {
 @import "src/renderer/styles/inputs";
 @import "src/renderer/styles/sizes";
 
-.top-section {
-    @include top-section();
-    margin-bottom: $size-small-space;
+.payments-list {
+    height: 100vh;
 
-    .table-filter-input {
-        width: 45%;
-        margin: {
-            left: auto;
-            right: 0;
+    .inner {
+        height: calc(100vh - #{$size-small-space} * 2);
+        margin: $size-small-space;
+
+        display: flex;
+        flex-flow: column;
+
+        .top-section {
+            height: fit-content;
+
+            .table-filter-input {
+                width: 45%;
+                margin: {
+                    left: auto;
+                    right: 0;
+                    bottom: $size-medium-space;
+                }
+
+                @include rounded-input();
+            }
+
+            .filter-input {
+                position: relative;
+                display: inline-block;
+            }
+
+            .show-unsynced-warning, .awaiting-updates {
+                text-align: center;
+                font: {
+                    size: 0.9em;
+                    style: italic;
+                    weight: bold;
+                }
+
+                margin-bottom: 1em;
+            }
+
+            .show-unsynced-warning {
+                color: red;
+            }
         }
 
-        @include rounded-input();
+        .animated-table {
+            flex-grow: 1;
+        }
     }
-}
-
-
-.filter-input {
-    position: relative;
-    display: inline-block;
-}
-
-.show-unsynced-warning, .awaiting-updates {
-    text-align: center;
-    font: {
-        size: 0.9em;
-        style: italic;
-        weight: bold;
-    }
-
-    margin-bottom: 1em;
-}
-
-.show-unsynced-warning {
-    color: red;
 }
 </style>

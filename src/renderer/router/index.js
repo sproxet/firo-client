@@ -53,6 +53,10 @@ export default new Router({
             redirect: '/receive',
             children: [
                 {
+                    path: '/transactions',
+                    component: require('renderer/components/PaymentsList').default
+                },
+                {
                     path: 'transaction-page',
                     component: require('renderer/components/PaymentsPage').default,
                     children: [

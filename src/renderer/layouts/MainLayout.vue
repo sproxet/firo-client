@@ -41,7 +41,8 @@ export default {
     }
 
     .main {
-        width: available;
+        float: right;
+        width: calc(100vw - #{$size-sidebar-width});
         height: 100vh;
         background: $color-main-background;
     }

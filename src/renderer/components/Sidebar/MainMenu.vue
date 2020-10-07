@@ -12,11 +12,11 @@
             </div>
         </router-link>
 
-        <a href="#">
+        <router-link to="/transactions">
             <div class="inner">
                 Transactions
             </div>
-        </a>
+        </router-link>
 
         <router-link to="/znodes">
             <div class="inner">
