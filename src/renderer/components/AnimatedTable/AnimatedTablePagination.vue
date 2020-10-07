@@ -97,25 +97,16 @@ export default {
 
 a {
     display: inline-block;
-    color: $color-text-light;
+    color: $color-text;
     cursor: pointer;
 }
 
 .icon {
     padding: emRhythm(0.5);
 
-    &:not(.disabled) {
-        color: $color-text-light;
-
-        &:hover,
-        &:focus {
-            color: $color-text-dark;
-        }
-    }
-
     &.disabled {
-        color: $color-text-medium;
         cursor: default;
+        color: $color-text-disabled;
     }
 }
 
@@ -128,7 +119,7 @@ a {
 
     a {
         padding: emRhythm(0.5);
-        color: $color-text-light;
+        color: $color-text;
 
         &:hover,
         &:focus {

@@ -268,8 +268,9 @@ export default {
             height: fit-content;
 
             .table-filter-input {
-                width: 45%;
+                width: 30%;
                 margin: {
+                    top: $size-small-space;
                     left: auto;
                     right: 0;
                     bottom: $size-medium-space;

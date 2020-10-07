@@ -51,7 +51,6 @@ export default {
 
 .sidebar {
     background-color: $color-menu-background;
-    color: $color-text-light;
     height: 100vh;
     width: $size-sidebar-width;
 

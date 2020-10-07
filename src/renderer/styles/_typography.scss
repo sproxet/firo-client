@@ -5,7 +5,6 @@
 $font-size-normal: 12pt;
 
 h1 {
-    color: $color-text-dark;
     font: {
         family: "Saira Semi Condensed";
         weight: bold;
@@ -14,7 +13,6 @@ h1 {
 }
 
 h2 {
-    color: $color-text-dark;
     font: {
         family: "Saira Semi Condensed";
         weight: 300;
@@ -23,7 +21,6 @@ h2 {
 }
 
 h3 {
-    color: $color-text-dark;
     font: {
         family: "Source Sans Pro";
         weight: bold;
@@ -32,7 +29,7 @@ h3 {
 }
 
 body {
-    color: $color-text-light;
+    color: $color-text;
     font: {
         family: "Source Sans Pro";
         size: $font-size-normal;
@@ -40,7 +37,7 @@ body {
 }
 
 a {
-    color: darken($color-text-light, 15%);
+    color: darken($color-text, 15%);
 }
 
 @mixin monospace {

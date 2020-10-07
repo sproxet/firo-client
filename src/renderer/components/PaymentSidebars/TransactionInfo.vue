@@ -142,7 +142,6 @@ export default {
 .tx-info {
     height: 100vh;
     background: $color-detail-background;
-    color: $color-text-light;
 
     padding: {
         left: 2em;

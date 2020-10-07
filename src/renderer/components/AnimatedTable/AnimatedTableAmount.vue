@@ -69,8 +69,6 @@ export default {
 @import "src/renderer/styles/typography";
 
 .vuetable-td-component-amount {
-    @include monospace();
-
     .outgoing {
         color: $color-amount-negative;
     }

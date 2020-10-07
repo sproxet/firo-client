@@ -21,12 +21,11 @@ $color-main-background: white;
 $color-menu-background: #e1ebf1;
 $color-detail-background: #f6f8fc;
 
-$color-text-light: black;
-$color-text-medium: black;
-$color-text-dark: black;
+$color-text: black;
+$color-text-disabled: $firo-silver;
 
-$color-input-text: $color-text-medium;
-$color-input-placeholder: $color-text-medium;
+$color-input-text: $color-text;
+$color-input-placeholder: $color-text;
 $color-input-background: white;
 $color-input-shadow: rgba(0, 0, 0, 0.25);
 
@@ -35,11 +34,11 @@ $color-menu-link-text-highlighted: white;
 $color-menu-highlighted-element: $firo-brick-red;
 
 $color-table-background: #F6F8FC;
-$color-table-heading: $color-text-dark;
+$color-table-heading: $color-text;
 
-$color-amount-positive: $color-text-medium;
-$color-amount-negative: $color-text-medium;
-$color-amount-neutral: $color-text-medium;
+$color-amount-positive: $color-text;
+$color-amount-negative: $color-text;
+$color-amount-neutral: $color-text;
 
 $color-debug-background: darken($color-menu-background, 5%);
 $color-debug-text: $firo-gray;
