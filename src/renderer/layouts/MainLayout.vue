@@ -3,15 +3,12 @@
         <Sidebar />
 
         <main ref="main" class="main">
-            <keep-alive exclude="AnonymizePage">
-                <router-view />
-            </keep-alive>
+            <router-view />
         </main>
     </div>
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
 import Sidebar from 'renderer/components/Sidebar'
 
 export default {
@@ -19,11 +16,7 @@ export default {
 
     components: {
         Sidebar,
-    },
-
-    computed: mapGetters({
-        waitingReason: 'App/waitingReason'
-    })
+    }
 }
 </script>
 
