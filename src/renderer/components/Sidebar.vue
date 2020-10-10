@@ -50,10 +50,6 @@ export default {
 @import 'src/renderer/styles/sizes';
 
 .sidebar {
-    background-color: $color-menu-background;
-    height: 100vh;
-    width: $size-sidebar-width;
-
     .logo, .network-badge {
         width: fit-content;
         margin: {

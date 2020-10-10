@@ -176,7 +176,7 @@ const getters = {
     isInitialized: (state) => state.isInitialized,
     zcoindHasStarted: (state) => state.zcoindHasStarted,
     currentRoute: (state) => state.currentRoute,
-
+    showPaymentPendingWarning: (state, getters, rootState, rootGetters) => rootGetters['Balance/availablePublic'] > 0,
     // If waitingReason is not undefined, WaitingScreen (shown by MainLayout) will display that reason to the user as an
     // overlay.
     waitingReason: (state) => state.waitingReason,

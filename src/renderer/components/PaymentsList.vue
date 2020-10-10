@@ -255,10 +255,10 @@ export default {
 @import "src/renderer/styles/sizes";
 
 .payments-list {
-    height: 100vh;
+    height: 100%;
 
     .inner {
-        height: calc(100vh - #{$size-small-space} * 2);
+        height: calc(100% - #{$size-small-space} * 2);
         margin: $size-small-space;
 
         display: flex;

@@ -29,6 +29,9 @@ const getters = {
     unspentMints: (state) => state.unspentMints,
 
     available: (state) => state.availablePrivate,
+    unconfirmedPrivate: (state) => state.unconfirmedPrivate,
+    availablePublic: (state) => state.availablePublic,
+    unconfirmedPublic: (state) => state.unconfirmedPublic,
     pendingAndPublic: (state) => state.unconfirmedPrivate + state.availablePublic + state.unconfirmedPublic,
     locked: (state) => state.locked,
 
