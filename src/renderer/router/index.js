@@ -102,11 +102,6 @@ export default new Router({
                 },
 
                 {
-                    path: '/znodelist',
-                    component: require('renderer/components/ZnodePage').default
-                },
-
-                {
                     path: '/settings',
                     component: require('renderer/components/SettingsPage').default
                 },
