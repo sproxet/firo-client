@@ -48,14 +48,14 @@ export default new Router({
 
         {
             path: '/main',
-            component: require('renderer/layouts/MainLayout').default,
-            // fixme: It would be cleaner if we started pointing to / instead of /main.
             redirect: '/receive',
+            component: require('renderer/layouts/MainLayout').default,
             children: [
                 {
                     path: '/transactions',
                     component: require('renderer/components/PaymentsList').default
                 },
+
                 {
                     path: 'transaction-page',
                     component: require('renderer/components/PaymentsPage').default,
