@@ -20,7 +20,7 @@ navigation:
     title: Balance
   menu:
     button__receive: Receive Zcoin
-    button__send: Send Zcoin
+    button__send: SendPage Zcoin
     button__mint: Mint Zcoin
     button__spend: Spend Privately
     button__settings: Settings
@@ -63,7 +63,7 @@ receive:
 send:
   # TODO: descriptions, error messages
   overview:
-    title: Send Zcoin
+    title: SendPage Zcoin
     description: Aenean lacinia bibendum nulla sed consectetur. Cras mattis consectetur purus sit amet fermentum.
     table__send:
       labels:
@@ -72,7 +72,7 @@ send:
         label__amount: Amount
 
   detail-create-send:
-    title__send: Send Zcoin
+    title__send: SendPage Zcoin
     label__label: Label
     error__label: The label field is required. # note internal labeling
     label__amount: Amount
@@ -82,10 +82,10 @@ send:
     error__address: The address field must cointain a valid Zcoin address. / Ups, it looks like you accidentally mistyped your address!
 
     single-send:
-      button__send-now--primary: Send Now
-      button__send-later--secondary: Send Later
+      button__send-now--primary: SendPage Now
+      button__send-later--secondary: SendPage Later
     multi-send:
-      button__send-all--primary: Send All
+      button__send-all--primary: SendPage All
       button__add-to-queue--secondary: Add to Queue
 
     pending-payments:
@@ -204,7 +204,7 @@ warnings-flyout:
 
   zcoin-address-in-clipboard:
     # TODO: spend possible
-    # CASE: Only Send Zcoin possible with available balance / requested amount
+    # CASE: Only SendPage Zcoin possible with available balance / requested amount
     title__address-found: Zcoin Address found
     description: Found a Zcoin address in your clipboard. Would you like to use it as the recipient address to send Zcoin?
     button__cancel--secondary: Nope

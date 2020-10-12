@@ -48,52 +48,17 @@ export default new Router({
 
         {
             path: '/main',
-            redirect: '/receive',
+            redirect: '/transactions',
             component: require('renderer/layouts/MainLayout').default,
             children: [
                 {
                     path: '/transactions',
-                    component: require('renderer/components/PaymentsList').default
+                    component: require('renderer/components/PaymentsPage').default
                 },
 
                 {
-                    path: 'transaction-page',
-                    component: require('renderer/components/PaymentsPage').default,
-                    children: [
-                        {
-                            path: '/send',
-                            component: require('renderer/components/PaymentSidebars/Send').default,
-                            children: [
-                                {
-                                    path: 'private'
-                                },
-
-                                {
-                                    path: 'public'
-                                }
-                            ]
-                        },
-
-                        {
-                            path: '/receive',
-                            component: require('renderer/components/PaymentSidebars/Receive').default
-                        },
-
-                        {
-                            path: '/payment-request/:uniqId',
-                            component: require('renderer/components/PaymentSidebars/PaymentRequest').default
-                        },
-
-                        {
-                            path: '/transaction-info/:uniqId',
-                            component: require('renderer/components/PaymentSidebars/TransactionInfo').default
-                        },
-
-                        {
-                            path: '/mint-info/:blockHeight',
-                            component: require('renderer/components/PaymentSidebars/MintInfo').default
-                        }
-                    ]
+                    path: '/send',
+                    component: require('renderer/components/SendPage/SendPage').default,
                 },
 
                 {

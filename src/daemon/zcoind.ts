@@ -1124,7 +1124,7 @@ export class Zcoind {
         }
     }
 
-    // Send a request to zcoind. Basically a given API call is identified by *both* the type and collection parameters.
+    // SendPage a request to zcoind. Basically a given API call is identified by *both* the type and collection parameters.
     // auth is the wallet password, which is only required for certain calls. data is arbitrary data associated with the
     // call. We return a Promise containing the data object of the response we got from zcoind.
     //
@@ -1151,7 +1151,7 @@ export class Zcoind {
         };
     }
 
-    // Send an object through the requester socket and process the response. Refer to the documentation of send() for
+    // SendPage an object through the requester socket and process the response. Refer to the documentation of send() for
     // what we're actually doing. The reason this method is split off is that the setPassphrase() method is weird and
     // requires a special case.
     //

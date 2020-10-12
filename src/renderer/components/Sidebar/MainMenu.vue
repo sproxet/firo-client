@@ -1,6 +1,6 @@
 <template>
     <nav class="main-menu">
-        <router-link to="/send/private">
+        <router-link to="/send">
             <div class="inner">
                 Send
             </div>

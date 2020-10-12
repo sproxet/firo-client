@@ -40,3 +40,19 @@
 
     font-weight: bold;
 }
+
+@mixin medium-button {
+    cursor: pointer;
+    background-color: $color-big-button;
+    color: $color-big-button-text;
+    width: 150px;
+    height: 30px;
+}
+
+@mixin big-button {
+    cursor: pointer;
+    background-color: $color-big-button;
+    color: $color-big-button-text;
+    width: 300px;
+    height: 60px;
+}

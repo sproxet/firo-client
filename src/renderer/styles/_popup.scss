@@ -1,0 +1,18 @@
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/typography";
+
+@mixin popup {
+    .title {
+        text-align: center;
+        @include label();
+    }
+
+    .content {
+        margin: $size-popup-margin;
+    }
+
+    .buttons {
+        display: flex;
+        justify-content: space-evenly;
+    }
+}
