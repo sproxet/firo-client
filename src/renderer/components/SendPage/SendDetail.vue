@@ -183,21 +183,6 @@ export default {
             amount: this.$route.query.amount || '',
             address: this.$route.query.address || '',
             subtractFeeFromAmount: true,
-            passphrase: '',
-
-            errorMessage: '',
-
-            // Valid progressions are:
-            //
-            // initial -> waitToConfirm
-            // waitToConfirm -> confirm
-            // confirm -> initial | passphrase
-            // passphrase -> initial | incorrectPassphrase | error | complete
-            // error -> initial
-            // incorrectPassphrase -> initial | passphrase
-            // complete -> initial
-            sendPopoverStep: 'initial',
-
             useCustomFee: false,
             txFeePerKb: 1,
 
@@ -422,7 +407,6 @@ export default {
             this.label = '';
             this.amount = '';
             this.address = '';
-            this.passphrase = '';
         },
 
         async selectCustomInputs() {
