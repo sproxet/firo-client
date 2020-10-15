@@ -78,7 +78,7 @@
                         <input
                             id="txFeePerKb"
                             ref="txFeePerKb"
-                            v-model="txFeePerKb"
+                            v-model.number="txFeePerKb"
                             v-validate.initial="'txFeeIsValid'"
                             v-tooltip="getValidationTooltip('txFeePerKb')"
                             type="text"
@@ -141,7 +141,17 @@
                     </div>
                 </div>
 
-                <SendFlow id="send-flow" :disabled="false" :is-private="isPrivate" @success="cleanupForm" />
+                <SendFlow
+                    :disabled="!canBeginSend"
+                    :is-private="isPrivate"
+                    :label="label"
+                    :address="address"
+                    :amount="satoshiAmount"
+                    :tx-fee-per-kb="txFeePerKb || 1"
+                    :computed-tx-fee="transactionFee"
+                    :subtract-fee-from-amount="subtractFeeFromAmount"
+                    @success="cleanupForm"
+                />
             </div>
         </div>
     </section>
@@ -153,6 +163,7 @@ import SendFlow from "renderer/components/SendPage/SendFlow";
 import {isValidAddress} from 'lib/isValidAddress';
 import {convertToSatoshi, convertToCoin} from 'lib/convert';
 import Amount from "renderer/components/Sidebar/Amount";
+import {ZcoindErrorResponse} from "daemon/zcoind";
 
 export default {
     name: 'SendDetail',
@@ -280,6 +291,8 @@ export default {
         useCustomFee() {
             if (!this.useCustomFee) {
                 this.txFeePerKb = 1;
+                // Make sure the validation warning goes away.
+                this.$refs.txFeePerKb.value = 1;
             }
         },
 
@@ -347,8 +360,8 @@ export default {
         });
 
         this.$validator.extend('txFeeIsValid', {
-            getMessage: () => 'Transaction fee must be between 0 and 10,000 satoshis/kb',
-            validate: (value) => Number(value) >= 0 && Number(value) <= 10e3
+            getMessage: () => 'Transaction fee must be an integer between 1 and 10,000',
+            validate: (value) => value > 0 && value <= 10_000 && (value % 1 === 0)
         })
     },
 
@@ -362,23 +375,23 @@ export default {
             try {
                 // The empty string for an amount won't issue a validation error, but it would be invalid to pass to zcoind.
                 if (
-                    !await this.$validator.validate('txFeePerKb') ||
+                    (this.useCustomFee && !await this.$validator.validate('txFeePerKb')) ||
+                    !(Number(this.txFeePerKb) > 0) ||
                     !await this.$validator.validate('amount') ||
-                    typeof this.txFeePerKb !== 'number' ||
                     this.satoshiAmount === 0
                 ) {
                     this.transactionFee = 0;
                     return;
                 }
             } catch {
-                // On startup, $validator.validate() will through an error because we're called before the page is loaded.
+                // On startup, $validator.validate() will throw an error because we're called before the page is loaded.
                 this.transactionFee = 0;
                 return;
             }
 
             const satoshiAmount = this.satoshiAmount;
             const subtractFeeFromAmount = this.subtractFeeFromAmount;
-            const txFeePerKb = this.txFeePerKb;
+            const txFeePerKb = this.useCustomFee ? this.txFeePerKb : 1;
 
             let p;
             if (this.isPrivate) {
@@ -518,6 +531,11 @@ label {
                         float: right;
                     }
                 }
+            }
+
+            .error {
+                @include error();
+                margin-bottom: $size-small-space;
             }
         }
     }

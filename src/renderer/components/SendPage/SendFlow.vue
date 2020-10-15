@@ -12,7 +12,7 @@
                 :label="label"
                 :address="address"
                 :amount="amount"
-                :fee="fee"
+                :fee="computedTxFee"
                 @cancel="cancel()"
                 @confirm="show = 'passphrase'"
             />
@@ -25,7 +25,7 @@
 <script>
 // $emits: success
 
-import {IncorrectPassphrase, ZcoindErrorResponse} from "../../../daemon/zcoind";
+import {IncorrectPassphrase, ZcoindErrorResponse} from "daemon/zcoind";
 import Popup from "../Popup";
 import ConfirmStep from "./ConfirmStep";
 import PassphraseStep from "./PassphraseStep";
@@ -51,7 +51,37 @@ export default {
     props: {
         disabled: {
             required: true,
-            type: Boolean,
+            type: Boolean
+        },
+
+        label: {
+            required: true,
+            type: String,
+        },
+
+        address: {
+            required: true,
+            type: String
+        },
+
+        amount: {
+            required: true,
+            type: Number
+        },
+
+        txFeePerKb: {
+            required: true,
+            type: Number
+        },
+
+        computedTxFee: {
+            required: true,
+            type: Number
+        },
+
+        subtractFeeFromAmount: {
+            required: true,
+            type: Boolean
         },
 
         isPrivate: {

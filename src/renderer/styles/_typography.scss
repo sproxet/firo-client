@@ -74,3 +74,13 @@ a {
 @mixin optional-action {
     font-style: italic;
 }
+
+@mixin error {
+    @include monospace();
+    @include mini();
+    color: $color-error;
+    font: {
+        weight: bold;
+        style: italic;
+    }
+}
