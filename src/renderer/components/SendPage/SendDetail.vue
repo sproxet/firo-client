@@ -42,24 +42,54 @@
                         Amount
                     </label>
 
-                    <input
-                        id="amount"
-                        ref="amount"
-                        v-model="amount"
-                        v-validate.initial="amountValidations"
-                        v-tooltip="getValidationTooltip('amount')"
-                        type="text"
-                        name="amount"
-                        class="amount"
-                        tabindex="3"
-                        placeholder="Amount"
-                    />
+                    <div class="input-with-tip-container">
+                        <input
+                            id="amount"
+                            ref="amount"
+                            v-model="amount"
+                            v-validate.initial="amountValidations"
+                            v-tooltip="getValidationTooltip('amount')"
+                            type="text"
+                            name="amount"
+                            class="amount"
+                            tabindex="3"
+                            placeholder="Amount"
+                        />
+
+                        <span class="tip ticker">
+                            XFR
+                        </span>
+                    </div>
                 </div>
 
                 <div class="field">
                     <a id="select-custom-inputs" href="#" @click="selectCustomInputs()">
                         Select Custom Inputs
                     </a>
+                </div>
+
+                <div class="field">
+                    <label>
+                        <input type="checkbox" v-model="useCustomFee" />
+                        Custom Transaction Fee
+                    </label>
+
+                    <div v-show="useCustomFee" class="input-with-tip-container">
+                        <input
+                            id="txFeePerKb"
+                            ref="txFeePerKb"
+                            v-model="txFeePerKb"
+                            v-validate.initial="'txFeeIsValid'"
+                            v-tooltip="getValidationTooltip('txFeePerKb')"
+                            type="text"
+                            name="txFeePerKb"
+                            tabindex="4"
+                        />
+
+                        <span class="tip">
+                            sat/kb
+                        </span>
+                    </div>
                 </div>
 
                 <div class="field" id="subtract-fee-from-amount">
@@ -78,7 +108,7 @@
                         </label>
 
                         <div v-if="transactionFee" class="value">
-                            {{ convertToCoin(amountToReceive) }} XFR
+                            <amount :amount="amountToReceive" /> <span class="ticker">XFR</span>
                         </div>
                         <div v-else class="value" />
                     </div>
@@ -89,7 +119,7 @@
                         </label>
 
                         <div v-if="transactionFee" class="value">
-                            {{ convertToCoin(transactionFee) }} XFR
+                            <amount :amount="transactionFee" /> <span class="ticker">XFR</span>
                         </div>
                         <div v-else class="value" />
                     </div>
@@ -100,14 +130,14 @@
                         </label>
 
                         <div v-if="transactionFee" class="value">
-                            {{ convertToCoin(totalAmount) }} XFR
+                            <amount :amount="totalAmount" /> <span class="ticker">XFR</span>
                         </div>
 
                         <div v-else class="value" />
+                    </div>
 
-                        <div v-if="totalAmountExceedsBalance" class="total-amount-exceeds-balance">
-                            Amount (including fees) exceeds available balance.
-                        </div>
+                    <div v-if="error" class="error">
+                        {{ error }}
                     </div>
                 </div>
 
@@ -122,12 +152,14 @@ import { mapGetters } from 'vuex';
 import SendFlow from "renderer/components/SendPage/SendFlow";
 import {isValidAddress} from 'lib/isValidAddress';
 import {convertToSatoshi, convertToCoin} from 'lib/convert';
+import Amount from "renderer/components/Sidebar/Amount";
 
 export default {
     name: 'SendDetail',
 
     components: {
-        SendFlow
+        SendFlow,
+        Amount
     },
 
     inject: [
@@ -161,8 +193,8 @@ export default {
             // This is the total, computed transaction fee.
             transactionFee: 0,
 
-            // This is set if error -6 occurs during fee calculation.
-            totalAmountExceedsBalance: false,
+            // This is used if an error occurs computing the fee
+            error: null,
         }
     },
 
@@ -177,11 +209,11 @@ export default {
         // Return either 'private' or 'public', depending on whether the user is intending to make a private or a public
         // send.
         isPrivate () {
-            return true;
+            return false;
         },
 
         available () {
-            return this.isPrivate() ? this.availablePrivate : this.availablePublic;
+            return this.isPrivate ? this.availablePrivate : this.availablePublic;
         },
 
         // This is the amount the user entered in satoshis.
@@ -270,16 +302,17 @@ export default {
         // Set up VeeValidator rules.
 
         this.$validator.extend('zcoinAddress', {
-            getMessage: () => 'Invalid Zcoin Address',
+            getMessage: () => 'The Firo address you entered is invalid',
             validate: (value) => isValidAddress(value, this.network)
         });
 
         this.$validator.extend('amountIsWithinAvailableBalance', {
             // this.availableXzc will still be reactively updated.
             getMessage: () => this.coinControlSelectedAmount ?
-                `Amount Is Over Your Available Balance of #{convertToCoin(this.available)}`
+                `Amount is over the sum of your selected coins, ${convertToCoin(this.coinControlSelectedAmount)} XFR`
                 :
-                `Amount Is Over Your Selected Amount of #{convertToCoin(this.coinControlSelectedAmount)}`,
+                `Amount is over your available balance of ${convertToCoin(this.available)} XFR`,
+
             validate: (value) => this.coinControlSelectedAmount ?
                 convertToSatoshi(value) <= this.coinControlSelectedAmount
                 :
@@ -287,13 +320,13 @@ export default {
         });
 
         this.$validator.extend('publicAmountIsValid', {
-            getMessage: () => 'Amount Must Be A Multiple of 0.00000001',
+            getMessage: () => 'Amount must be a multiple of 0.00000001',
             // We use a regex here so as to not to have to deal with floating point issues.
             validate: (value) => Number(value) !== 0 && !!value.match(/^\d+(\.\d{1,8})?$/)
         });
 
         this.$validator.extend('privateAmountIsValid', {
-            getMessage: () => 'Amount For Private Send Must Be A Multiple of 0.05',
+            getMessage: () => 'Amount for private send must be a multiple of 0.05',
             validate: (value) => {
                 const v = convertToSatoshi(value);
                 return (v % 5e6 === 0) && (v > 0);
@@ -301,23 +334,29 @@ export default {
         });
 
         this.$validator.extend('privateAmountIsWithinBounds', {
-            getMessage: () => 'Amount For Private Send May Not Exceed 500 XZC',
+            getMessage: () => 'Amount for private send may not exceed 500 XFR',
             validate: (value) => Number(value) <= 500
         });
 
         this.$validator.extend('privateAmountDoesntViolateInputLimits', {
             getMessage: () =>
                 `Due to private transaction input limits, you can currently spend no more than ` +
-                `${convertToCoin(this.maxPrivateSend)} XZC in one transaction. Try minting a larger denomination.`,
+                `${convertToCoin(this.maxPrivateSend)} XFR in one transaction. Try minting a larger denomination.`,
 
             validate: (value) => convertToSatoshi(value) <= this.maxPrivateSend
         });
+
+        this.$validator.extend('txFeeIsValid', {
+            getMessage: () => 'Transaction fee must be between 0 and 10,000 satoshis/kb',
+            validate: (value) => Number(value) >= 0 && Number(value) <= 10e3
+        })
     },
 
     methods: {
         convertToCoin,
 
         async maybeShowFee () {
+            this.error = null;
             this.totalAmountExceedsBalance = false;
 
             try {
@@ -355,9 +394,9 @@ export default {
                 }
             } catch (e) {
                 if (e instanceof ZcoindErrorResponse && e.errorCode === -6) {
-                    this.totalAmountExceedsBalance = true;
+                    this.error = e;
                 } else {
-                    throw e;
+                    this.error = `${e}`;
                 }
             }
         },
@@ -396,6 +435,21 @@ export default {
 
 label {
     @include label();
+}
+
+.input-with-tip-container {
+    width: fit-content;
+    position: relative;
+
+    .tip {
+        position: absolute;
+        bottom: $size-rounded-input-vertical-padding;
+        right: $size-rounded-input-horizontal-padding;
+    }
+}
+
+.ticker {
+    @include ticker();
 }
 
 .send-detail {
@@ -448,11 +502,21 @@ label {
         }
 
         #bottom {
-            max-height: available;
-
             #totals {
                 .total-field {
                     margin-bottom: $size-small-space;
+
+                    label, .value {
+                        display: inline;
+                    }
+
+                    label {
+                        margin-right: $size-medium-space;
+                    }
+
+                    .value {
+                        float: right;
+                    }
                 }
             }
         }

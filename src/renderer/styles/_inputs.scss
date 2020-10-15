@@ -10,18 +10,18 @@
         outline: none;
     }
 
-    box-shadow: 4px 4px 4px 0 $color-input-shadow;
+    box-shadow: $size-rounded-input-border-radius $size-rounded-input-border-radius $size-rounded-input-border-radius 0 $color-input-shadow;
 
     border: {
         width: 0;
-        radius: 15px;
+        radius: $size-rounded-input-border-radius;
     }
 
     padding: {
-        top: 3px;
-        bottom: 3px;
-        left: 10px;
-        right: 10px;
+        top: $size-rounded-input-vertical-padding;
+        bottom: $size-rounded-input-vertical-padding;
+        left: $size-rounded-input-horizontal-padding;
+        right: $size-rounded-input-horizontal-padding;
     }
 
     &:active {

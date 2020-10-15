@@ -34,19 +34,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "src/renderer/styles/colors";
+@import "src/renderer/styles/typography";
 
 .balance {
     opacity: 0.8;
     text-align: right;
     margin: {
-        top: 1em;
-        right: 1em;
-        left: 1em;
+        top: $size-small-space;
+        right: $size-small-space;
     }
 
     .ticker {
-        color: $color-text-accent;
+        @include ticker();
     }
 }
 </style>

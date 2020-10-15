@@ -54,6 +54,14 @@ a {
     font-family: "Robot Mono";
 }
 
+@mixin ticker {
+    color: $color-ticker;
+}
+
+@mixin amount {
+    font-weight: bold;
+}
+
 @mixin address {
     @include monospace();
 }
