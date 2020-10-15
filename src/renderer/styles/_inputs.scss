@@ -57,8 +57,15 @@
 
     button {
         flex-grow: 1;
-        cursor: pointer;
         background-color: $color-big-button;
         color: $color-big-button-text;
+
+        &:not([disabled]) {
+            cursor: pointer;
+        }
+
+        &[disabled] {
+            opacity: 0.4;
+        }
     }
 }
