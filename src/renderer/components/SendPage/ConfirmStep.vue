@@ -57,7 +57,7 @@ export default {
 
 @include popup();
 
-button {
-    @include medium-button();
+.buttons {
+    @include buttons-container();
 }
 </style>

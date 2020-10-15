@@ -1,114 +1,116 @@
 <template>
     <section id="send">
-        <div id="top">
-            <div class="field" id="label-field">
-                <label>
-                    Label
-                </label>
+        <div class="inner">
+            <div id="top">
+                <div class="field" id="label-field">
+                    <label>
+                        Label
+                    </label>
 
-                <input
-                    id="label"
-                    ref="label"
-                    v-model.trim="label"
-                    v-focus
-                    type="text"
-                    name="label"
-                    tabindex="1"
-                    placeholder="Label"
-                />
-            </div>
+                    <input
+                        id="label"
+                        ref="label"
+                        v-model.trim="label"
+                        v-focus
+                        type="text"
+                        name="label"
+                        tabindex="1"
+                        placeholder="Label"
+                    />
+                </div>
 
-            <div class="field" id="address-field">
-                <label>
-                    Address
-                </label>
+                <div class="field" id="address-field">
+                    <label>
+                        Address
+                    </label>
 
-                <input
-                    id="address"
-                    ref="address"
-                    v-model="address"
-                    v-validate.initial="'zcoinAddress'"
-                    v-tooltip="getValidationTooltip('address')"
-                    type="text"
-                    name="address"
-                    tabindex="2"
-                    placeholder="Address"
-                />
-            </div>
+                    <input
+                        id="address"
+                        ref="address"
+                        v-model="address"
+                        v-validate.initial="'zcoinAddress'"
+                        v-tooltip="getValidationTooltip('address')"
+                        type="text"
+                        name="address"
+                        tabindex="2"
+                        placeholder="Address"
+                    />
+                </div>
 
-            <div class="field" id="amount-field">
-                <label>
-                    Amount
-                </label>
+                <div class="field" id="amount-field">
+                    <label>
+                        Amount
+                    </label>
 
-                <input
-                    id="amount"
-                    ref="amount"
-                    v-model="amount"
-                    v-validate.initial="amountValidations"
-                    v-tooltip="getValidationTooltip('amount')"
-                    type="text"
-                    name="amount"
-                    class="amount"
-                    tabindex="3"
-                    placeholder="Amount"
-                />
+                    <input
+                        id="amount"
+                        ref="amount"
+                        v-model="amount"
+                        v-validate.initial="amountValidations"
+                        v-tooltip="getValidationTooltip('amount')"
+                        type="text"
+                        name="amount"
+                        class="amount"
+                        tabindex="3"
+                        placeholder="Amount"
+                    />
+                </div>
 
-                <a @click="selectCustomInputs()">
-                    Select Custom Inputs
-                </a>
+                <div class="field">
+                    <a id="select-custom-inputs" href="#" @click="selectCustomInputs()">
+                        Select Custom Inputs
+                    </a>
+                </div>
 
-                <div id="subtract-fee-from-amount">
+                <div class="field" id="subtract-fee-from-amount">
                     <input v-model="subtractFeeFromAmount" type="checkbox" checked />
                     <label>
                         Take Transaction Fee From Amount
                     </label>
                 </div>
             </div>
-        </div>
 
-        <div id="bottom">
-            <div class="totals">
-                <div class="total-field" id="receive-amount">
-                    <label>
-                        Recipient will receive:
-                    </label>
+            <div id="bottom">
+                <div id="totals">
+                    <div class="total-field" id="receive-amount">
+                        <label>
+                            Recipient will receive:
+                        </label>
 
-                    <div v-if="transactionFee" class="value">
-                        {{ convertToCoin(amountToReceive) }} XFR
+                        <div v-if="transactionFee" class="value">
+                            {{ convertToCoin(amountToReceive) }} XFR
+                        </div>
+                        <div v-else class="value" />
                     </div>
-                    <div v-else class="value" />
+
+                    <div class="total-field" id="transaction-fee">
+                        <label>
+                            Transaction fee:
+                        </label>
+
+                        <div v-if="transactionFee" class="value">
+                            {{ convertToCoin(transactionFee) }} XFR
+                        </div>
+                        <div v-else class="value" />
+                    </div>
+
+                    <div class="total-field" id="total-amount">
+                        <label>
+                            Total:
+                        </label>
+
+                        <div v-if="transactionFee" class="value">
+                            {{ convertToCoin(totalAmount) }} XFR
+                        </div>
+
+                        <div v-else class="value" />
+
+                        <div v-if="totalAmountExceedsBalance" class="total-amount-exceeds-balance">
+                            Amount (including fees) exceeds available balance.
+                        </div>
+                    </div>
                 </div>
 
-                <div class="total-field" id="transaction-fee">
-                    <label>
-                        Transaction fee:
-                    </label>
-
-                    <div v-if="transactionFee" class="value">
-                        {{ convertToCoin(transactionFee) }} XFR
-                    </div>
-                    <div v-else class="value" />
-                </div>
-
-                <div class="field" id="total-amount">
-                    <label>
-                        Total:
-                    </label>
-
-                    <div v-if="transactionFee" class="value">
-                        {{ convertToCoin(totalAmount) }} XFR
-                    </div>
-
-                    <div v-else class="value" />
-
-                    <div v-if="totalAmountExceedsBalance" class="total-amount-exceeds-balance">
-                        Amount (including fees) exceeds available balance.
-                    </div>
-                </div>
-            </div>
-
-            <div class="button">
                 <SendFlow id="send-flow" :disabled="false" :is-private="isPrivate" @success="cleanupForm" />
             </div>
         </div>
@@ -117,7 +119,7 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import SendFlow from "./SendFlow";
+import SendFlow from "renderer/components/SendPage/SendFlow";
 import {isValidAddress} from 'lib/isValidAddress';
 import {convertToSatoshi, convertToCoin} from 'lib/convert';
 
@@ -179,7 +181,7 @@ export default {
         },
 
         available () {
-            return this.privateOrPublic === 'private' ? this.availablePrivate : this.availablePublic;
+            return this.isPrivate() ? this.availablePrivate : this.availablePublic;
         },
 
         // This is the amount the user entered in satoshis.
@@ -274,9 +276,14 @@ export default {
 
         this.$validator.extend('amountIsWithinAvailableBalance', {
             // this.availableXzc will still be reactively updated.
-            getMessage: () => this.coinControlSelectedAmount == 0? ('Amount Is Over Your Available Balance of ' + convertToCoin(this.availableBalance)):'Amount Is Over Your Selected Amount of ' + convertToCoin(this.coinControlSelectedAmount),
-            validate: (value) => (this.coinControlSelectedAmount == 0 && convertToSatoshi(value) <= this.availableBalance)
-                                || (this.coinControlSelectedAmount > 0 && convertToSatoshi(value) <= this.coinControlSelectedAmount)
+            getMessage: () => this.coinControlSelectedAmount ?
+                `Amount Is Over Your Available Balance of #{convertToCoin(this.available)}`
+                :
+                `Amount Is Over Your Selected Amount of #{convertToCoin(this.coinControlSelectedAmount)}`,
+            validate: (value) => this.coinControlSelectedAmount ?
+                convertToSatoshi(value) <= this.coinControlSelectedAmount
+                :
+                convertToSatoshi(value) <= this.available
         });
 
         this.$validator.extend('publicAmountIsValid', {
@@ -286,7 +293,7 @@ export default {
         });
 
         this.$validator.extend('privateAmountIsValid', {
-            getMessage: () => 'Amount For Private SendPage Must Be A Multiple of 0.05',
+            getMessage: () => 'Amount For Private Send Must Be A Multiple of 0.05',
             validate: (value) => {
                 const v = convertToSatoshi(value);
                 return (v % 5e6 === 0) && (v > 0);
@@ -294,7 +301,7 @@ export default {
         });
 
         this.$validator.extend('privateAmountIsWithinBounds', {
-            getMessage: () => 'Amount For Private SendPage May Not Exceed 500 XZC',
+            getMessage: () => 'Amount For Private Send May Not Exceed 500 XZC',
             validate: (value) => Number(value) <= 500
         });
 
@@ -372,7 +379,7 @@ export default {
         },
 
         async openAddressBook() {
-            if (!this.addressBook || Object.keys(this.addressBook).length == 0) {
+            if (!this.addressBook || !Object.keys(this.addressBook).length) {
                 const ab = await $daemon.readAddressBook();
                 this.$store.dispatch('Transactions/setAddressBook', ab);
             }
@@ -384,14 +391,70 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/renderer/styles/inputs";
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/typography";
+
+label {
+    @include label();
+}
 
 #send {
+    box-sizing: border-box;
+    padding: $size-main-margin;
     height: 100%;
-    display: flex;
-    flex-flow: column;
+    width: $size-secondary-content-width;
+    background-color: $color-detail-background;
 
-    #bottom {
-        flex-grow: 1;
+    .inner {
+        height: 100%;
+        display: flex;
+        flex-flow: column;
+
+        #top {
+            flex-grow: 1;
+
+            .field {
+                &:not(:first-child) {
+                    margin-top: $size-between-field-space;
+                }
+
+                label, input[type="text"] {
+                    display: block;
+                }
+
+                input[type="text"] {
+                    @include wide-rounded-input();
+                }
+
+                &#address-field {
+                    input {
+                        @include address();
+                    }
+                }
+
+                &#select-custom-inputs {
+                    a {
+                        @include optional-action();
+                    }
+                }
+
+                &#subtract-fee-from-amount {
+                    * {
+                        display: inline;
+                    }
+                }
+            }
+        }
+
+        #bottom {
+            max-height: available;
+
+            #totals {
+                .total-field {
+                    margin-bottom: $size-small-space;
+                }
+            }
+        }
     }
 }
 </style>

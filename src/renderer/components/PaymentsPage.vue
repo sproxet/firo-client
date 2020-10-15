@@ -1,5 +1,5 @@
 <template>
-    <section class="payments-list">
+    <section class="payments-page">
         <div class="inner">
             <div class="top-section">
                 <input
@@ -75,9 +75,6 @@ export default {
     },
 
     watch: {
-        currentPage(newPage, oldPage) {
-        },
-
         latestTableData: {
             immediate: true,
 
@@ -253,13 +250,14 @@ export default {
 <style lang="scss" scoped>
 @import "src/renderer/styles/inputs";
 @import "src/renderer/styles/sizes";
+@import "src/renderer/styles/colors";
 
-.payments-list {
+.payments-page {
     height: 100%;
 
     .inner {
         height: calc(100% - #{$size-small-space} * 2);
-        margin: $size-small-space;
+        margin: $size-main-margin;
 
         display: flex;
         flex-flow: column;
@@ -268,7 +266,6 @@ export default {
             height: fit-content;
 
             .table-filter-input {
-                width: 30%;
                 margin: {
                     top: $size-small-space;
                     left: auto;
@@ -276,7 +273,8 @@ export default {
                     bottom: $size-medium-space;
                 }
 
-                @include rounded-input();
+                @include wide-rounded-input();
+                max-width: $size-primary-content-width;
             }
 
             .filter-input {

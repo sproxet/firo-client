@@ -15,6 +15,7 @@ const state = {
 
 const mutations = {
     updateBalance(state, balance) {
+        logger.info("balance: %O", balance);
         state.availablePublic = balance.public.confirmed;
         state.unconfirmedPublic = balance.public.unconfirmed;
         state.availablePrivate = balance.private.confirmed;

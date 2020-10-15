@@ -1,5 +1,5 @@
 <template>
-    <div class="blockchain-status">
+    <div id="blockchain-status">
         <div v-if="connections === 0 && network !== 'regtest'">
             <loading-bounce size="mini" />
             Connecting...
@@ -40,7 +40,7 @@ export default {
 <style scoped lang="scss">
 @import "src/renderer/styles/sizes";
 
-.blockchain-status {
+#blockchain-status {
     font-style: italic;
     margin: {
         bottom: $size-tiny-space;

@@ -58,7 +58,7 @@ export default new Router({
 
                 {
                     path: '/send',
-                    component: require('renderer/components/SendPage/SendPage').default,
+                    component: require('renderer/components/SendPage.vue').default,
                 },
 
                 {

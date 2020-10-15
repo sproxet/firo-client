@@ -1,4 +1,7 @@
-@import "typography";
+// Firo brand guidelines specify a base font of 16pt, but that's too large for our UI.
+$font-size-normal: 12pt;
+
+$size-warning-banner: 35pt;
 
 $size-menu-top-margin: 15pt;
 $size-menu-logo: 60pt;
@@ -6,14 +9,22 @@ $size-top-section: $size-menu-top-margin + $size-menu-logo;
 
 $size-sidebar-width: 20vw;
 
+// These are only used on pages with a right sidebar.
+$size-primary-content-width: 45vw;
+$size-secondary-content-width: calc(100vw - #{$size-sidebar-width} - #{$size-primary-content-width});
+
 $size-tiny-space: 5pt;
 $size-small-space: 14pt;
 $size-medium-space: 21pt;
 $size-large-space: 28pt;
 
+$size-large-field-width: 250pt;
+$size-between-field-space: $size-medium-space;
+
 $size-warning-vertical-padding: $size-small-space;
 
 $size-popup-margin: 40px;
+$size-main-margin: $size-small-space;
 
 $size-sidebar-link-horizontal-padding: 15pt;
 $size-sidebar-link-vertical-padding: 5pt;

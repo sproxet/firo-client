@@ -373,7 +373,7 @@ export default {
 
 
 .debug-page {
-    height: 100vh;
+    height: 100%;
     word-break: break-all;
 
     background-color: $color-debug-background;

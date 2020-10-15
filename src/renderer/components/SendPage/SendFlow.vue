@@ -1,8 +1,10 @@
 <template>
     <div>
-        <button class="button" :disabled="disabled" @click="show = 'confirm'">
-            Send
-        </button>
+        <div class="buttons">
+            <button :disabled="disabled" @click="show = 'confirm'">
+                Send
+            </button>
+        </div>
 
         <Popup v-if="show !== 'button'">
             <ConfirmStep
@@ -100,7 +102,7 @@ export default {
 <style scoped lang="scss">
 @import "src/renderer/styles/inputs";
 
-button {
-    @include big-button();
+.buttons {
+    @include buttons-container();
 }
 </style>

@@ -32,12 +32,12 @@ export default {
 @import "src/renderer/styles/sizes";
 
 .warning {
+    height: 100%;
     background: $color-warning-background;
     color: $color-warning-text;
     text-align: center;
-    padding: {
-        top: $size-warning-vertical-padding;
-        bottom: $size-warning-vertical-padding;
-    }
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
 }
 </style>

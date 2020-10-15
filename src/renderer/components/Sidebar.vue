@@ -1,6 +1,6 @@
 <template>
-    <div class="sidebar">
-        <div class="logo">
+    <div id="sidebar">
+        <div id="logo">
             <router-link to="/main">
                 <img src="/assets/FiroLogoDark.svg" />
             </router-link>
@@ -16,9 +16,9 @@
             Unknown Network
         </div>
 
-        <balance />
-        <main-menu />
-        <blockchain-status />
+        <balance id="sidebar-balance" />
+        <main-menu id="main-menu" />
+        <blockchain-status id="blockchain-status" />
     </div>
 </template>
 
@@ -49,8 +49,10 @@ export default {
 @import 'src/renderer/styles/colors';
 @import 'src/renderer/styles/sizes';
 
-.sidebar {
-    .logo, .network-badge {
+#sidebar {
+    user-select: none;
+
+    #logo, .network-badge {
         width: fit-content;
         margin: {
             left: auto;
@@ -58,7 +60,7 @@ export default {
         }
     }
 
-    .logo {
+    #logo {
         margin-top: $size-menu-top-margin;
 
         img {
@@ -67,16 +69,22 @@ export default {
     }
 
     .network-badge {
+        @include monospace();
+        user-select: text;
         color: $color-text-accent;
         font-size: 0.8em;
-        @include monospace();
     }
 
-    .main-menu {
+    #sidebar-balance {
+        user-select: text;
+    }
+
+    #main-menu {
         margin-top: 1em;
     }
 
-    .blockchain-status {
+    #blockchain-status {
+        user-select: text;
         position: absolute;
         bottom: 0;
     }

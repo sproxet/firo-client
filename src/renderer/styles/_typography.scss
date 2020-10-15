@@ -1,8 +1,6 @@
 @import "./fonts";
 @import "./colors";
-
-// Firo brand guidelines specify a base font of 16pt, but that's too large for our UI.
-$font-size-normal: 12pt;
+@import "./sizes";
 
 h1 {
     font: {
@@ -40,14 +38,6 @@ a {
     color: darken($color-text, 15%);
 }
 
-@mixin label {
-    font-weight: bold;
-}
-
-@mixin monospace {
-    font-family: "Robot Mono";
-}
-
 @mixin large {
     font-size: $font-size-normal * 1.5;
 }
@@ -58,4 +48,21 @@ a {
 
 @mixin mini {
     font-size: $font-size-normal * 0.7;
+}
+
+@mixin monospace {
+    font-family: "Robot Mono";
+}
+
+@mixin address {
+    @include monospace();
+}
+
+@mixin label {
+    font-weight: bold;
+    margin-bottom: $size-tiny-space;
+}
+
+@mixin optional-action {
+    font-style: italic;
 }

@@ -1,4 +1,5 @@
 @import "./colors";
+@import "./sizes";
 
 @mixin rounded-input() {
     background-color: $color-input-background;
@@ -28,6 +29,11 @@
     }
 }
 
+@mixin wide-rounded-input() {
+    @include rounded-input();
+    width: $size-large-field-width;
+}
+
 @mixin undecorated-button() {
     cursor: pointer;
     background-color: inherit;
@@ -41,18 +47,18 @@
     font-weight: bold;
 }
 
-@mixin medium-button {
-    cursor: pointer;
-    background-color: $color-big-button;
-    color: $color-big-button-text;
-    width: 150px;
+@mixin buttons-container {
     height: 30px;
-}
+    width: 60%;
+    margin: auto;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
 
-@mixin big-button {
-    cursor: pointer;
-    background-color: $color-big-button;
-    color: $color-big-button-text;
-    width: 300px;
-    height: 60px;
+    button {
+        flex-grow: 1;
+        cursor: pointer;
+        background-color: $color-big-button;
+        color: $color-big-button-text;
+    }
 }
