@@ -1,5 +1,7 @@
 @import "src/renderer/styles/sizes";
 @import "src/renderer/styles/typography";
+@import "src/renderer/styles/inputs";
+
 
 @mixin popup {
     .title {
@@ -9,5 +11,9 @@
 
     .content {
         margin: $size-popup-margin;
+    }
+
+    .buttons {
+        @include buttons-container();
     }
 }

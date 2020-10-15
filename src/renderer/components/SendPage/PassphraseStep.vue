@@ -1,30 +1,33 @@
 <template>
-    <div class="form">
-        <header>
-            <h2>
-                <label for="passphrase">
-                    Enter Your Passphrase
-                </label>
-            </h2>
+    <div class="passphrase-input">
+        <div class="title">
+            Enter Your Passphrase
+        </div>
 
-            <div
-                v-if="fromIncorrect"
-                class="from-incorrect"
-            >
-                Please try again.
-            </div>
-        </header>
-
-        <div class="control">
+        <div class="content">
             <input
-                id="passphrase"
                 v-focus
                 type="password"
                 :value="value"
                 name="passphrase"
+                placeholder="Enter Your Passphrase"
                 @input="$emit('input', $event.target.value)"
                 @keyup.enter="$emit('onEnter')"
             />
+
+            <div v-if="error" class="error">
+                {{ error }}
+            </div>
+        </div>
+
+        <div class="buttons">
+            <button @click="$emit('cancel')">
+                Cancel
+            </button>
+
+            <button :disabled="!value" @click="$emit('confirm')">
+                Confirm
+            </button>
         </div>
     </div>
 </template>
@@ -39,32 +42,27 @@ export default {
             required: true
         },
 
-        fromIncorrect: {
-            type: Boolean,
-            default: false
+        error: {
+            type: String,
+            default: null
         }
     }
 }
 </script>
 
 <style lang="scss" scoped>
-.form {
-    min-width: 20em;
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/popup";
+@import "src/renderer/styles/inputs";
 
-    padding: {
-        top: 2em;
-        bottom: 2em;
-        left: 3em;
-        right: 3em;
-    }
+@include popup();
 
-    .from-incorrect {
-        font-size: 0.9em;
-        font-style: italic;
-    }
+input[type="password"] {
+    @include wide-rounded-input();
+}
 
-    input {
-        width: 100%;
-    }
+.error {
+    margin-top: $size-between-field-space-big;
+    @include error();
 }
 </style>

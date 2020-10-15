@@ -61,7 +61,7 @@
                 Cancel
             </button>
 
-            <button @click="$emit('continue')">
+            <button @click="$emit('confirm')">
                 Continue
             </button>
         </div>
@@ -144,9 +144,5 @@ export default {
             float: right;
         }
     }
-}
-
-.buttons {
-    @include buttons-container();
 }
 </style>

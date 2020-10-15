@@ -1,6 +1,6 @@
 <template>
     <div id="popup">
-        <div id="inner-popup">
+        <div id="inner-popup" :class="{'no-popup-margin': !margin}">
             <slot />
         </div>
     </div>
@@ -8,7 +8,14 @@
 
 <script>
 export default {
-    name: "Popup"
+    name: "Popup",
+
+    props: {
+        margin: {
+            type: Boolean,
+            default: true
+        }
+    }
 }
 </script>
 
@@ -35,9 +42,12 @@ export default {
         background-color: $color-popup-background;
         width: fit-content;
         height: fit-content;
-        padding: $size-popup-margin;
         box-shadow: 0 8px 8px rgba(0, 0, 0, 0.25);
         border-radius: 8px;
+
+        &:not(.no-popup-margin) {
+            padding: $size-popup-margin;
+        }
     }
 }
 </style>

@@ -6,7 +6,7 @@
             </button>
         </div>
 
-        <Popup v-if="show !== 'button'">
+        <Popup v-if="show !== 'button'" :margin="show !== 'wait'">
             <ConfirmStep
                 v-if="show === 'confirm'"
                 :label="label"
@@ -15,9 +15,10 @@
                 :fee="computedTxFee"
                 :total="totalAmount"
                 @cancel="cancel()"
-                @confirm="show = 'passphrase'"
+                @confirm="goToPassphraseStep()"
             />
-            <PassphraseStep v-if="show === 'passphrase'" :error="error" @cancel="cancel()" @confirm="attemptSend" />
+            <PassphraseStep v-if="show === 'passphrase'" :error="error" v-model="passphrase" @cancel="cancel()" @confirm="attemptSend" />
+            <WaitOverlay v-if="show === 'wait'" />
             <ErrorStep v-if="show === 'error'" :error="error" @ok="cancel()" />
         </Popup>
     </div>
@@ -31,6 +32,7 @@ import Popup from "../Popup";
 import ConfirmStep from "./ConfirmStep";
 import PassphraseStep from "./PassphraseStep";
 import ErrorStep from "./ErrorStep";
+import WaitOverlay from "renderer/components/WaitOverlay";
 
 export default {
     name: "SendFlow",
@@ -39,13 +41,15 @@ export default {
         Popup,
         ConfirmStep,
         PassphraseStep,
-        ErrorStep
+        ErrorStep,
+        WaitOverlay
     },
 
     data() {
         return {
             error: null,
-            show: 'button'
+            show: 'button',
+            passphrase: ''
         }
     },
 
@@ -98,12 +102,18 @@ export default {
     },
 
     methods: {
+        goToPassphraseStep() {
+            this.show = 'passphrase';
+        },
+
         cancel() {
             this.error = null;
             this.show = 'button';
         },
 
         async attemptSend () {
+            this.show = 'wait';
+            
             try {
                 if (this.isPrivate) {
                     await $daemon.privateSend(this.passphrase, this.label, this.address, this.amount,
