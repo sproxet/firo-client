@@ -1,6 +1,6 @@
 <template>
     <div id="main-layout">
-        <PaymentPendingWarning v-if="showPaymentPendingWarning" id="payment-pending-warning" />
+        <PaymentPendingWarning v-if="showPaymentPendingWarning" />
 
         <div id="main-content" :class="{'has-payment-pending-warning': showPaymentPendingWarning}">
             <Sidebar id="sidebar" />

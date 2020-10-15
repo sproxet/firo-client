@@ -1,5 +1,5 @@
 <template>
-    <div class="payment-pending-warning">
+    <div id="payment-pending-warning">
         <h3>
             {{ convertToCoin(availablePublic) }} XFR pending. <a href="#" @click="anonymizeFunds">Click here</a> to secure them.
         </h3>
@@ -31,7 +31,8 @@ export default {
 @import "src/renderer/styles/colors";
 @import "src/renderer/styles/sizes";
 
-.warning {
+#payment-pending-warning {
+    user-select: none;
     height: 100%;
     background: $color-warning-background;
     color: $color-warning-text;

@@ -10,7 +10,7 @@ $size-top-section: $size-menu-top-margin + $size-menu-logo;
 $size-sidebar-width: 20vw;
 
 // These are only used on pages with a right sidebar.
-$size-primary-content-width: 45vw;
+$size-primary-content-width: 48vw;
 $size-secondary-content-width: calc(100vw - #{$size-sidebar-width} - #{$size-primary-content-width});
 
 $size-tiny-space: 5pt;
