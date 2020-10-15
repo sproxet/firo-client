@@ -467,7 +467,7 @@ label {
 
             .field {
                 &:not(:first-child) {
-                    margin-top: $size-between-field-space;
+                    margin-top: $size-between-field-space-big;
                 }
 
                 label, input[type="text"] {

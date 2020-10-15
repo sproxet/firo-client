@@ -13,6 +13,7 @@
                 :address="address"
                 :amount="amount"
                 :fee="computedTxFee"
+                :total="totalAmount"
                 @cancel="cancel()"
                 @confirm="show = 'passphrase'"
             />
@@ -87,6 +88,12 @@ export default {
         isPrivate: {
             required: true,
             type: Boolean
+        }
+    },
+
+    computed: {
+        totalAmount() {
+            return this.subtractFeeFromAmount ? this.amount : this.amount + this.computedTxFee;
         }
     },
 

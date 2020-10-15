@@ -49,7 +49,6 @@
 
 @mixin buttons-container {
     height: 30px;
-    width: 60%;
     margin: auto;
     display: flex;
     flex-flow: row;
@@ -66,6 +65,10 @@
 
         &[disabled] {
             opacity: 0.4;
+        }
+
+        &.disrecommended {
+            opacity: 0.6;
         }
     }
 }
