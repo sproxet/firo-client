@@ -1,5 +1,7 @@
 <template>
     <div id="app">
+        <div id="app-drag-area" />
+
         <div :v-show="!!waitingReason">
             <WaitingScreen v-if="waitingReason" :reason="waitingReason" />
         </div>
@@ -31,8 +33,21 @@ export default {
 
 <style lang="scss">
 @import './styles';
+@import './styles/z';
 
 #app {
+    #app-drag-area {
+        position: fixed;
+        top: 0;
+        z-index: $z-app-drag-area;
+        height: $size-app-drag-area-height;
+        width: 100vw;
+
+        // Allow the user to drag the window from this area.
+        user-select: none;
+        -webkit-app-region: drag;
+    }
+
     max-height: 100vh;
     overflow: hidden;
 }
