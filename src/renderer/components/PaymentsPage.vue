@@ -274,7 +274,7 @@ export default {
                 }
 
                 @include wide-rounded-input();
-                max-width: $size-primary-content-width;
+                max-width: 100%;
             }
 
             .filter-input {

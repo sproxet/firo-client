@@ -1,6 +1,7 @@
 <template>
     <div id="send-page">
         <div id="send-primary">
+            <PaymentsPage />
         </div>
 
         <SendDetail />
@@ -9,13 +10,15 @@
 
 <script>
 import {mapGetters} from "vuex";
+import PaymentsPage from "renderer/components/PaymentsPage";
 import SendDetail from "renderer/components/SendPage/SendDetail";
 
 export default {
     name: 'MainLayout',
 
     components: {
-        SendDetail
+        SendDetail,
+        PaymentsPage
     }
 }
 </script>

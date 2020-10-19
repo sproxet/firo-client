@@ -453,7 +453,7 @@ label {
     width: $size-secondary-content-width;
     float: right;
     box-sizing: border-box;
-    padding: $size-main-margin;
+    padding: $size-detail-margin;
     height: 100%;
     background-color: $color-detail-background;
 

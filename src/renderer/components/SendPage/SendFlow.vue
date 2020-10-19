@@ -113,7 +113,7 @@ export default {
 
         async attemptSend () {
             this.show = 'wait';
-            
+
             try {
                 if (this.isPrivate) {
                     await $daemon.privateSend(this.passphrase, this.label, this.address, this.amount,
