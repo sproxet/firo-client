@@ -5,11 +5,14 @@
             Connecting...
         </div>
         <div v-else-if="!isBlockchainSynced">
-            <loading-bounce size="mini" />
-            Syncing...
-            <span class="progress">
-                ({{currentBlockHeight}}/~{{estimatedBlockHeight}})
-            </span>
+            <div class="syncing-text">
+                <loading-bounce size="mini" />
+                Syncing...
+            </div>
+
+            <div class="details">
+                {{currentBlockHeight}}/~{{estimatedBlockHeight}} blocks, {{connections}} connections
+            </div>
         </div>
     </div>
 </template>
@@ -39,8 +42,11 @@ export default {
 
 <style scoped lang="scss">
 @import "src/renderer/styles/sizes";
+@import "src/renderer/styles/typography";
+
 
 #blockchain-status {
+    @include small();
     font-style: italic;
     margin: {
         bottom: $size-tiny-space;
@@ -52,8 +58,11 @@ export default {
         margin-right: $size-tiny-space;
     }
 
-    * {
-        display: inline-block;
+    .syncing-text {
+        margin-bottom: $size-tiny-space;
+        * {
+            display: inline-block;
+        }
     }
 }
 </style>
