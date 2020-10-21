@@ -2,15 +2,13 @@
     <div class="receive-page">
         <div class="top">
             <div ref="qrContainer" class="qr-container">
-                <div ref="qrCode" class="qr-code" />
+                <div ref="qrContainerInner" class="inner" style="display: none">
+                    <div ref="qrCode" class="qr-code" />
+                </div>
             </div>
 
             <div class="address">
-                <div v-if="!address" class="loading">
-                    Loading...
-                </div>
-
-                <div v-else>
+                <div v-if="address" class="loading">
                     <div class="label">
                         <input v-if="isEditing" class="label-input" type="text" v-model="label" />
                         <div v-else class="label-text">{{ label }}</div>
@@ -48,7 +46,6 @@ export default {
             label: '',
             isEditing: false,
             qrCode: null,
-            watcher: null,
 
             // This has to be here rather than as a method so we can capture this.
             resizeListener: () => this.resizeQrCode()
@@ -100,40 +97,32 @@ export default {
                 this.label = 'Unlabelled';
             }
 
-            this.$nextTick(() => {
-                if (!this.qrcode) {
-                    this.qrcode = new QRCode(this.$refs.qrCode, {
-                        text: this.address,
-                        height: 2048,
-                        width: 2048,
-                        colorDark: 'black',
-                        colorLight: 'white',
-                        logo: '/assets/FiroSymbol.svg',
-                        // $firo-silver
-                        logoBackgroundColor: 'white'
-                    });
-                } else {
-                    // Update the address in the QR code.
-                    this.qrcode.makeCode(this.address);
-                }
-
-                this.$nextTick(() => {
-                    this.resizeQrCode();
+            if (this.qrCode) {
+                this.qrCode.makeCode(this.address)
+            } else {
+                this.qrCode = new QRCode(this.$refs.qrCode, {
+                    text: this.address,
+                    height: 2048,
+                    width: 2048,
+                    colorDark: 'black',
+                    colorLight: 'white',
+                    logo: '/assets/FiroSymbol.svg',
+                    logoBackgroundColor: 'white',
+                    onRenderingEnd: () => this.resizeQrCode()
                 });
-            });
+            }
         },
 
         resizeQrCode() {
-            const img = this.$refs.qrCode.querySelector('img');
-            img.style.display = 'none';
+            this.$refs.qrContainerInner.style.display = 'none';
 
-            this.$nextTick(() => {
-                // The size of qrContainer is computed to be slightly higher than that of img, for reasons I don't know.
-                const size = `${this.$refs.qrContainer.clientHeight}px`;
-                img.style.height = size;
-                img.style.width = size;
-                img.style.display = 'initial';
-            });
+            const size = `${this.$refs.qrContainer.clientHeight}px`;
+            const img = this.$refs.qrCode.querySelector('img');
+            img.style.height = size;
+            img.style.width = size;
+            img.style.display = 'initial';
+
+            this.$refs.qrContainerInner.style.display = 'initial';
         },
 
         copyAddress() {
@@ -156,13 +145,14 @@ export default {
 @import "src/renderer/styles/inputs";
 @import "src/renderer/styles/typography";
 
+$top-height: 40%;
 
 .receive-page {
     height: 100%;
     margin: $size-main-margin;
 
     .top {
-        height: 50%;
+        height: $top-height;
         display: flex;
         flex-direction: column;
         justify-content: end;
@@ -186,14 +176,17 @@ export default {
                     left: auto;
                     right: auto;
                     top: $size-tiny-space;
-                    bottom: $size-tiny-space;
                 }
 
                 * {
                     display: inline;
                 }
 
-                input[type="text"] {
+                .label-text {
+                    margin-bottom: $size-very-tiny-space;
+                }
+
+                .label-input {
                     @include wide-rounded-input();
                     margin-bottom: $size-tiny-space;
                 }
@@ -216,7 +209,7 @@ export default {
     }
 
     .bottom {
-        height: 50%;
+        height: calc(100% - #{$top-height});
     }
 }
 </style>
