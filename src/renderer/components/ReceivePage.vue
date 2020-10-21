@@ -1,31 +1,33 @@
 <template>
     <div class="receive-page">
         <div class="top">
-            <div class="inner">
+            <div ref="qrContainer" class="qr-container">
                 <div ref="qrCode" class="qr-code" />
+            </div>
 
-                <div v-if="address" class="address monospace loaded">
-                    <a @click.prevent="copyAddress" id="receive-address" href="#" title="Click to copy address">
-                        {{ address }}
-                    </a>
-
-                    <div class="add-label">
-                        <label>
-                            Add label:
-                        </label>
-
-                        <input type="text" v-model="label" @keydown.enter="addLabel" />
-                        <input type="button" value="Go!" @click="addLabel" />
-                    </div>
+            <div class="address">
+                <div v-if="!address" class="loading">
+                    Loading...
                 </div>
 
-                <div v-else class="address loading">
-                    Loading...
+                <div v-else>
+                    <div class="label">
+                        <input v-if="isEditing" class="label-input" type="text" v-model="label" />
+                        <div v-else class="label-text">{{ label }}</div>
+
+                        <input v-if="isEditing" type="button" value="Ok!" @click="changeLabel()" />
+                        <input v-else type="button" value="Edit" @click="isEditing = true" />
+                    </div>
+
+                    <div class="address">
+                        {{ address }}
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="bottom">
+            <h2>Bottom Text</h2>
         </div>
     </div>
 </template>
@@ -38,13 +40,20 @@ import {mapGetters} from "vuex";
 export default {
     name: "ReceivePage",
 
-    data: () => ({
-        address: null,
-        label: '',
-        isAdding: false,
-        qrCode: null,
-        watcher: null
-    }),
+    data() {
+        let timeoutHandle = null;
+
+        return {
+            address: null,
+            label: '',
+            isEditing: false,
+            qrCode: null,
+            watcher: null,
+
+            // This has to be here rather than as a method so we can capture this.
+            resizeListener: () => this.resizeQrCode()
+        };
+    },
 
     computed: mapGetters({
         paymentRequests: 'PaymentRequest/paymentRequests',
@@ -58,6 +67,12 @@ export default {
         }
 
         await this.displayAddress();
+
+        window.addEventListener('resize', this.resizeListener);
+    },
+
+    destroyed() {
+        window.removeEventListener('resize', this.resizeListener);
     },
 
     // Make sure we always display a fresh address.
@@ -81,75 +96,121 @@ export default {
 
             if (this.paymentRequests[this.address]) {
                 this.label = this.paymentRequests[this.address].label;
-            }
-
-            if (!this.qrcode) {
-                const qrSize = 500 + Math.floor(this.$refs.qrCode.clientHeight * 0.9);
-                const logoSize = Math.floor(qrSize * 0.25);
-
-                this.qrcode = new QRCode(this.$refs.qrCode, {
-                    text: this.address,
-                    height: qrSize,
-                    width: qrSize,
-                    colorDark: 'black',
-                    colorLight: 'white',
-                    logo: '/assets/FiroSymbol.svg',
-                    // $firo-silver
-                    logoBackgroundColor: 'white',
-                    logoWidth: logoSize,
-                    logoHeight: logoSize
-                });
             } else {
-                // Update the address in the QR code.
-                this.qrcode.makeCode(this.address);
+                this.label = 'Unlabelled';
             }
+
+            this.$nextTick(() => {
+                if (!this.qrcode) {
+                    this.qrcode = new QRCode(this.$refs.qrCode, {
+                        text: this.address,
+                        height: 2048,
+                        width: 2048,
+                        colorDark: 'black',
+                        colorLight: 'white',
+                        logo: '/assets/FiroSymbol.svg',
+                        // $firo-silver
+                        logoBackgroundColor: 'white'
+                    });
+                } else {
+                    // Update the address in the QR code.
+                    this.qrcode.makeCode(this.address);
+                }
+
+                this.$nextTick(() => {
+                    this.resizeQrCode();
+                });
+            });
+        },
+
+        resizeQrCode() {
+            const img = this.$refs.qrCode.querySelector('img');
+            img.style.display = 'none';
+
+            this.$nextTick(() => {
+                // The size of qrContainer is computed to be slightly higher than that of img, for reasons I don't know.
+                const size = `${this.$refs.qrContainer.clientHeight}px`;
+                img.style.height = size;
+                img.style.width = size;
+                img.style.display = 'initial';
+            });
         },
 
         copyAddress() {
             clipboard.writeText(this.address);
         },
 
-        async addLabel() {
+        async changeLabel() {
             if (!this.address) return;
-            if (this.isAdding) return;
-            this.isAdding = true;
+            this.isEditing = false;
 
             const pr = await $daemon.createPaymentRequest(undefined, this.label, '', this.address);
             await this.$store.dispatch('PaymentRequest/addOrUpdatePaymentRequestFromResponse', pr);
-
-            while (true) {
-                await new Promise(resolve => setTimeout(resolve, 10));
-
-                if (this.paymentRequests[pr.address]) {
-                    this.$router.push('/payment-request/' + pr.address);
-                    break;
-                }
-            }
-
-            await this.displayAddress();
-            this.isAdding = false;
-        }
+         }
     }
 }
 </script>
 
 <style scoped lang="scss">
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/inputs";
+@import "src/renderer/styles/typography";
+
+
 .receive-page {
+    height: 100%;
+    margin: $size-main-margin;
+
     .top {
         height: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: end;
 
-        .inner {
-            display: flex;
-            flex-flow: column;
-            justify-content: flex-end;
+        .qr-container {
+            flex-grow: 1;
+            width: fit-content;
+            margin: {
+                left: auto;
+                right: auto;
+            }
+        }
 
-            .qr-code {
-                flex-grow: 1;
+        .address {
+            flex-grow: 0;
+
+            .label {
+                font-weight: bold;
+                width: fit-content;
+                margin: {
+                    left: auto;
+                    right: auto;
+                    top: $size-tiny-space;
+                    bottom: $size-tiny-space;
+                }
+
+                * {
+                    display: inline;
+                }
+
+                input[type="text"] {
+                    @include wide-rounded-input();
+                    margin-bottom: $size-tiny-space;
+                }
+
+                input[type="button"] {
+                    @include undecorated-button();
+                }
             }
 
             .address {
-                height: fit-content;
-                flex-grow: 0;
+                width: fit-content;
+                margin: {
+                    left: auto;
+                    right: auto;
+                    bottom: $size-tiny-space;
+                }
+                @include monospace();
             }
         }
     }
