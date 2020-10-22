@@ -33,7 +33,7 @@ const getters = {
     unconfirmedPrivate: (state) => state.unconfirmedPrivate,
     availablePublic: (state) => state.availablePublic,
     unconfirmedPublic: (state) => state.unconfirmedPublic,
-    pendingAndPublic: (state) => state.unconfirmedPrivate + state.availablePublic + state.unconfirmedPublic,
+    pending: (state) => state.unconfirmedPrivate + state.unconfirmedPublic,
     locked: (state) => state.locked,
 
     // Get the sum value of immature mining transactions.

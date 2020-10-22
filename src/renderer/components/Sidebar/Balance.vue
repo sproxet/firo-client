@@ -1,13 +1,19 @@
 <template>
     <section class="balance">
-        <div id="available">
+        <div>
             <amount :amount="available" />&nbsp;<span class="ticker">XFR</span>
         </div>
-        <div v-if="locked > 0" id="locked">
+
+        <div v-if="locked > 0" class="locked">
             +&nbsp;<amount :amount="locked" />&nbsp;locked
         </div>
-        <div v-if="pendingAndPublic > 0" id="pending">
-            +&nbsp;<amount :amount="pendingAndPublic" />&nbsp;pending
+
+        <div v-if="availablePublic > 0" class="public">
+            +&nbsp;<amount :amount="availablePublic" />&nbsp;public
+        </div>
+
+        <div v-if="pending > 0" class="pending">
+            +&nbsp;<amount :amount="pending" />&nbsp;pending
         </div>
     </section>
 </template>
@@ -27,7 +33,8 @@ export default {
         ...mapGetters({
             available: 'Balance/available',
             locked: 'Balance/locked',
-            pendingAndPublic: 'Balance/pendingAndPublic'
+            availablePublic: 'Balance/availablePublic',
+            pending: 'Balance/pending'
         })
     }
 }
@@ -46,6 +53,10 @@ export default {
 
     .ticker {
         @include ticker();
+    }
+
+    .locked, .public, .pending {
+        opacity: 0.6;
     }
 }
 </style>
