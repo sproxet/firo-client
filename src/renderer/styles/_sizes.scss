@@ -12,6 +12,8 @@ $size-top-section: $size-menu-top-margin + $size-menu-logo;
 
 $size-sidebar-width: 20vw;
 
+$size-shadow-radius: 4px;
+
 // These are only used on pages with a right sidebar.
 $size-primary-content-width: 48vw;
 $size-secondary-content-width: calc(100vw - #{$size-sidebar-width} - #{$size-primary-content-width});
@@ -32,7 +34,6 @@ $size-popup-margin: 40px;
 $size-main-margin: $size-small-space;
 $size-detail-margin: $size-main-margin;
 
-$size-rounded-input-border-radius: 4px;
 $size-rounded-input-horizontal-padding: 10px;
 $size-rounded-input-vertical-padding: 3px;
 

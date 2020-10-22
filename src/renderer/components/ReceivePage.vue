@@ -1,9 +1,11 @@
 <template>
     <div class="receive-page">
         <div class="top">
-            <div ref="qrContainer" class="qr-container">
-                <div ref="qrContainerInner" class="inner" style="display: none">
-                    <div ref="qrCode" class="qr-code" />
+            <div class="outer">
+                <div ref="qrContainer" class="qr-container">
+                    <div ref="qrContainerInner" class="inner" style="display: none">
+                        <div ref="qrCode" class="qr-code" />
+                    </div>
                 </div>
             </div>
 
@@ -145,6 +147,7 @@ export default {
 @import "src/renderer/styles/inputs";
 @import "src/renderer/styles/typography";
 
+
 $top-height: 40%;
 
 .receive-page {
@@ -157,12 +160,25 @@ $top-height: 40%;
         flex-direction: column;
         justify-content: end;
 
-        .qr-container {
+        .outer {
             flex-grow: 1;
+            padding: $size-tiny-space;
+
+            box-shadow: $size-shadow-radius $size-shadow-radius $size-shadow-radius $size-shadow-radius $color-shadow;
+
+            border: {
+                width: 0;
+                radius: $size-shadow-radius;
+            }
+
             width: fit-content;
             margin: {
                 left: auto;
                 right: auto;
+            }
+
+            .qr-container {
+                height: 100%;
             }
         }
 
