@@ -27,7 +27,12 @@
         </div>
 
         <div class="bottom">
-            <h2>Bottom Text</h2>
+            <AnimatedTable
+                :fields="tableFields"
+                :data="paymentRequestsSorted"
+                :compare-elements="() => false"
+                no-data-message="No Saved Addresses"
+            />
         </div>
     </div>
 </template>
@@ -36,9 +41,16 @@
 import {clipboard} from "electron";
 import QRCode from "easyqrcodejs";
 import {mapGetters} from "vuex";
+import AnimatedTable from "renderer/components/AnimatedTable/AnimatedTable";
+import PaymentRequestLabel from "renderer/components/AnimatedTable/PaymentRequestLabel";
+import PaymentRequestAddress from "renderer/components/AnimatedTable/PaymentRequestAddress";
 
 export default {
     name: "ReceivePage",
+
+    components: {
+        AnimatedTable
+    },
 
     data() {
         let timeoutHandle = null;
@@ -50,14 +62,25 @@ export default {
             qrCode: null,
 
             // This has to be here rather than as a method so we can capture this.
-            resizeListener: () => this.resizeQrCode()
+            resizeListener: () => this.resizeQrCode(),
+
+            tableFields: [
+                {name: PaymentRequestLabel},
+                {name: PaymentRequestAddress}
+            ]
         };
     },
 
-    computed: mapGetters({
-        paymentRequests: 'PaymentRequest/paymentRequests',
-        addresses: 'Transactions/addresses'
-    }),
+    computed: {
+        ...mapGetters({
+            paymentRequests: 'PaymentRequest/paymentRequests',
+            addresses: 'Transactions/addresses'
+        }),
+
+        paymentRequestsSorted() {
+            return Object.values(this.paymentRequests).sort((a, b) => b.createdAt - a.createdAt);
+        }
+    },
 
     async created() {
         // Make sure everything shows properly on reload.
@@ -91,7 +114,11 @@ export default {
 
     methods: {
         async displayAddress() {
-            this.address = await $daemon.getUnusedAddress();
+            if (this.$route.params.address) {
+                this.address = this.$route.params.address;
+            } else {
+                this.address = await $daemon.getUnusedAddress();
+            }
 
             if (this.paymentRequests[this.address]) {
                 this.label = this.paymentRequests[this.address].label;
@@ -137,6 +164,7 @@ export default {
 
             const pr = await $daemon.createPaymentRequest(undefined, this.label, '', this.address);
             await this.$store.dispatch('PaymentRequest/addOrUpdatePaymentRequestFromResponse', pr);
+            await this.$router.push(`/receive/${this.address}`);
          }
     }
 }
@@ -155,7 +183,7 @@ $top-height: 40%;
     margin: $size-main-margin;
 
     .top {
-        height: $top-height;
+        height: calc(#{$top-height} - #{$size-main-margin});
         display: flex;
         flex-direction: column;
         justify-content: end;
@@ -225,7 +253,12 @@ $top-height: 40%;
     }
 
     .bottom {
-        height: calc(100% - #{$top-height});
+        height: calc(100% - #{$top-height} - #{$size-main-margin}*2);
+        margin-top: $size-main-margin;
+
+        .animated-table {
+            height: 100%;
+        }
     }
 }
 </style>
