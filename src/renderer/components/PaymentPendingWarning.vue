@@ -1,17 +1,38 @@
 <template>
     <div id="payment-pending-warning">
         <h3>
-            {{ convertToCoin(availablePublic) }} XFR pending. <a href="#" @click="anonymizeFunds">Click here</a> to secure them.
+            {{ convertToCoin(availablePublic) }} XFR pending.
+            <a href="#" @click="showAnonymizeDialog = true">Click here</a> to secure them.
         </h3>
+
+        <Popup v-if="showAnonymizeDialog">
+            <AnonymizeDialog
+                @cancel="showAnonymizeDialog = false"
+                @complete="showAnonymizeDialog = false"
+            />
+        </Popup>
     </div>
 </template>
 
 <script>
 import {mapGetters} from "vuex";
 import {convertToCoin} from "lib/convert";
+import Popup from "renderer/components/Popup";
+import AnonymizeDialog from "renderer/components/AnonymizeDialog";
 
 export default {
     name: "PaymentPendingWarning",
+
+    components: {
+        Popup,
+        AnonymizeDialog
+    },
+
+    data() {
+        return {
+            showAnonymizeDialog: false
+        };
+    },
 
     computed: mapGetters({
         availablePublic: 'Balance/availablePublic'
@@ -21,7 +42,11 @@ export default {
         convertToCoin,
 
         anonymizeFunds() {
-            throw 'unimplemented';
+            this. true;
+        },
+
+        closeDialog() {
+            this.showAnonymizeDialog = false;
         }
     }
 }
@@ -30,6 +55,7 @@ export default {
 <style scoped lang="scss">
 @import "src/renderer/styles/colors";
 @import "src/renderer/styles/sizes";
+@import "src/renderer/styles/popup";
 
 #payment-pending-warning {
     user-select: none;

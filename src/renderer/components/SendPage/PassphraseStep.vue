@@ -12,7 +12,7 @@
                 name="passphrase"
                 placeholder="Enter Your Passphrase"
                 @input="$emit('input', $event.target.value)"
-                @keyup.enter="$emit('onEnter')"
+                @keyup.enter="$emit('confirm')"
             />
 
             <div v-if="error" class="error">
