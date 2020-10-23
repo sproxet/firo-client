@@ -424,6 +424,7 @@ export default {
             this.label = '';
             this.amount = '';
             this.address = '';
+            this.isPrivate = true;
         },
 
         async selectCustomInputs() {
