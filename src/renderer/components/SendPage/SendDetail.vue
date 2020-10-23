@@ -158,12 +158,12 @@
                     <div id="private-balance">{{ convertToCoin(availablePrivate) }} <span class="ticker">XFR</span></div>
                     <label id="public-balance-label">PUBLIC BALANCE:</label>
                     <div id="public-balance">{{ convertToCoin(availablePublic) }} <span class="ticker">XFR</span></div>
-                    <div id="toggle">
-                        PRIVATE
-                        <div class="toggle-switch" :class="isPrivate ? 'private' : 'public'" @click="togglePrivatePublic()">
+                    <div id="toggle" :class="isPrivate ? 'private' : 'public'">
+                        <label id="toggle-label-private">PRIVATE</label>
+                        <div class="toggle-switch" @click="togglePrivatePublic()">
                             <div class="inner" />
                         </div>
-                        PUBLIC
+                        <label id="toggle-label-public">PUBLIC</label>
                     </div>
                 </div>
             </div>
@@ -584,12 +584,24 @@ label {
                             background-color: red;
                             border-radius: 5px;
 
-                            @at-root #toggle .private .inner {
-                                float: left;
+                            @at-root #toggle.private {
+                                #toggle-label-public {
+                                    opacity: 0.4;
+                                }
+
+                                .inner {
+                                  float: left;
+                                }
                             }
 
-                            @at-root #toggle .public .inner {
-                                float: right;
+                            @at-root #toggle.public {
+                                #toggle-label-private {
+                                    opacity: 0.4;
+                                }
+
+                                .inner {
+                                    float: right;
+                                }
                             }
                         }
                     }
