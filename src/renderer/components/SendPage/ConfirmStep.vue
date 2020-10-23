@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="title">
-            Confirm Send
+            Confirm {{ isPrivate ? '' : 'Public '}}Send
         </div>
 
         <div class="content">
@@ -81,6 +81,11 @@ export default {
     },
 
     props: {
+        isPrivate: {
+            required: true,
+            type: Boolean
+        },
+
         label: {
             required: true,
             type: String

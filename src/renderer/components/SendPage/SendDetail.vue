@@ -152,6 +152,20 @@
                     :subtract-fee-from-amount="subtractFeeFromAmount"
                     @success="cleanupForm"
                 />
+
+                <div class="footer">
+                    <label id="private-balance-label">PRIVATE BALANCE:</label>
+                    <div id="private-balance">{{ convertToCoin(availablePrivate) }} <span class="ticker">XFR</span></div>
+                    <label id="public-balance-label">PRIVATE BALANCE:</label>
+                    <div id="public-balance">{{ convertToCoin(availablePublic) }} <span class="ticker">XFR</span></div>
+                    <div id="toggle">
+                        PRIVATE
+                        <div class="toggle-switch" :class="isPrivate ? 'private' : 'public'" @click="togglePrivatePublic()">
+                            <div class="inner" />
+                        </div>
+                        PUBLIC
+                    </div>
+                </div>
             </div>
         </div>
     </section>
@@ -185,6 +199,7 @@ export default {
             subtractFeeFromAmount: true,
             useCustomFee: false,
             txFeePerKb: 1,
+            isPrivate: true,
 
             // This is the total, computed transaction fee.
             transactionFee: 0,
@@ -202,12 +217,6 @@ export default {
             maxPrivateSend: 'Balance/maxPrivateSend',
             selectedUtxos: 'ZcoinPayment/selectedInputs'
         }),
-
-        // Return either 'private' or 'public', depending on whether the user is intending to make a private or a public
-        // send.
-        isPrivate () {
-            return true;
-        },
 
         available () {
             return this.isPrivate ? this.availablePrivate : this.availablePublic;
@@ -294,6 +303,10 @@ export default {
 
         isValidated: {
             handler: 'maybeShowFee'
+        },
+
+        isPrivate: {
+            handler: 'maybeShowFee'
         }
     },
 
@@ -354,7 +367,12 @@ export default {
     methods: {
         convertToCoin,
 
+        togglePrivatePublic() {
+            this.isPrivate = !this.isPrivate;
+        },
+
         async maybeShowFee () {
+            this.transactionFee = 0;
             this.error = null;
             this.totalAmountExceedsBalance = false;
 
@@ -366,12 +384,10 @@ export default {
                     !await this.$validator.validate('amount') ||
                     this.satoshiAmount === 0
                 ) {
-                    this.transactionFee = 0;
                     return;
                 }
             } catch {
                 // On startup, $validator.validate() will throw an error because we're called before the page is loaded.
-                this.transactionFee = 0;
                 return;
             }
 
@@ -513,6 +529,68 @@ label {
             .error {
                 @include error();
                 margin-bottom: $size-small-space;
+            }
+
+            .footer {
+                @include small();
+                margin-top: $size-small-space;
+
+                display: grid;
+                grid-gap: $size-tiny-space;
+
+                #private-balance-label {
+                    grid-row: 1;
+                    grid-column: 1;
+                }
+
+                #private-balance {
+                    grid-row: 1;
+                    grid-column: 2;
+                }
+
+                #public-balance-label {
+                    grid-row: 2;
+                    grid-column: 1;
+                }
+
+                #public-balance {
+                    grid-row: 2;
+                    grid-column: 2;
+                }
+
+                #toggle {
+                    @include label();
+                    user-select: none;
+                    grid-row: 2;
+                    grid-column: 4;
+                    justify-self: end;
+
+                    .toggle-switch {
+                        height: 0.7em;
+                        width: $size-medium-space;
+                        padding: 1px;
+                        display: inline-block;
+                        background-color: black;
+                        border-radius: 5px;
+
+                        .inner {
+                            height: 0.7em;
+                            display: inline-block;
+                            position: relative;
+                            width: $size-medium-space / 2;
+                            background-color: red;
+                            border-radius: 5px;
+
+                            @at-root #toggle .private .inner {
+                                float: left;
+                            }
+
+                            @at-root #toggle .public .inner {
+                                float: right;
+                            }
+                        }
+                    }
+                }
             }
         }
     }

@@ -14,6 +14,7 @@
                 :amount="amount"
                 :fee="computedTxFee"
                 :total="totalAmount"
+                :is-private="isPrivate"
                 @cancel="cancel()"
                 @confirm="goToPassphraseStep()"
             />
