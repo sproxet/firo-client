@@ -114,13 +114,15 @@ export default {
 
         async attemptSend () {
             this.show = 'wait';
+            const passphrase = this.passphrase;
+            this.passphrase = '';
 
             try {
                 if (this.isPrivate) {
-                    await $daemon.privateSend(this.passphrase, this.label, this.address, this.amount,
+                    await $daemon.privateSend(passphrase, this.label, this.address, this.amount,
                         this.subtractFeeFromAmount);
                 } else {
-                    let d = await $daemon.publicSend(this.passphrase, this.label, this.address, this.amount,
+                    let d = await $daemon.publicSend(passphrase, this.label, this.address, this.amount,
                         this.txFeePerKb, this.subtractFeeFromAmount);
                 }
             } catch (e) {
