@@ -156,7 +156,7 @@
                 <div class="footer">
                     <label id="private-balance-label">PRIVATE BALANCE:</label>
                     <div id="private-balance">{{ convertToCoin(availablePrivate) }} <span class="ticker">XFR</span></div>
-                    <label id="public-balance-label">PRIVATE BALANCE:</label>
+                    <label id="public-balance-label">PUBLIC BALANCE:</label>
                     <div id="public-balance">{{ convertToCoin(availablePublic) }} <span class="ticker">XFR</span></div>
                     <div id="toggle">
                         PRIVATE
