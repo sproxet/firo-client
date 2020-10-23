@@ -1,28 +1,27 @@
 <template>
     <div class="evo-znode-page znode-table-container">
         <div class="window-height znode-table-container">
-            <input
-                class="control"
-                v-focus
-                @input="onInput"
-                placeholder="Filter by label, ip address or collateral address"
-                v-model="filter"
-                style="font-style:italic"
-            />
-            <input
-                class="round"
-                v-model="showAllZnodes"
-                type="checkbox"
-                name="showallznodes"
-                :checked="false"
-                @change="showAllZnodesChange(showAllZnodes)"
-            />
-            <label for="showallznodes">
-                Show all Znodes.
-            </label>
-            <div style="text-align:right">
-                <p>Node Count: {{ tableData.length }}</p>
+            <div class="header">
+                <input
+                    class="filter-input"
+                    v-model="filter"
+                    @input="onInput"
+                    placeholder="Filter by label, ip address or collateral address"
+                />
+
+                <div class="right">
+                    <div class="show-all-znodes">
+                        <input type="checkbox" v-model="showAllZnodes" @change="showAllZnodesChange(showAllZnodes)" />
+                        <label>SHOW ALL ZNODES</label>
+                    </div>
+
+                    <div class="node-count">
+                        <label>NODE COUNT:</label>
+                        <div class="value">{{ tableData.length }}</div>
+                    </div>
+                </div>
             </div>
+
             <section v-scrollable class="znode-table-container animated-table">
                 <vuetable
                     ref="vuetable"
@@ -167,7 +166,7 @@ export default {
         return {
             tableFields,
             filter: "",
-            showAllZnodes: false,
+            showAllZnodes: true,
             tableData: [],
             oldFilter: "",
         };
@@ -364,6 +363,54 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "src/renderer/styles/inputs";
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/typography";
+@import "src/renderer/styles/colors";
+
+.header {
+    width: 100%;
+    overflow: auto;
+    padding-bottom: $size-small-space;
+
+    .filter-input {
+        @include wide-rounded-input();
+        position: relative;
+        float: left;
+    }
+
+    .right {
+        position: relative;
+        float: right;
+
+        .show-all-znodes, .node-count  {
+            display: inline-block;
+
+            label {
+                @include label();
+            }
+
+            * {
+                display: inline;
+            }
+        }
+
+        .show-all-znodes {
+            margin-right: $size-large-space;
+
+            label {
+                color: $color-text-accent;
+            }
+        }
+
+        .node-count {
+            .value {
+                @include label();
+            }
+        }
+    }
+}
+
 .control {
     display: flex;
     padding-right: 0;
