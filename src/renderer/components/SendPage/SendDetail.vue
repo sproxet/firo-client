@@ -199,6 +199,7 @@ export default {
             network: 'ApiStatus/network',
             availablePrivate: 'Balance/available',
             availablePublic: 'Balance/availablePublic',
+            maxPrivateSend: 'Balance/maxPrivateSend',
             selectedUtxos: 'ZcoinPayment/selectedInputs'
         }),
 
