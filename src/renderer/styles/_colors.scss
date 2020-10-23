@@ -21,6 +21,8 @@ $color-main-background: white;
 $color-menu-background: #e1ebf1;
 $color-detail-background: #f6f8fc;
 $color-loading-background: #e5e5e5;
+$color-setup-background: $color-menu-background;
+$color-setup-foreground: $color-detail-background;
 
 $color-warning-background: $firo-brick-red;
 $color-warning-text: white;

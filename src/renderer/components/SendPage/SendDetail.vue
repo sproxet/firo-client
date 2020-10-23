@@ -205,7 +205,7 @@ export default {
         // Return either 'private' or 'public', depending on whether the user is intending to make a private or a public
         // send.
         isPrivate () {
-            return false;
+            return true;
         },
 
         available () {
@@ -412,14 +412,6 @@ export default {
         async selectCustomInputs() {
             this.$store.commit('ZcoinPayment/ENTERED_SEND_AMOUNT', this.amount? this.amount : 0);
             this.$store.dispatch('ZcoinPayment/TOGGLE_CUSTOM_INPUTS_POPUP');
-        },
-
-        async openAddressBook() {
-            if (!this.addressBook || !Object.keys(this.addressBook).length) {
-                const ab = await $daemon.readAddressBook();
-                this.$store.dispatch('Transactions/setAddressBook', ab);
-            }
-            this.$store.dispatch('App/OPEN_ADDRESS_BOOK', {open: true, address: '', purpose: 'send'});
         }
     }
 }

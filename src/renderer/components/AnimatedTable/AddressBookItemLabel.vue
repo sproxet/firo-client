@@ -4,7 +4,7 @@
     </th>
 
     <td v-else class="label">
-        {{ rowData.label || 'Untitled' }}
+        {{ rowData.label || 'Unlabelled' }}
     </td>
 </template>
 

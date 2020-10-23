@@ -1,7 +1,7 @@
 <template>
     <div class="receive-page">
         <div class="top">
-            <div class="outer">
+            <div ref="outerQrCode" class="outer">
                 <div ref="qrContainer" class="qr-container">
                     <div ref="qrContainerInner" class="inner" style="display: none">
                         <div ref="qrCode" class="qr-code" />
@@ -29,8 +29,9 @@
         <div class="bottom">
             <AnimatedTable
                 :fields="tableFields"
-                :data="paymentRequestsSorted"
+                :data="receiveAddresses"
                 :compare-elements="() => false"
+                :on-row-select="navigateToAddressBookItem"
                 no-data-message="No Saved Addresses"
             />
         </div>
@@ -42,8 +43,8 @@ import {clipboard} from "electron";
 import QRCode from "easyqrcodejs";
 import {mapGetters} from "vuex";
 import AnimatedTable from "renderer/components/AnimatedTable/AnimatedTable";
-import PaymentRequestLabel from "renderer/components/AnimatedTable/PaymentRequestLabel";
-import PaymentRequestAddress from "renderer/components/AnimatedTable/PaymentRequestAddress";
+import AddressBookItemLabel from "renderer/components/AnimatedTable/AddressBookItemLabel";
+import AddressBookItemAddress from "renderer/components/AnimatedTable/AddressBookItemAddress";
 
 export default {
     name: "ReceivePage",
@@ -53,33 +54,25 @@ export default {
     },
 
     data() {
-        let timeoutHandle = null;
-
         return {
             address: null,
             label: '',
             isEditing: false,
             qrCode: null,
 
-            // This has to be here rather than as a method so we can capture this.
-            resizeListener: () => this.resizeQrCode(),
-
             tableFields: [
-                {name: PaymentRequestLabel},
-                {name: PaymentRequestAddress}
+                {name: AddressBookItemLabel},
+                {name: AddressBookItemAddress}
             ]
         };
     },
 
     computed: {
         ...mapGetters({
-            paymentRequests: 'PaymentRequest/paymentRequests',
+            addressBook: 'AddressBook/addressBook',
+            receiveAddresses: 'AddressBook/receiveAddresses',
             addresses: 'Transactions/addresses'
-        }),
-
-        paymentRequestsSorted() {
-            return Object.values(this.paymentRequests).sort((a, b) => b.createdAt - a.createdAt);
-        }
+        })
     },
 
     async created() {
@@ -90,17 +83,17 @@ export default {
 
         await this.displayAddress();
 
-        window.addEventListener('resize', this.resizeListener);
+        window.addEventListener('resize', () => this.resizeQrCode());
     },
 
     destroyed() {
-        window.removeEventListener('resize', this.resizeListener);
+        window.removeEventListener('resize', () => this.resizeQrCode());
     },
 
     // Make sure we always display a fresh address.
     watch: {
-        paymentRequests() {
-            if (this.paymentRequests[this.address]) {
+        receiveAddresses() {
+            if (this.addressBook[this.address]) {
                 this.displayAddress();
             }
         },
@@ -113,6 +106,12 @@ export default {
     },
 
     methods: {
+        navigateToAddressBookItem(item) {
+            if (this.$route.params.address === item.address) return;
+            this.$router.push(`/receive/${item.address}`);
+            this.displayAddress();
+        },
+
         async displayAddress() {
             if (this.$route.params.address) {
                 this.address = this.$route.params.address;
@@ -120,8 +119,8 @@ export default {
                 this.address = await $daemon.getUnusedAddress();
             }
 
-            if (this.paymentRequests[this.address]) {
-                this.label = this.paymentRequests[this.address].label;
+            if (this.addressBook[this.address] && this.addressBook[this.address].label) {
+                this.label = this.addressBook[this.address].label;
             } else {
                 this.label = 'Unlabelled';
             }
@@ -143,6 +142,7 @@ export default {
         },
 
         resizeQrCode() {
+            this.$refs.outerQrCode.classList.remove('shadow');
             this.$refs.qrContainerInner.style.display = 'none';
 
             const size = `${this.$refs.qrContainer.clientHeight}px`;
@@ -152,6 +152,7 @@ export default {
             img.style.display = 'initial';
 
             this.$refs.qrContainerInner.style.display = 'initial';
+            this.$refs.outerQrCode.classList.add('shadow');
         },
 
         copyAddress() {
@@ -162,8 +163,8 @@ export default {
             if (!this.address) return;
             this.isEditing = false;
 
-            const pr = await $daemon.createPaymentRequest(undefined, this.label, '', this.address);
-            await this.$store.dispatch('PaymentRequest/addOrUpdatePaymentRequestFromResponse', pr);
+            const newAddress = await $daemon.updateAddressBookItem(this.addressBook[this.address], this.label);
+            await this.$store.commit('AddressBook/updateAddress', newAddress);
             await this.$router.push(`/receive/${this.address}`);
          }
     }
@@ -192,7 +193,9 @@ $top-height: 40%;
             flex-grow: 1;
             padding: $size-tiny-space;
 
-            box-shadow: $size-shadow-radius $size-shadow-radius $size-shadow-radius $size-shadow-radius $color-shadow;
+            &.shadow {
+                box-shadow: $size-shadow-radius $size-shadow-radius $size-shadow-radius $size-shadow-radius $color-shadow;
+            }
 
             border: {
                 width: 0;

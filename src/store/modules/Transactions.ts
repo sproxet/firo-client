@@ -120,23 +120,6 @@ const mutations = {
     setShouldShowWarning(state, warning: boolean) {
         state.shouldShowWarning = warning;
         state.shouldShowWarning = {...state.shouldShowWarning};
-    },
-
-    setAddressBook(state, addressBook_: AddressBookItem[]) {
-        addressBook_.forEach(e => {
-            state.addressBook[e.address] = e;
-        })
-        state.addressBook = {...state.addressBook};
-    },
-
-    deleteAddressItem(state, address: string) {
-        delete state.addressBook[address];
-        state.addressBook = {...state.addressBook};
-    },
-
-    addAddressItem(state, item: AddressBookItem) {
-        state.addressBook[item.address] = item;
-        state.addressBook = {...state.addressBook};
     }
 };
 
@@ -205,18 +188,6 @@ const actions = {
 
     changeShouldShowWarning({commit, rootGetters}, warning: boolean) {
         commit('setShouldShowWarning', warning);
-    },
-
-    setAddressBook({commit, rootGetters}, addressBook_: AddressBookItem[]) {
-        commit('setAddressBook', addressBook_);
-    },
-
-    deleteAddressItem({commit, rootGetters}, address:string) {
-        commit('deleteAddressItem', address);
-    },
-
-    addAddressItem({commit, rootGetters}, item:AddressBookItem) {
-        commit('addAddressItem', item);
     }
 };
 

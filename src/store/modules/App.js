@@ -12,7 +12,6 @@ const state = {
     // This is used so that we will always have the same mnemonic even if we go back and forth through several different
     // screens. Cached mnemonic is of the type {mnemonic: string, mnemonicPassphrase: string | null, isNewMnemonic: boolean}
     cachedMnemonic: null,
-    openAddressBook: null,
     blockchainLocation: null,
     // This is the value read from our configuration, not what is given to us in APIStatus.
     zcoinClientNetwork: null,
@@ -23,10 +22,6 @@ const state = {
 }
 
 const mutations = {
-    [types.OPEN_ADDRESS_BOOK] (state, open_) {
-        state.openAddressBook = open_
-    },
-
     // This is called when app settings are read. It DOES NOT persist information to disk itself. (cf. setIsInitialized)
     // We will cause MainLayout.vue to stop showing IntroScreen.
     SET_IS_INITIALIZED (state, value) {
@@ -95,10 +90,6 @@ const mutations = {
 }
 
 const actions = {
-    async [types.OPEN_ADDRESS_BOOK] ({ commit, state }, open_) {
-        commit(types.OPEN_ADDRESS_BOOK, open_);
-    },
-
     async SET_IS_INITIALIZED({commit}, value) {
         commit('SET_IS_INITIALIZED', value);
     },
@@ -181,7 +172,6 @@ const getters = {
     // overlay.
     waitingReason: (state) => state.waitingReason,
     cachedMnemonic: (state) => state.cachedMnemonic,
-    openAddressBook: (state) => state.openAddressBook
 }
 
 export default {
