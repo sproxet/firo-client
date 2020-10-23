@@ -544,6 +544,7 @@ label {
                 }
 
                 #private-balance {
+                    text-align: right;
                     grid-row: 1;
                     grid-column: 2;
                 }
@@ -554,6 +555,7 @@ label {
                 }
 
                 #public-balance {
+                    text-align: right;
                     grid-row: 2;
                     grid-column: 2;
                 }
