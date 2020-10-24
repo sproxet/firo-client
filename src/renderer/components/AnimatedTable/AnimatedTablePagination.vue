@@ -84,12 +84,13 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/renderer/styles/colors";
+@import "src/renderer/styles/sizes";
 
 .pagination {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: emRhythm(5);
+    margin-top: $size-tiny-space;
     text-align: center;
     user-select: none;
 
@@ -102,7 +103,7 @@ a {
 }
 
 .icon {
-    padding: emRhythm(0.5);
+    padding: $size-tiny-space;
 
     &.disabled {
         cursor: default;
@@ -112,13 +113,13 @@ a {
 
 .numbers {
     background: lighten($color-main-background, 20%);
-    border-radius: emRhythm(1);
+    border-radius: $size-tiny-space;
     overflow: hidden;
-    margin-left: emRhythm(1.5);
-    margin-right: emRhythm(1.5);
+    margin-left: $size-tiny-space;
+    margin-right: $size-tiny-space;
 
     a {
-        padding: emRhythm(0.5);
+        padding: $size-tiny-space;
         color: $color-text;
 
         &:hover,

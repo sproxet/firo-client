@@ -228,11 +228,6 @@ export default {
     flex-grow: 1;
 }
 
-.table-pagination {
-    flex-grow: 0;
-    flex-basis: $size-table-row-height;
-}
-
 .animated-table {
     .vuetable-body-wrapper {
         & > table {
@@ -264,6 +259,7 @@ export default {
     .vuetable-body {
         tr {
             cursor: pointer;
+            box-sizing: border-box;
 
             // alternating colours for different rows
             &:nth-child(odd) {
