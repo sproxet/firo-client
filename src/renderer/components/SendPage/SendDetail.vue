@@ -15,7 +15,7 @@
                         type="text"
                         name="label"
                         tabindex="1"
-                        placeholder="Label"
+                        placeholder="Label (optional)"
                     />
                 </div>
 
@@ -63,9 +63,25 @@
                 </div>
 
                 <div class="field">
-                    <a id="select-custom-inputs" href="#" @click="selectCustomInputs()">
-                        Select Custom Inputs
-                    </a>
+                    <div class="custom-input-checkbox-container">
+                        <input type="checkbox" v-model="useCustomInputs" />
+                        <label>
+                            <a href="#" @click="showCustomInputSelector = true">
+                                Custom Inputs (Coin Control)
+                            </a>
+                        </label>
+                    </div>
+
+                    <div v-if="useCustomInputs" class="selected-coin-value">
+                        <label>Max Send:</label>
+                        <div class="value">
+                            <amount :amount="coinControlSelectedAmount" /> <span class="ticker">XFR</span>
+                        </div>
+                    </div>
+
+                    <Popup v-if="useCustomInputs" v-show="showCustomInputSelector" :close="() => showCustomInputSelector = false">
+                        <InputSelection v-model="customInputs" :is-private="isPrivate" />
+                    </Popup>
                 </div>
 
                 <div class="field">
@@ -150,6 +166,7 @@
                     :tx-fee-per-kb="txFeePerKb || 1"
                     :computed-tx-fee="transactionFee"
                     :subtract-fee-from-amount="subtractFeeFromAmount"
+                    :coin-control="coinControl"
                     @success="cleanupForm"
                 />
 
@@ -178,13 +195,17 @@ import {isValidAddress} from 'lib/isValidAddress';
 import {convertToSatoshi, convertToCoin} from 'lib/convert';
 import Amount from "renderer/components/Sidebar/Amount";
 import {ZcoindErrorResponse} from "daemon/zcoind";
+import InputSelection from "renderer/components/SendPage/InputSelection";
+import Popup from "renderer/components/Popup";
 
 export default {
     name: 'SendDetail',
 
     components: {
         SendFlow,
-        Amount
+        Amount,
+        InputSelection,
+        Popup
     },
 
     inject: [
@@ -200,6 +221,9 @@ export default {
             useCustomFee: false,
             txFeePerKb: 1,
             isPrivate: true,
+            showCustomInputSelector: false,
+            useCustomInputs: false,
+            customInputs: [],
 
             // This is the total, computed transaction fee.
             transactionFee: 0,
@@ -217,6 +241,14 @@ export default {
             maxPrivateSend: 'Balance/maxPrivateSend',
             selectedUtxos: 'ZcoinPayment/selectedInputs'
         }),
+
+        coinControl () {
+            return this.customInputs.length ? this.customInputs.map(tx => [tx.txid, tx.txIndex]) : undefined;
+        },
+
+        coinControlSelectedAmount () {
+            return this.customInputs.reduce((a, tx) => a + tx.amount, 0);
+        },
 
         available () {
             return this.isPrivate ? this.availablePrivate : this.availablePublic;
@@ -247,10 +279,6 @@ export default {
             return !!(this.amount && this.address && this.txFeePerKb && !this.validationErrors.items.length);
         },
 
-        coinControlSelectedAmount() {
-            return (this.selectedUtxos || []).reduce((a, e) => a + e.amount, 0);
-        },
-
         amountValidations () {
             return this.isPrivate ?
                 'amountIsWithinAvailableBalance|privateAmountIsValid|privateAmountIsWithinBounds|privateAmountDoesntViolateInputLimits'
@@ -278,17 +306,31 @@ export default {
             this.amount = to.query.amount || '';
         },
 
-        txFeePerKb: {
-            handler: 'maybeShowFee',
-            immediate: true
-        },
-
         useCustomFee() {
             if (!this.useCustomFee) {
                 this.txFeePerKb = 1;
                 // Make sure the validation warning goes away.
                 this.$refs.txFeePerKb.value = 1;
             }
+        },
+
+        useCustomInputs() {
+            if (this.useCustomInputs) {
+                this.showCustomInputSelector = true;
+            } else {
+                this.customInputs.length = 0;
+            }
+
+            this.$validator.validateAll();
+        },
+
+        coinControlSelectedAmount() {
+            this.$validator.validateAll();
+        },
+
+        txFeePerKb: {
+            handler: 'maybeShowFee',
+            immediate: true
         },
 
         amount: {
@@ -416,20 +458,11 @@ export default {
             }
         },
 
-        send() {
-            throw 'unimplemented'
-        },
-
         cleanupForm () {
             this.label = '';
             this.amount = '';
             this.address = '';
             this.isPrivate = true;
-        },
-
-        async selectCustomInputs() {
-            this.$store.commit('ZcoinPayment/ENTERED_SEND_AMOUNT', this.amount? this.amount : 0);
-            this.$store.dispatch('ZcoinPayment/TOGGLE_CUSTOM_INPUTS_POPUP');
         }
     }
 }
@@ -501,6 +534,18 @@ label {
                 }
 
                 &#subtract-fee-from-amount {
+                    * {
+                        display: inline;
+                    }
+                }
+
+                .custom-input-checkbox-container {
+                    * {
+                        display: inline-block;
+                    }
+                }
+
+                .selected-coin-value {
                     * {
                         display: inline;
                     }

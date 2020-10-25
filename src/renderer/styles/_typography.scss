@@ -66,6 +66,11 @@ a {
     @include monospace();
 }
 
+@mixin txid {
+    @include monospace();
+    @include mini();
+}
+
 @mixin label {
     font-weight: bold;
     margin-bottom: $size-tiny-space;

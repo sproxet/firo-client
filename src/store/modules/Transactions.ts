@@ -30,15 +30,21 @@ const mutations = {
                 unspentAlreadyProcess = true;
                 for (const transactions of Object.values(addressData.txids)) {
                     for (const tx of Object.values(transactions)) {
-                        stateUnspentUTXOs[`${tx.txid}-${tx.txIndex}-${tx.category}`] = true;
-
                         if (address === 'MINT' && tx.category === 'receive') {
                             // Every mint transaction appears both as a 'receive' and a 'mint'. Since we're already
                             // processing them as a 'mint' category transaction, we don't need to process it as a 'receive'
                             // category one.
                             continue;
                         }
+
                         tx.uniqId = `${tx.txid}-${tx.txIndex}-${tx.category}`;
+
+                        if (tx.spendable) {
+                            stateUnspentUTXOs[tx.uniqId] = true;
+                        } else {
+                            delete stateUnspentUTXOs[tx.uniqId];
+                        }
+
                         // mined and znode transactions without a blockHeight are orphans.
                         if (['mined', 'znode'].includes(tx.category) && !tx.blockHeight) {
                             // Delete previous records associated with the transaction.
@@ -92,7 +98,6 @@ const mutations = {
                     //logger.info('spent: %s', id);
                     if (id.includes(`${outpoint.txid}-${outpoint.index}-`)) {
                         stateTransactions[id].spendable = false;
-                        stateUnspentUTXOs[id] = false;
                         delete stateUnspentUTXOs[id];
                     }
                 }
@@ -194,7 +199,7 @@ const actions = {
 const getters = {
     // a map of `${txid}-${txIndex}` to the full transaction object returned from zcoind
     transactions: (state) => state.transactions,
-    unspentUTXOs: (state) => state.unspentUTXOs,
+    unspentUTXOs: (state) => Object.keys(state.unspentUTXOs).map(uniqId => state.transactions[uniqId]),
     addressBook: (state) => state.addressBook,
     walletLoaded: (state) => state.walletLoaded,
 

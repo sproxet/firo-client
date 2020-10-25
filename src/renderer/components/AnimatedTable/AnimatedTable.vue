@@ -14,6 +14,7 @@
                 v-bind="{ scopedSlots: $scopedSlots }"
                 @vuetable:pagination-data="onPaginationData"
                 @vuetable:row-clicked="onRowClick"
+                @vuetable:field-event="(ev) => $emit('field-event', ev)"
             />
         </div>
 
@@ -87,6 +88,14 @@ export default {
         compareElements: {
             type: Function,
             default: (a, b) => a === b
+        },
+
+        // FIXME: For reasons I haven't been able to figure out, flex-grow will cause .table-container to sometimes
+        //        outgrow the available space. This sets our table to be smaller so that won't happen. It seems to only
+        //        be necessary when AnimatedTable is embedded in Popup, which happens in InputSelection.
+        antiOverflowHack: {
+            type: Boolean,
+            default: false
         }
     },
 
@@ -152,6 +161,7 @@ export default {
                 const tableRow = document.querySelector('.table-container td');
                 if (tableContainer && tableHeader && tableRow) {
                     this.perPage = Math.floor((tableContainer.clientHeight - tableHeader.clientHeight) / tableRow.clientHeight);
+                    if (this.antiOverflowHack) this.perPage -= 1;
                     this.$refs.vuetable.refresh();
                 }
             });

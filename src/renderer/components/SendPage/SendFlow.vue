@@ -93,6 +93,11 @@ export default {
         isPrivate: {
             required: true,
             type: Boolean
+        },
+
+        coinControl: {
+            required: false,
+            type: Array // CoinControl[]
         }
     },
 
@@ -120,10 +125,10 @@ export default {
             try {
                 if (this.isPrivate) {
                     await $daemon.privateSend(passphrase, this.label, this.address, this.amount,
-                        this.subtractFeeFromAmount);
+                        this.subtractFeeFromAmount, this.coinControl);
                 } else {
                     let d = await $daemon.publicSend(passphrase, this.label, this.address, this.amount,
-                        this.txFeePerKb, this.subtractFeeFromAmount);
+                        this.txFeePerKb, this.subtractFeeFromAmount, this.coinControl);
                 }
             } catch (e) {
                 if (e instanceof IncorrectPassphrase) {

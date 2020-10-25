@@ -1,11 +1,15 @@
 <template>
-    <div class="content-wrapper">
-        <div>
-            <h3>ERROR</h3>
+    <div class="error-step">
+        <div class="title">Error</div>
 
-            <p>
-                {{ errorMessage }}
-            </p>
+        <div class="content">
+            {{ error }}
+        </div>
+
+        <div class="buttons">
+            <button @click="$emit('ok')">
+                Ok
+            </button>
         </div>
     </div>
 </template>
@@ -15,7 +19,7 @@ export default {
     name: "SendStepError",
 
     props: {
-        errorMessage: {
+        error: {
             type: String,
             required: true
         }
@@ -23,10 +27,13 @@ export default {
 }
 </script>
 
-<style scoped>
-.content-wrapper {
-    word-break: break-word;
-    /* This could possibly overflow, but other elements have greater fixed-length anyway. */
-    max-width: 40em;
+<style scoped lang="scss">
+@import "src/renderer/styles/typography";
+@import "src/renderer/styles/popup";
+
+@include popup();
+
+.content {
+    @include error();
 }
 </style>

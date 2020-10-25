@@ -1401,10 +1401,11 @@ export class Zcoind {
         }
     }
 
-    async lockCoins(auth: string, lockedCoins: string, unlockedCoins: string): Promise<string> {
+    // Lock the coins in lockedCoins, and unlock the ones in unlockedCoins.
+    async updateCoinLocks(auth: string, lockedCoins: CoinControl, unlockedCoins: CoinControl): Promise<string> {
         const data = await this.send(auth, 'create', 'lockCoins', {
-            lockedCoins: lockedCoins,
-            unlockedCoins: unlockedCoins
+            lockedCoins: coinControlToString(lockedCoins),
+            unlockedCoins: coinControlToString(unlockedCoins)
         });
 
         if (typeof data === 'string') {

@@ -1,10 +1,12 @@
+@import "src/renderer/styles/z";
+
 .tooltip {
     $tooltip--padding: emRhythm(2) emRhythm(2);
     $tooltip--arrow-size: 0.66em;
     $tooltip--background-transition-duration: .5s;
 
     display: block !important;
-    z-index: 10000;
+    z-index: $z-tooltip;
     @include box-shadow-large();
 
     &:not(.popover) {
@@ -41,7 +43,7 @@
         position: absolute;
         margin: emRhythm(1);
         border-color: $color--comet-dark-mixed;
-        z-index: 1;
+        z-index: $z-tooltip;
     }
 
     &[x-placement^="top"] {

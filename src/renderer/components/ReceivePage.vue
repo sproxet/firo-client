@@ -30,7 +30,7 @@
             <AnimatedTable
                 :fields="tableFields"
                 :data="receiveAddresses"
-                :compare-elements="() => false"
+                :track-by="'address'"
                 :on-row-select="navigateToAddressBookItem"
                 no-data-message="No Saved Addresses"
             />
