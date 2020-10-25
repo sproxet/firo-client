@@ -4,6 +4,7 @@ import { ipcMain } from 'electron'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import AddressBook from "store/modules/AddressBook";
 import AddressValidation from "store/modules/AddressValidation";
 import ApiStatus from "store/modules/ApiStatus";
 import App from "store/modules/App";
@@ -29,6 +30,7 @@ const clients = []
 
 const store = new Vuex.Store({
     modules: {
+        AddressBook,
         AddressValidation,
         ApiStatus,
         App,
