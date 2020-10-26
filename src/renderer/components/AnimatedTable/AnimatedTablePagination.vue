@@ -90,7 +90,7 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: $size-tiny-space;
+    padding-top: $size-tiny-space;
     text-align: center;
     user-select: none;
 
@@ -115,9 +115,10 @@ a {
     background: lighten($color-main-background, 20%);
     border-radius: $size-tiny-space;
     overflow: hidden;
-    margin-left: $size-tiny-space;
-    margin-right: $size-tiny-space;
-
+    padding: {
+        left: $size-tiny-space;
+        right: $size-tiny-space;
+    }
     a {
         padding: $size-tiny-space;
         color: $color-text;

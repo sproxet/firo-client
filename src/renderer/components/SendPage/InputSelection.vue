@@ -5,7 +5,7 @@
             :selected-to="selectedRows"
             :data="ourUnspentUTXOs"
             :fields="fields"
-            :anti-overflow-hack="true"
+            :anti-overflow-hack="false"
             track-by="uniqId"
             @field-event="handleSelectionEvent($event)"
         />

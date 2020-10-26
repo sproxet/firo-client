@@ -63,7 +63,6 @@ export default {
 
     .outer {
         box-sizing: border-box;
-        padding: 10vh;
 
         .inner {
             position: relative;

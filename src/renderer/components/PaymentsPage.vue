@@ -256,8 +256,9 @@ export default {
     height: 100%;
 
     .inner {
-        height: calc(100% - #{$size-small-space} * 2);
-        margin: $size-main-margin;
+        box-sizing: border-box;
+        height: calc(100% - #{$size-main-margin} * 2);
+        padding: $size-main-margin;
 
         display: flex;
         flex-flow: column;

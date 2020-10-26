@@ -37,7 +37,7 @@ export default {
 
 #app {
     #app-drag-area {
-        position: fixed;
+        position: absolute;
         top: 0;
         z-index: $z-app-drag-area;
         height: $size-app-drag-area-height;
@@ -47,8 +47,5 @@ export default {
         user-select: none;
         -webkit-app-region: drag;
     }
-
-    max-height: 100vh;
-    overflow: hidden;
 }
 </style>

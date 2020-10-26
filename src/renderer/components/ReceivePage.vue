@@ -182,7 +182,8 @@ $top-height: 40%;
 
 .receive-page {
     height: 100%;
-    margin: $size-main-margin;
+    padding: $size-main-margin;
+    box-sizing: border-box;
 
     .top {
         height: calc(#{$top-height} - #{$size-main-margin});
