@@ -186,7 +186,7 @@ $top-height: 40%;
     box-sizing: border-box;
 
     .top {
-        height: calc(#{$top-height} - #{$size-main-margin});
+        height: $top-height;
         display: flex;
         flex-direction: column;
         justify-content: end;
@@ -258,8 +258,8 @@ $top-height: 40%;
     }
 
     .bottom {
-        height: calc(100% - #{$top-height} - #{$size-main-margin}*2);
-        margin-top: $size-main-margin;
+        height: calc(100% - #{$top-height});
+        padding-top: $size-main-margin;
 
         .animated-table {
             height: 100%;

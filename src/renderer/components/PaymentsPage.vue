@@ -248,7 +248,7 @@ export default {
 
     .inner {
         box-sizing: border-box;
-        height: calc(100% - #{$size-main-margin} * 2);
+        height: 100%;
         padding: $size-main-margin;
 
         display: flex;
