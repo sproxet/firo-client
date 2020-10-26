@@ -11,8 +11,7 @@
             <div class="output">
                 <div class="info">
                     Hello, welcome to the Zcoin Client debug console. Here you can interact with zcoind directly. Write
-                    <span class="bold">help</span> and see the list of commands, or <span class="bold">clear</span> to
-                    clear the console.
+                    <b>help</b> and see the list of commands, or <b>clear</b> to clear the console.
                 </div>
 
                 <div
@@ -369,24 +368,23 @@ export default {
 </script>
 
 <style scoped lang="scss">
-.debug-page {
-    // override styles defined globally
-    padding-right: 0;
+@import "src/renderer/styles/colors";
+@import "src/renderer/styles/typography";
 
+
+.debug-page {
+    height: 100%;
     word-break: break-all;
 
-    background-color: $color--dark;
-    color: $color--green;
+    background-color: $color-debug-background;
+    color: $color-debug-text;
 
     &:focus {
         outline: none;
     }
 
     .console {
-        font: {
-            family: monospace;
-            size: 1.3em;
-        }
+        @include monospace();
 
         padding: {
             top: 4em;

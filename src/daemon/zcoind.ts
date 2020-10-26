@@ -260,7 +260,7 @@ function isValidTransactionInput(x: any): x is TransactionInput {
 export interface AddressBookItem {
     address: string;
     label: string;
-    purpose: string;
+    purpose: 'send' | 'receive';
 }
 
 function isValidAddressBookItem(x: any): x is AddressBookItem {
@@ -268,7 +268,7 @@ function isValidAddressBookItem(x: any): x is AddressBookItem {
         typeof x === 'object' &&
         typeof x.address === 'string' &&
         typeof x.label === 'string' &&
-        typeof x.purpose === 'string';
+        ['send', 'receive'].includes(x.purpose);
 
     if (!r) {
         logger.error("Invalid address book item: %O", x);
@@ -1124,7 +1124,7 @@ export class Zcoind {
         }
     }
 
-    // Send a request to zcoind. Basically a given API call is identified by *both* the type and collection parameters.
+    // SendPage a request to zcoind. Basically a given API call is identified by *both* the type and collection parameters.
     // auth is the wallet password, which is only required for certain calls. data is arbitrary data associated with the
     // call. We return a Promise containing the data object of the response we got from zcoind.
     //
@@ -1151,7 +1151,7 @@ export class Zcoind {
         };
     }
 
-    // Send an object through the requester socket and process the response. Refer to the documentation of send() for
+    // SendPage an object through the requester socket and process the response. Refer to the documentation of send() for
     // what we're actually doing. The reason this method is split off is that the setPassphrase() method is weird and
     // requires a special case.
     //
@@ -1401,10 +1401,11 @@ export class Zcoind {
         }
     }
 
-    async lockCoins(auth: string, lockedCoins: string, unlockedCoins: string): Promise<string> {
+    // Lock the coins in lockedCoins, and unlock the ones in unlockedCoins.
+    async updateCoinLocks(auth: string, lockedCoins: CoinControl, unlockedCoins: CoinControl): Promise<string> {
         const data = await this.send(auth, 'create', 'lockCoins', {
-            lockedCoins: lockedCoins,
-            unlockedCoins: unlockedCoins
+            lockedCoins: coinControlToString(lockedCoins),
+            unlockedCoins: coinControlToString(unlockedCoins)
         });
 
         if (typeof data === 'string') {
@@ -1455,6 +1456,10 @@ export class Zcoind {
     async writeShowMnemonicWarning(auth: string, dontShowMnemonicWarning: boolean) : Promise<void> {
         await this.send(auth, 'create', 'writeShowMnemonicWarning', {dontShowMnemonicWarning});
     }
+
+    async getMasternodeList() : Promise<Object> {
+        return await this.send('', 'initial', 'masternodeList', {});
+    }
     
     async readAddressBook() : Promise<AddressBookItem[]> {
         const data = await this.send('', 'create', 'readAddressBook', {});
@@ -1465,18 +1470,42 @@ export class Zcoind {
         throw new UnexpectedZcoindResponse('create/readAddressBook', data);
     }
 
-    async getMasternodeList() : Promise<Object> {
-        return await this.send('', 'initial', 'masternodeList', {});
+    async addAddressBookItem(item: AddressBookItem): Promise<void> {
+        await this.send('', 'create', 'editAddressBook', {
+            address: item.address,
+            label: item.label,
+            purpose: item.purpose,
+            action: 'add',
+            updatedaddress: '',
+            updatedlabel: ''
+        });
     }
 
-    async editAddressBook(address_: string, label_: string, purpose_: string, action_: string, updatedaddress_:string, updatedlabel_: string) : Promise<void> {
+    async updateAddressBookItem(item: AddressBookItem, newLabel: string) : Promise<AddressBookItem> {
         await this.send('', 'create', 'editAddressBook', {
-            address: address_,
-            label: label_, // FIXME: This field is required, but its value is ignored.
-            purpose: purpose_,
-            action: action_,
-            updatedaddress: updatedaddress_,
-            updatedlabel: updatedlabel_
+            address: item.address,
+            label: item.label,
+            purpose: item.purpose,
+            action: 'edit',
+            updatedaddress: item.address,
+            updatedlabel: newLabel
+        });
+
+        return {
+            address: item.address,
+            purpose: item.purpose,
+            label: newLabel
+        };
+    }
+
+    async deleteAddressBookItem(item: AddressBookItem) : Promise<void> {
+        await this.send('', 'create', 'editAddressBook', {
+            address: item.address,
+            label: undefined,
+            purpose: item.purpose,
+            action: 'delete',
+            updatedaddress: '',
+            updatedlabel: ''
         });
     }
 

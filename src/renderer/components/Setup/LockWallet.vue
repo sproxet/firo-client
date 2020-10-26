@@ -58,20 +58,20 @@
                     this passphrase.
                 </div>
             </div>
+        </div>
 
-            <div class="buttons">
-                <BaseButton v-if="isExistingWallet" @click="quit" class="button" color="comet" tabindex="-1">
-                    Quit
-                </BaseButton>
+        <div class="buttons">
+            <button v-if="isExistingWallet" @click="quit" tabindex="-1">
+                Quit
+            </button>
 
-                <BaseButton v-else @click="goBack" id="go-back" class="button" color="comet" tabindex="-1">
-                    Back
-                </BaseButton>
+            <button v-else @click="goBack" tabindex="-1">
+                Back
+            </button>
 
-                <BaseButton @click="lockWallet" id="submit-button" class="button" color="green" tabindex="-1" :disabled="!canProceed">
-                    Submit
-                </BaseButton>
-            </div>
+            <button @click="lockWallet" tabindex="-1" :disabled="!canProceed">
+                Submit
+            </button>
         </div>
     </div>
 </template>
@@ -227,57 +227,48 @@ export default {
 </script>
 
 <style scoped lang="scss">
+@import "src/renderer/styles/typography";
+@import "src/renderer/styles/colors";
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/popup";
+@import "src/renderer/styles/inputs";
+
+@include popup();
+
 .lock-wallet {
     width: fit-content;
 }
 
-.title {
-    width: fit-content;
-    margin: auto;
-    font: {
-        size: 2em;
-        weight: bold;
-    }
-}
-
 .guidance {
+    text-align: center;
     font-style: italic;
+    padding-bottom: $size-medium-space;
 
     .emphasis {
         font-weight: bold;
-        color: $color--red-dark;
+        color: $color-error;
     }
 }
 
 .content {
-    width: fit-content;
-    margin: auto;
+    width: $size-large-field-width;
 
     .passphrase-input {
-        margin-top: 1em;
-
         .input-groups {
             .input-group {
-                margin-top: 1em;
-
+                &:first-child {
+                    margin-bottom: $size-between-field-space-big;
+                }
+                
                 label {
                     display: block;
 
-                    font: {
-                        size: 1.2em;
-                        weight: bold;
-                    }
+                    @include label();
+                    @include large();
                 }
 
                 input {
-                    border-radius: 10px;
-                    border-style: none;
-                    height: 2em;
-                    width: 25em;
-
-                    &:focus {
-                        outline: none;
-                    }
+                    @include wide-rounded-input();
                 }
 
                 .passphrase-input-and-meter {
@@ -324,25 +315,20 @@ export default {
     }
 
     .existing-wallet-confirmation-input {
-        margin-top: 1em;
+        margin-top: $size-between-field-space-small;
 
         .confirm-existing-wallet {
-            margin-top: 0.2em;
-            font-weight: bold;
+            margin-top: $size-tiny-space;
+            @include label();
 
             input {
-                margin-right: 0.2em;
+                margin-right: $size-tiny-space;
             }
         }
     }
 
     .buttons {
         width: fit-content;
-        margin: {
-            top: 2em;
-            left: auto;
-            right: auto;
-        }
     }
 }
 </style>

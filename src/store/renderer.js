@@ -4,7 +4,7 @@ import { ipcRenderer } from 'electron'
 
 import types from 'store/types'
 
-
+import AddressBook from "store/modules/AddressBook";
 import AddressValidation from "store/modules/AddressValidation";
 import ApiStatus from "store/modules/ApiStatus";
 import App from "store/modules/App";
@@ -30,6 +30,7 @@ const localModules = [
 
 const store = new Vuex.Store({
     modules: {
+        AddressBook,
         AddressValidation,
         ApiStatus,
         App,

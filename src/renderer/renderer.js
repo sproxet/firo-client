@@ -191,7 +191,7 @@ app.on('open-url', (event, url) => {
     const label = m(/[?&]message=([^&]+)/);
 
     router.push({
-        path: '/send/private',
+        path: '/send',
         query: {
             address: address,
             amount: amount && convertToCoin(amount),

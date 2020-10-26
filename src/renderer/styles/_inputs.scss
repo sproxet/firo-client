@@ -1,0 +1,74 @@
+@import "./colors";
+@import "./sizes";
+
+@mixin rounded-input() {
+    background-color: $color-input-background;
+    font-family: "Source Sans Pro";
+    opacity: 0.7;
+
+    box-shadow: $size-shadow-radius $size-shadow-radius $size-shadow-radius 0 $color-shadow;
+
+    border: {
+        width: 0;
+        radius: $size-shadow-radius;
+    }
+
+    padding: {
+        top: $size-rounded-input-vertical-padding;
+        bottom: $size-rounded-input-vertical-padding;
+        left: $size-rounded-input-horizontal-padding;
+        right: $size-rounded-input-horizontal-padding;
+    }
+
+    &, &::placeholder {
+        outline: none;
+    }
+
+    &:active {
+        border: none;
+    }
+}
+
+@mixin wide-rounded-input() {
+    @include rounded-input();
+    width: $size-large-field-width;
+}
+
+@mixin undecorated-button() {
+    cursor: pointer;
+    background-color: inherit;
+    border-radius: 25px;
+    border-width: 0;
+
+    &:focus {
+        outline: none;
+    }
+
+    font-weight: bold;
+}
+
+@mixin buttons-container {
+    height: 30px;
+    margin: auto;
+    display: flex;
+    flex-flow: row;
+    justify-content: space-between;
+
+    button {
+        flex-grow: 1;
+        background-color: $color-big-button;
+        color: $color-big-button-text;
+
+        &:not([disabled]) {
+            cursor: pointer;
+        }
+
+        &[disabled] {
+            opacity: 0.4;
+        }
+
+        &.disrecommended {
+            opacity: 0.6;
+        }
+    }
+}

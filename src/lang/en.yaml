@@ -33,7 +33,7 @@ navigation:
     title: Zcoin Balance
   menu:
     button__receive: Receive
-    button__send: Public Send
+    button__send: Public SendPage
     button__mint: Anonymize
     button__spend: Private Spend
     button__znode: Znodes
@@ -233,10 +233,10 @@ send:
 
   public:
     overview:
-      title: Send<br>Zcoin
+      title: SendPage<br>Zcoin
 
     detail-public-send:
-      title: Public Send
+      title: Public SendPage
       description: You can send one or more payments in one transaction.<br />All transactions send via this screen will be visible on the blockchain.
       label__label: Label
       placeholder__label: Enter a label for your transaction
@@ -244,13 +244,13 @@ send:
       placeholder__address: Add a valid Zcoin address
       label__amount: Amount
       placeholder__amount: Enter amount to send publicly
-      button__send--primary: "Send now | Send now | Send {count} now"
+      button__send--primary: "SendPage now | SendPage now | SendPage {count} now"
       button__send-later--secondary: Add to queue
       button__add-to-queue--secondary: Add to queue
 
     flyout-pending-payment-queue:
       title: Pending Payments
-      description: These payments are currently queued up. Once you have finished adding payments, you can send them via "Send now"
+      description: These payments are currently queued up. Once you have finished adding payments, you can send them via "SendPage now"
 
     flyout-suggest-private-spend:
       title: Private Spend

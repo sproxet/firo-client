@@ -4,6 +4,7 @@ const path = require('path')
 const { dependencies } = require('../package.json')
 const webpack = require('webpack')
 
+const CopyPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { VueLoaderPlugin } = require('vue-loader')
@@ -137,6 +138,15 @@ let rendererConfig = {
             template: path.resolve(__dirname, '../src/index.ejs'),
             nodeModules: process.env.NODE_ENV === 'production' ? false : path.resolve(__dirname, '../node_modules')
         }),
+
+        new CopyPlugin({
+            patterns: [
+                {from: 'assets/fonts', to: 'assets/fonts'},
+                {from: 'src/renderer/assets/', to: 'assets/'},
+                {from: 'src/renderer/assets/FiroSymbolDark.svg', to: 'assets/FiroSymbolDark.svg'},
+                {from: 'src/renderer/assets/FiroLogoDark.svg', to: 'assets/FiroLogoDark.svg'}
+            ]
+        }),
         new webpack.HotModuleReplacementPlugin()
     ],
     output: {
@@ -146,7 +156,8 @@ let rendererConfig = {
     },
     resolve: {
         alias: {
-            'vue$': 'vue/dist/vue.esm.js'
+            'vue$': 'vue/dist/vue.esm.js',
+            '~styles': 'renderer/styles'
         },
         modules: ['src', 'node_modules'].map(x => path.join(__dirname, '..', x)),
         extensions: ['.js', '.vue', '.json', '.css', '.scss', '.node', '.ts']
