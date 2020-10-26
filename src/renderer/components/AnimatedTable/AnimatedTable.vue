@@ -103,7 +103,8 @@ export default {
         return {
             interval: null,
             rowTransition: 'fade',
-            perPage: 0
+            perPage: 0,
+            resizeListener: () => this.setPerPage()
         }
     },
 
@@ -141,7 +142,7 @@ export default {
     },
 
     mounted() {
-        window.addEventListener("resize", this.setPerPage);
+        window.addEventListener("resize", this.resizeListener);
 
         this.$nextTick(() => {
             this.setPerPage();
@@ -149,7 +150,7 @@ export default {
     },
 
     destroyed() {
-        window.removeEventListener("resize", this.setPerPage);
+        window.removeEventListener("resize", this.resizeListener);
     },
 
     methods: {

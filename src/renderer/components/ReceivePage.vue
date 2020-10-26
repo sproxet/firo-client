@@ -59,6 +59,7 @@ export default {
             label: '',
             isEditing: false,
             qrCode: null,
+            resizeListener: () => this.resizeQrCode(),
 
             tableFields: [
                 {name: AddressBookItemLabel},
@@ -83,11 +84,11 @@ export default {
 
         await this.displayAddress();
 
-        window.addEventListener('resize', () => this.resizeQrCode());
+        window.addEventListener('resize', this.resizeListener);
     },
 
     destroyed() {
-        window.removeEventListener('resize', () => this.resizeQrCode());
+        window.removeEventListener('resize', this.resizeListener);
     },
 
     // Make sure we always display a fresh address.
