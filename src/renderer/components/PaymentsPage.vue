@@ -22,9 +22,7 @@
                 :data="filteredTableData"
                 :fields="tableFields"
                 track-by="id"
-                :selected-row="selectedPayment"
                 :no-data-message="tableData.length ? 'No transactions matched your search criterion' : 'No Payments made yet.'"
-                :on-row-select="onTableRowSelect"
                 :sort-order="sortOrder"
                 :compare-elements="comparePayments"
                 :per-page="17"
@@ -235,13 +233,6 @@ export default {
         reloadTable() {
             this.tableData = this.newTableData;
             this.newTableData = [];
-        },
-
-        async onTableRowSelect (rowData) {
-            // id is always set to the path of the detail route of the payment.
-            if (this.$route.path !== rowData.id) {
-                this.$router.push(rowData.id);
-            }
         }
     }
 }
