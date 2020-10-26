@@ -410,6 +410,7 @@ export default {
         convertToCoin,
 
         togglePrivatePublic() {
+            this.cleanupForm();
             this.isPrivate = !this.isPrivate;
         },
 
