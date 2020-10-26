@@ -3,7 +3,7 @@
         <div class="title">Welcome!</div>
 
         <div class="content">
-            Thank you for downloading Firo. Click below to embark on your path to financial privacy.
+            Thank you for downloading <span class="firo">Firo</span>. Click below to embark on your path to financial privacy.
         </div>
 
         <div class="buttons">
@@ -29,10 +29,18 @@ export default {
 
 <style lang="scss" scoped>
 @import "src/renderer/styles/popup";
+@import "src/renderer/styles/colors";
 
 .welcome {
     @include popup();
     max-width: 30% !important;
+    text-align: center;
+
+    .content {
+        .firo {
+            color: $color-text-accent;
+        }
+    }
 
     .buttons {
         width: 30%;
