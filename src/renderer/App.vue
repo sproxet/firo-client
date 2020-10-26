@@ -36,6 +36,8 @@ export default {
 @import './styles/z';
 
 #app {
+    user-select: none;
+
     #app-drag-area {
         position: absolute;
         top: 0;
