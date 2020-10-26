@@ -66,7 +66,7 @@
                     <div class="custom-input-checkbox-container">
                         <input type="checkbox" v-model="useCustomInputs" />
                         <label>
-                            <a href="#" @click="showCustomInputSelector = true">
+                            <a href="#" @click="useCustomInputs = true; showCustomInputSelector = true">
                                 Custom Inputs (Coin Control)
                             </a>
                         </label>
@@ -362,12 +362,12 @@ export default {
 
         this.$validator.extend('amountIsWithinAvailableBalance', {
             // this.availableXzc will still be reactively updated.
-            getMessage: () => this.coinControlSelectedAmount ?
+            getMessage: () => this.useCustomInputs ?
                 `Amount is over the sum of your selected coins, ${convertToCoin(this.coinControlSelectedAmount)} XFR`
                 :
                 `Amount is over your available balance of ${convertToCoin(this.available)} XFR`,
 
-            validate: (value) => this.coinControlSelectedAmount ?
+            validate: (value) => this.useCustomInputs ?
                 convertToSatoshi(value) <= this.coinControlSelectedAmount
                 :
                 convertToSatoshi(value) <= this.available
