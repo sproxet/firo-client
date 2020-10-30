@@ -410,8 +410,9 @@ export default {
         convertToCoin,
 
         togglePrivatePublic() {
+            const p = this.isPrivate;
             this.cleanupForm();
-            this.isPrivate = !this.isPrivate;
+            this.isPrivate = !p;
         },
 
         async maybeShowFee () {
