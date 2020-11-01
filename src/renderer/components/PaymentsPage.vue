@@ -259,7 +259,6 @@ export default {
 
             .table-filter-input {
                 margin: {
-                    top: $size-small-space;
                     left: auto;
                     right: 0;
                     bottom: $size-medium-space;

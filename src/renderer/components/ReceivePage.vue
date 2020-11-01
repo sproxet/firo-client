@@ -164,7 +164,13 @@ export default {
             if (!this.address) return;
             this.isEditing = false;
 
-            const newAddress = await $daemon.updateAddressBookItem(this.addressBook[this.address], this.label);
+            let newAddress;
+            if (this.addressBook[this.address]) {
+                newAddress = await $daemon.updateAddressBookItem(this.addressBook[this.address], this.label);
+            } else {
+                newAddress = {purpose: 'receive', label: this.label, address: this.address};
+                await $daemon.addAddressBookItem(newAddress);
+            }
             await this.$store.commit('AddressBook/updateAddress', newAddress);
             await this.$router.push(`/receive/${this.address}`);
          }
@@ -219,7 +225,7 @@ $top-height: 40%;
             flex-grow: 0;
 
             .label {
-                font-weight: bold;
+                @include label();
                 width: fit-content;
                 margin: {
                     left: auto;
@@ -252,7 +258,7 @@ $top-height: 40%;
                     right: auto;
                     bottom: $size-tiny-space;
                 }
-                @include monospace();
+                @include address();
             }
         }
     }

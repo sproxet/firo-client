@@ -1,9 +1,16 @@
 <template>
     <div id="send-page">
         <div id="send-primary">
+            <input
+                v-model="filter"
+                type="text"
+                placeholder="Search by label or address"
+            />
+
             <AnimatedTable
+                ref="table"
                 :fields="tableFields"
-                :data="sendAddresses"
+                :data="filteredSendAddresses"
                 :track-by="'address'"
                 :on-row-select="navigateToAddressBookItem"
                 no-data-message="No Saved Addresses"
@@ -46,6 +53,12 @@
                             tabindex="2"
                             placeholder="Address"
                         />
+
+                        <div v-if="showAddToAddressBook" id="add-to-address-book">
+                            <a href="#" @click.once="addToAddressBook">
+                                Add to Address Book
+                            </a>
+                        </div>
                     </div>
 
                     <div class="field" id="amount-field">
@@ -245,6 +258,9 @@ export default {
                 {name: AddressBookItemAddress}
             ],
 
+            // This is the search term to filter addresses by.
+            filter: '',
+
             // This is the total, computed transaction fee.
             transactionFee: 0,
 
@@ -260,8 +276,19 @@ export default {
             availablePublic: 'Balance/availablePublic',
             maxPrivateSend: 'Balance/maxPrivateSend',
             selectedUtxos: 'ZcoinPayment/selectedInputs',
-            sendAddresses: 'AddressBook/sendAddresses'
+            sendAddresses: 'AddressBook/sendAddresses',
+            addressBook: 'AddressBook/addressBook'
         }),
+
+        filteredSendAddresses () {
+            // filter must be outside the closure for reactivity to work.
+            const filter = this.filter;
+            return this.sendAddresses.filter(address => address.label.includes(filter) || address.address.includes(filter));
+        },
+
+        showAddToAddressBook () {
+            return isValidAddress(this.address, this.network) && !this.addressBook[this.address];
+        },
 
         coinControl () {
             return this.customInputs.length ? this.customInputs.map(tx => [tx.txid, tx.txIndex]) : undefined;
@@ -510,6 +537,11 @@ export default {
         float: left;
 
         padding: $size-main-margin;
+
+        input[type="text"] {
+            @include wide-rounded-input();
+            margin-bottom: $size-medium-space;
+        }
     }
 
     .send-detail {
@@ -548,6 +580,8 @@ export default {
                 flex-grow: 1;
 
                 .field {
+                    width: fit-content;
+
                     &:not(:first-child) {
                         margin-top: $size-between-field-space-big;
                     }
@@ -563,6 +597,14 @@ export default {
                     &#address-field {
                         input {
                             @include address();
+                        }
+
+                        #add-to-address-book {
+                            text-align: right;
+                            a {
+                                @include small();
+                                @include optional-action;
+                            }
                         }
                     }
 
