@@ -1,6 +1,5 @@
 <template>
     <section
-        v-scrollable
         ref="debugPage"
         class="debug-page"
         tabindex="0"
@@ -371,8 +370,8 @@ export default {
 @import "src/renderer/styles/colors";
 @import "src/renderer/styles/typography";
 
-
 .debug-page {
+    overflow: scroll;
     user-select: text;
     height: 100%;
     word-break: break-all;
