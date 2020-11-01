@@ -1,7 +1,7 @@
 <template>
     <div id="payment-pending-warning">
         <h3>
-            {{ convertToCoin(availablePublic) }} XFR pending.
+            {{ convertToCoin(availablePublic) }} XFR awaiting anonymization.
             <a href="#" @click="showAnonymizeDialog = true">Click here</a> to secure them.
         </h3>
 
