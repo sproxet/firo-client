@@ -373,6 +373,7 @@ export default {
 
 
 .debug-page {
+    user-select: text;
     height: 100%;
     word-break: break-all;
 

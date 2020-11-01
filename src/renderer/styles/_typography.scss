@@ -59,19 +59,23 @@ a {
 }
 
 @mixin amount {
+    user-select: text;
     font-weight: bold;
 }
 
 @mixin address {
+    user-select: text;
     @include monospace();
 }
 
 @mixin txid {
+    user-select: text;
     @include monospace();
     @include mini();
 }
 
 @mixin label {
+    user-select: text;
     font-weight: bold;
     margin-bottom: $size-tiny-space;
 }
@@ -83,6 +87,7 @@ a {
 @mixin error {
     @include monospace();
     @include mini();
+    user-select: text;
     color: $color-error;
     font: {
         weight: bold;
