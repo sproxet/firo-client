@@ -13,6 +13,7 @@
                 :data="filteredSendAddresses"
                 :track-by="'address'"
                 :on-row-select="navigateToAddressBookItem"
+                :compare-elements="(a, b) => a.address === b.address && a.label === b.label"
                 no-data-message="No Saved Addresses"
             />
         </div>
@@ -55,7 +56,7 @@
                         />
 
                         <div v-if="showAddToAddressBook" id="add-to-address-book">
-                            <a href="#" @click.once="addToAddressBook">
+                            <a href="#" @click="addToAddressBook">
                                 Add to Address Book
                             </a>
                         </div>
@@ -457,8 +458,21 @@ export default {
     methods: {
         convertToCoin,
 
+        async addToAddressBook() {
+            if (this.addressBook[this.address]) return;
+
+            const item = {
+                address: this.address,
+                label: this.label,
+                purpose: 'send'
+            };
+            $store.commit('AddressBook/updateAddress', item);
+            await $daemon.addAddressBookItem(item);
+        },
+
         navigateToAddressBookItem(addressBookItem) {
             this.address = addressBookItem.address;
+            this.label = addressBookItem.label;
         },
 
         togglePrivatePublic() {
@@ -535,12 +549,18 @@ export default {
         height: 100%;
         width: $size-primary-content-width;
         float: left;
+        display: flex;
+        flex-direction: column;
 
         padding: $size-main-margin;
 
         input[type="text"] {
             @include wide-rounded-input();
             margin-bottom: $size-medium-space;
+        }
+
+        .animated-table {
+            flex-grow: 1;
         }
     }
 

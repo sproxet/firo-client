@@ -1,5 +1,7 @@
 import {fromPairs} from "lodash";
 import {AddressBookItem} from "../../daemon/zcoind"
+import Vue from "vue";
+
 const state = {
     addressBook: <{[address: string]: AddressBookItem}>{}
 };
@@ -11,7 +13,7 @@ const mutations = {
 
     // This must be called *in addition to* $daemon.editAddressBook.
     updateAddress(state, addressBookItem: AddressBookItem) {
-        state.addressBook[addressBookItem.address] = addressBookItem;
+        Vue.set(state.addressBook, addressBookItem.address, addressBookItem);
     },
 
     deleteAddress(state, addressBookItem: AddressBookItem) {

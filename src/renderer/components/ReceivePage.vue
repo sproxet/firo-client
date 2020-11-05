@@ -31,6 +31,8 @@
                 :fields="tableFields"
                 :data="receiveAddresses"
                 :on-row-select="navigateToAddressBookItem"
+                :compare-elements="(a, b) => a.address === b.address && a.label === b.label"
+                track-by="address"
                 no-data-message="No Saved Addresses"
             />
         </div>

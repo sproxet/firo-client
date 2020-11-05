@@ -37,6 +37,7 @@ export default {
         rowData: {
             immediate: true,
             handler(rowData) {
+                if (!rowData) return;
                 this.label = rowData.label;
             }
         }
