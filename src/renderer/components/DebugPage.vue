@@ -386,11 +386,7 @@ export default {
     .console {
         @include monospace();
 
-        padding: {
-            top: 4em;
-            left: 2%;
-            right: 2%;
-        }
+        padding: $size-main-margin;
 
         .input-line {
             font-weight: bold;
@@ -400,7 +396,7 @@ export default {
             }
 
             .input {
-                margin-left: 0.5em;
+                margin-left: $size-tiny-space;
                 max-width: border-box;
             }
         }
@@ -408,7 +404,7 @@ export default {
         .output {
             .info {
                 font-style: italic;
-                margin-bottom: 2em;
+                margin-bottom: $size-small-space;
 
                 word-break: normal;
 
@@ -423,7 +419,7 @@ export default {
 
             .output {
                 white-space: pre-wrap;
-                margin-bottom: 1em;
+                margin-bottom: $size-tiny-space;
             }
         }
 
@@ -438,7 +434,7 @@ export default {
         }
 
         .suggestions {
-            margin-top: 0.5em;
+            margin-top: $size-very-tiny-space;
 
             .suggestion {
                 &.selected {
