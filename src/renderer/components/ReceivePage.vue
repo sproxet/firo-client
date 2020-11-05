@@ -108,15 +108,12 @@ export default {
 
     methods: {
         navigateToAddressBookItem(item) {
-            if (this.$route.params.address === item.address) return;
-            this.$router.push(`/receive/${item.address}`);
+            this.address = item.address;
             this.displayAddress();
         },
 
         async displayAddress() {
-            if (this.$route.params.address) {
-                this.address = this.$route.params.address;
-            } else {
+            if (!this.address) {
                 this.address = await $daemon.getUnusedAddress();
             }
 
@@ -172,7 +169,6 @@ export default {
                 await $daemon.addAddressBookItem(newAddress);
             }
             await this.$store.commit('AddressBook/updateAddress', newAddress);
-            await this.$router.push(`/receive/${this.address}`);
          }
     }
 }

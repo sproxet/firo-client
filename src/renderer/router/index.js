@@ -63,10 +63,7 @@ export default new Router({
 
                 {
                     path: '/receive',
-                    component: require('renderer/components/ReceivePage').default,
-                    children: [
-                        {path: ':address'}
-                    ]
+                    component: require('renderer/components/ReceivePage').default
                 },
 
                 {
