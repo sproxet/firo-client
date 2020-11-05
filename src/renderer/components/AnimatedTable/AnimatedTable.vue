@@ -252,11 +252,11 @@ export default {
 
         td, th {
             &:first-child {
-                padding-left: $size-small-space;
+                padding-left: $size-table-row-horizontal-padding;
             }
 
             &:last-child {
-                padding-right: $size-small-space;
+                padding-right: $size-table-row-horizontal-padding;
             }
         }
 

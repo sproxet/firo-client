@@ -46,6 +46,7 @@ $size-sidebar-border-radius: 30pt;
 
 $size-table-row-height: $font-size-normal * 3;
 $size-table-row-vertical-padding: calc((#{$size-table-row-height} - #{$font-size-normal}) / 2);
+$size-table-row-horizontal-padding: $size-small-space;
 
 // Align child elements to the same height as the bottom of our logo.
 @mixin top-section {

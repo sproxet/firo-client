@@ -5,7 +5,7 @@
 
     <td v-else class="label">
         <div v-if="isEditing">
-            <input v-model="label" @keyup.enter="onLabelInput" @blur="onLabelInput" />
+            <input v-model="label" @keyup.enter="changeLabel" @focusout="changeLabel" />
         </div>
 
         <div v-else>
@@ -28,18 +28,31 @@ export default {
 
     data() {
         return {
-            lastLabel: this.rowData.label,
-            label: this.rowData.label,
+            label: '',
             isEditing: false
         };
     },
 
+    async created() {
+        while (!this.rowData) await new Promise(r => setTimeout(r, 10));
+        this.label = this.rowData.label;
+    },
+
     methods: {
-        onLabelInput() {
-            this.isEditing = false;
-            if (this.lastLabel === this.label) return;
-            alert(`${[this.rowData.label, this.label]}`);
-            this.lastLabel = this.label;
+        async changeLabel() {
+            const rowData = this.rowData;
+
+            if (rowData.label === this.label) {
+                this.isEditing = false;
+                return;
+            }
+
+            try {
+                const newABI = await $daemon.updateAddressBookItem(rowData, this.label);
+                $store.commit('AddressBook/updateAddress', newABI);
+            } finally {
+                this.isEditing = false;
+            }
         }
     }
 }
@@ -47,8 +60,15 @@ export default {
 
 <style scoped lang="scss">
 @import "src/renderer/styles/typography";
+@import "src/renderer/styles/inputs";
+@import "src/renderer/styles/sizes";
 
 td {
     @include label();
+}
+
+input {
+    @include rounded-input;
+    width: calc(100% - #{$size-table-row-horizontal-padding});
 }
 </style>

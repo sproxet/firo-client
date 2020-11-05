@@ -127,8 +127,8 @@
                             />
 
                             <span class="tip">
-                            sat/kb
-                        </span>
+                                sat/kb
+                            </span>
                         </div>
                     </div>
 
@@ -223,7 +223,7 @@ import {ZcoindErrorResponse} from "daemon/zcoind";
 import InputSelection from "renderer/components/SendPage/InputSelection";
 import Popup from "renderer/components/Popup";
 import AnimatedTable from "renderer/components/AnimatedTable/AnimatedTable";
-import AddressBookItemLabel from "renderer/components/AnimatedTable/AddressBookItemLabel";
+import AddressBookItemEditableLabel from "renderer/components/AnimatedTable/AddressBookItemEditableLabel";
 import AddressBookItemAddress from "renderer/components/AnimatedTable/AddressBookItemAddress";
 
 export default {
@@ -254,7 +254,7 @@ export default {
             useCustomInputs: false,
             customInputs: [],
             tableFields: [
-                {name: AddressBookItemLabel},
+                {name: AddressBookItemEditableLabel},
                 {name: AddressBookItemAddress}
             ],
 

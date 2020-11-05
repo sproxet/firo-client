@@ -30,7 +30,6 @@
             <AnimatedTable
                 :fields="tableFields"
                 :data="receiveAddresses"
-                :track-by="'address'"
                 :on-row-select="navigateToAddressBookItem"
                 no-data-message="No Saved Addresses"
             />
@@ -43,7 +42,7 @@ import {clipboard} from "electron";
 import QRCode from "easyqrcodejs";
 import {mapGetters} from "vuex";
 import AnimatedTable from "renderer/components/AnimatedTable/AnimatedTable";
-import AddressBookItemLabel from "renderer/components/AnimatedTable/AddressBookItemLabel";
+import AddressBookItemEditableLabel from "renderer/components/AnimatedTable/AddressBookItemEditableLabel";
 import AddressBookItemAddress from "renderer/components/AnimatedTable/AddressBookItemAddress";
 
 export default {
@@ -62,7 +61,7 @@ export default {
             resizeListener: () => this.resizeQrCode(),
 
             tableFields: [
-                {name: AddressBookItemLabel},
+                {name: AddressBookItemEditableLabel},
                 {name: AddressBookItemAddress}
             ]
         };
