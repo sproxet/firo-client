@@ -33,9 +33,13 @@ export default {
         };
     },
 
-    async created() {
-        while (!this.rowData) await new Promise(r => setTimeout(r, 10));
-        this.label = this.rowData.label;
+    watch: {
+        rowData: {
+            immediate: true,
+            handler(rowData) {
+                this.label = rowData.label;
+            }
+        }
     },
 
     methods: {
