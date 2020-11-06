@@ -1,233 +1,118 @@
 <template>
-    <section class="settings-page">
-        <div class="window-height">
-            <div>
-                <div class="settings-page-inner">
-                    <h1>
-                        <span>{{ $t('settings.overview.title') }}</span>
+    <div class="settings-page">
+        <Popup v-if="error">
+            <ErrorStep :error="error" />
+        </Popup>
 
-                        <div class="version">
-                            Zcoin Client v{{ zcoinClientVersion }}
-                        </div>
-                    </h1>
+        <div class="pure-buttons">
+            <button @click="openBackupDialog">
+                Backup Wallet
+            </button>
 
-                    <section class="privacy">
-                        <h2>{{ $t('settings.form.privacy.title') }}</h2>
-                        <div class="form">
-                            <connect-via-tor-settings
-                                class="connection-settings"
-                                @toggle-tor="restartDaemon"
-                            />
-                        </div>
-                    </section>
+            <button @click="showSetupScreenAgain">
+                Show Setup Screen Again
+            </button>
+        </div>
 
-                    <section class="passphrase">
-                        <h2>Passphrase</h2>
+        <div class="tor-settings">
+            <div class="guidance">
+                Enabling Tor will increase your anonymity by hiding the IP address you connect to the Firo network with.
+            </div>
 
-                        <form class="form">
-                            <div class="field">
-                                <label>Current Passphrase:</label>
-                                <input
-                                    v-model="currentPassphrase"
-                                    id="current-passphrase"
-                                    type="password"
-                                />
-                            </div>
-
-                            <div class="field">
-                                <label>New Passphrase:</label>
-                                <input
-                                    v-model="newPassphrase"
-                                    id="new-passphrase"
-                                    name="newPassphrase"
-                                    type="password"
-                                    :class="passphraseBoxClass"
-                                />
-                            </div>
-
-                            <div class="field">
-                                <label>Confirm New Passphrase:</label>
-                                <input
-                                    v-model="confirmNewPassphrase"
-                                    id="confirm-new-passphrase"
-                                    name="confirmNewPassphrase"
-                                    type="password"
-                                    :class="passphraseBoxClass"
-                                />
-                            </div>
-                        </form>
-
-                        <v-popover
-                            placement="top-end"
-                            popover-class="tooltip popover multi-step-popover"
-                            class="change-passphrase-button-popover-container"
-                            trigger="manually"
-                            :open="openPassphrasePopover"
-                            :auto-hide="true"
-                            :handle-resize="true"
-                            @hide="closePassphrasePopover"
-                        >
-                            <base-button
-                                :disabled="!canChangePassphrase"
-                                id="change-passphrase-button"
-                                color="green"
-                                @click="changePassphrase"
-                            >
-                                Change Passphrase
-                            </base-button>
-
-                            <template slot="popover">
-                                <div class="close-dialog-button">
-                                    <a
-                                        href="#"
-                                        id="close-passphrase-dialog-button"
-                                        @click.prevent="closePassphrasePopover"
-                                    >
-                                        X
-                                    </a>
-                                </div>
-
-                                <div class="content-wrapper">
-                                    <div v-if="!changePassphraseError" id="passphrase-change-successful">
-                                        Passphrase changed successfully.
-                                    </div>
-
-                                    <div v-else id="passphrase-change-error">
-                                        {{ changePassphraseError }}
-                                    </div>
-                                </div>
-                            </template>
-                        </v-popover>
-                    </section>
-                    <div v-if="apiStatus.data.hasMnemonic" class="mnemonic-setting">
-                        <u><a
-                                :style="{ cursor: 'pointer'}"
-                                @click.prevent="openMnemonicSettings()"                            >
-                            <b>Show my mnemonic recovery phrase</b>
-                            </a>
-                        </u>
-                    </div>
-                    <ShowMnemonicSettings v-if="showMnemonicSetting" @close-mnemonic="closeMnemonicDialog"/>
-
-                    <div class="buttons">
-                        <div class="backup button">
-                            <h2>Backup</h2>
-
-                            <v-popover
-                                :open="popoverStep !== 'initial'"
-                                placement="top-end"
-                                popover-class="tooltip popover multi-step-popover"
-                                class="send-button-popover-container"
-                                trigger="manually"
-                                :auto-hide="false"
-                                :handle-resize="true"
-                            >
-                                <base-button
-                                    color="green"
-                                    @click="openBackupDialog"
-                                >
-                                    Backup Zcoin Data
-                                </base-button>
-
-                                <template slot="popover">
-                                    <div class="close-dialog-button">
-                                        <a
-                                            @click.prevent="closePopover"
-                                            href="#"
-                                        >
-                                            X
-                                        </a>
-                                    </div>
-
-                                    <div class="content-wrapper">
-                                        <div v-if="popoverStep === 'wait'">
-                                            Please wait...
-                                        </div>
-
-                                        <div v-if="popoverStep === 'success'">
-                                            Backup succeeded!
-                                        </div>
-
-                                        <div v-if="popoverStep === 'error'">
-                                            {{ errorMessage }}
-                                        </div>
-                                    </div>
-                                </template>
-                            </v-popover>
-                        </div>
-
-                        <div class="button reset-config">
-                            <h2>Reset Network and Data Directory</h2>
-
-                            <base-button color="green" @click="showSetupScreenAgain">
-                                Reset Configuration
-                            </base-button>
-                        </div>
-                    </div>
-                </div>
+            <div class="tor-checkbox-line">
+                <input type="checkbox" v-model="useTor" />
+                <label>
+                    Connect to Other Nodes via Tor
+                </label>
             </div>
         </div>
-    </section>
+
+        <hr />
+
+        <div class="detail-buttons">
+            <button @click="() => showDetail = 'passphrase'">
+                Change Passphrase
+            </button>
+
+            <button v-if="hasMnemonic" @click="showMnemonicRecoveryPhrase">
+                Show My Mnemonic Recovery Phrase
+            </button>
+        </div>
+
+        <div class="detail">
+            <div v-if="showDetail == 'passphrase'">
+                <div class="field">
+                    <label>Current Passphrase:</label>
+                    <input type="password" v-model="currentPassphrase" />
+                </div>
+
+                <div class="field">
+                    <label>New Passphrase:</label>
+                    <input type="password" v-model="newPassphrase" :class="{matching: passphrasesMatch}" />
+                </div>
+
+                <div class="field">
+                    <label>Confirm Passphrase:</label>
+                    <input type="password" v-model="confirmPassphrase" :class="{matching: passphrasesMatch}" />
+                </div>
+            </div>
+
+            <SmallMnemonic v-if="showDetail === 'mnemonic'" :words="mnemonicWords" />
+        </div>
+    </div>
 </template>
 
 <script>
 import {mapGetters} from 'vuex'
 import {remote} from 'electron';
-import ConnectViaTorSettings from 'renderer/components/SettingsPage/ConnectViaTorSettings'
-import ShowMnemonicSettings from 'renderer/components/SettingsPage/ShowMnemonicSettings'
-
-const zcoinClientVersion = require('../../../package.json').version;
+import Popup from './Popup';
+import ErrorStep from "./SendPage/ErrorStep";
+import {IncorrectPassphrase} from "daemon/zcoind";
 
 export default {
     name: 'SettingsPage',
 
     components: {
-        ConnectViaTorSettings,
-        ShowMnemonicSettings
+        Popup,
+        ErrorStep,
+        SmallMnemonic
     },
 
     computed: {
         ...mapGetters({
-            apiStatus: 'ApiStatus/apiStatus'
+            apiStatus: 'ApiStatus/apiStatus',
+            hasMnemonic: 'ApiStatus/hasMnemonic'
         }),
 
-        passphraseBoxClass () {
-            return this.confirmNewPassphrase && (this.newPassphrase !== this.confirmNewPassphrase) ?
-                'non-matching'
-                :
-                'matching';
+        passphrasesMatch () {
+            return !this.confirmNewPassphrase || this.newPassphrase === this.confirmNewPassphrase;
         },
 
         canChangePassphrase () {
-            return this.currentPassphrase && this.newPassphrase && (this.newPassphrase === this.confirmNewPassphrase) && !this.openPassphrasePopover;
+            return this.currentPassphrase && this.newPassphrase && (this.newPassphrase === this.confirmNewPassphrase);
         }
     },
 
     data () {
         return {
-            popoverStep: 'initial',
-            errorMessage: '',
-            changePassphraseError: '',
+            useTor: $store.getters['Settings/isConnectedViaTor'],
+            showDetail: 'passphrase', // 'passphrase' | 'mnemonic'
             currentPassphrase: '',
             newPassphrase: '',
             confirmNewPassphrase: '',
-            openPassphrasePopover: false,
-            zcoinClientVersion,
-            showMnemonicSetting: false
         }
     },
 
-    mounted() {
-        this.$on('close-mnemonic', this.closeMnemonicDialog);
+    watch: {
+        async useTor() {
+            $setWaitingReason("Restarting daemon...");
+            await $daemon.updateSettings({torsetup: this.useTor ? '1' : '0'});
+            await $daemon.stopDaemon();
+            await $startDaemon();
+        }
     },
 
     methods: {
-        async restartDaemon() {
-            $setWaitingReason("Restarting daemon...");
-            await $daemon.stopDaemon();
-
-            await $startDaemon();
-        },
 
         async changePassphrase() {
             if (!this.canChangePassphrase) {
@@ -237,16 +122,16 @@ export default {
             try {
                 await $daemon.setPassphrase(this.currentPassphrase, this.newPassphrase);
             } catch (e) {
-                if (e.name === 'IncorrectPassphrase') {
-                    this.changePassphraseError = 'Incorrect Passphrase';
-                } else if (e.error && e.error.message) {
-                    this.changePassphraseError = e.error.message;
+                if (e instanceof IncorrectPassphrase) {
+                    this.error = 'Incorrect Passphrase';
                 } else {
-                    this.changePassphraseError = JSON.stringify(e);
+                    this.error = `${e}`;
                 }
             }
 
-            this.openPassphrasePopover = true;
+            this.currentPassphrase = '';
+            this.newPassphrase = '';
+            this.confirmNewPassphrase = '';
         },
 
         async closeMnemonicDialog() {
