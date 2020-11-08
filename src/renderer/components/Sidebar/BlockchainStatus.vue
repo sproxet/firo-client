@@ -1,6 +1,6 @@
 <template>
     <div id="blockchain-status">
-        <div v-if="connections === 0 && network !== 'regtest'">
+        <div v-if="connections === 0 && network !== 'regtest'" class="connecting">
             <loading-bounce size="mini" />
             Connecting...
         </div>
@@ -58,7 +58,7 @@ export default {
         margin-right: $size-tiny-space;
     }
 
-    .syncing-text {
+    .connecting, .syncing-text {
         margin-bottom: $size-tiny-space;
         * {
             display: inline-block;
