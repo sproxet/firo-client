@@ -1,5 +1,6 @@
 @import "./colors";
 @import "./sizes";
+@import "./typography";
 
 @mixin rounded-input() {
     background-color: $color-input-background;
@@ -47,6 +48,35 @@
     font-weight: bold;
 }
 
+@mixin button {
+    background-color: $color-big-button;
+    color: $color-big-button-text;
+    font-weight: bold;
+
+    &:focus {
+        outline: none;
+    }
+
+    &:not([disabled]) {
+        cursor: pointer;
+    }
+
+    &[disabled] {
+        opacity: 0.4;
+    }
+
+    &.disrecommended {
+        opacity: 0.6;
+    }
+
+    &.active {
+        color: white;
+        background-color: $firo-brick-red;
+        border: none;
+        font-weight: bold;
+    }
+}
+
 @mixin buttons-container {
     height: 30px;
     margin: auto;
@@ -56,19 +86,26 @@
 
     button {
         flex-grow: 1;
-        background-color: $color-big-button;
-        color: $color-big-button-text;
+        @include button();
 
-        &:not([disabled]) {
-            cursor: pointer;
+        &:not(:first-child) {
+            margin-left: $size-small-space;
         }
+    }
+}
 
-        &[disabled] {
-            opacity: 0.4;
-        }
+@mixin buttons-vertical-container {
+    display: flex;
+    flex-flow: column;
+    justify-content: space-between;
 
-        &.disrecommended {
-            opacity: 0.6;
+    button {
+        height: 30px;
+        flex-grow: 1;
+        @include button();
+
+        &:not(:first-child) {
+            margin-top: $size-small-space;
         }
     }
 }

@@ -1,16 +1,35 @@
 <template>
     <div class="settings-page">
-        <Popup v-if="error">
-            <ErrorStep :error="error" />
+        <Popup v-if="errorMessage">
+            <ErrorStep :error="errorMessage" @ok="clearErrorMessage" />
         </Popup>
+
+        <Popup v-if="successMessage">
+            <SuccessMessage :message="successMessage" @ok="clearSuccessMessage" />
+        </Popup>
+
+        <Popup v-if="shouldShowMnemonicPassphrasePopup">
+            <SendStepPassphrase
+                v-model="mnemonicPassphrase"
+                :error="mnemonicPassphraseError"
+                @cancel="clearMnemonicPassphrasePopup"
+                @confirm="tryShowMnemonicRecoveryPhrase"
+            />
+        </Popup>
+
+        <h1 class="header">
+            firo client v2.0.0
+        </h1>
+
+        <hr class="hr1" />
 
         <div class="pure-buttons">
             <button @click="openBackupDialog">
                 Backup Wallet
             </button>
 
-            <button @click="showSetupScreenAgain">
-                Show Setup Screen Again
+            <button @click="redoSetup">
+                Redo Setup
             </button>
         </div>
 
@@ -27,33 +46,35 @@
             </div>
         </div>
 
-        <hr />
+        <hr class="hr2" />
 
         <div class="detail-buttons">
-            <button @click="() => showDetail = 'passphrase'">
+            <button :class="{active: showDetail === 'passphrase'}" @click="showPassphraseInput">
                 Change Passphrase
             </button>
 
-            <button v-if="hasMnemonic" @click="showMnemonicRecoveryPhrase">
-                Show My Mnemonic Recovery Phrase
+            <button v-if="hasMnemonic" :class="{active: showDetail === 'mnemonic'}" @click="showMnemonicPassphrasePopup">
+                Show Mnemonic Recovery Phrase
             </button>
         </div>
 
         <div class="detail">
-            <div v-if="showDetail == 'passphrase'">
-                <div class="field">
+            <div v-if="showDetail === 'passphrase'" class="change-passphrase">
+                <div class="passphrase-inputs">
                     <label>Current Passphrase:</label>
                     <input type="password" v-model="currentPassphrase" />
-                </div>
 
-                <div class="field">
                     <label>New Passphrase:</label>
                     <input type="password" v-model="newPassphrase" :class="{matching: passphrasesMatch}" />
+
+                    <label>Confirm Passphrase:</label>
+                    <input type="password" v-model="confirmNewPassphrase" :class="{matching: passphrasesMatch}" />
                 </div>
 
-                <div class="field">
-                    <label>Confirm Passphrase:</label>
-                    <input type="password" v-model="confirmPassphrase" :class="{matching: passphrasesMatch}" />
+                <div class="buttons">
+                    <button :disabled="!canChangePassphrase" :class="{active: canChangePassphrase}" @click="changePassphrase">
+                        Change Passphrase
+                    </button>
                 </div>
             </div>
 
@@ -67,15 +88,20 @@ import {mapGetters} from 'vuex'
 import {remote} from 'electron';
 import Popup from './Popup';
 import ErrorStep from "./SendPage/ErrorStep";
+import SmallMnemonic from "./SettingsPage/SmallMnemonic";
 import {IncorrectPassphrase} from "daemon/zcoind";
+import SendStepPassphrase from "renderer/components/SendPage/PassphraseStep";
+import SuccessMessage from "renderer/components/SuccessMessage";
 
 export default {
     name: 'SettingsPage',
 
     components: {
+        SendStepPassphrase,
         Popup,
         ErrorStep,
-        SmallMnemonic
+        SmallMnemonic,
+        SuccessMessage
     },
 
     computed: {
@@ -100,7 +126,14 @@ export default {
             currentPassphrase: '',
             newPassphrase: '',
             confirmNewPassphrase: '',
-        }
+            changePassphraseError: null,
+            shouldShowMnemonicPassphrasePopup: false,
+            mnemonicPassphrase: '',
+            mnemonicPassphraseError: null,
+            mnemonicWords: [],
+            successMessage: null,
+            errorMessage: null
+        };
     },
 
     watch: {
@@ -113,6 +146,46 @@ export default {
     },
 
     methods: {
+        clearSuccessMessage() {
+            this.successMessage = null;
+        },
+
+        clearErrorMessage() {
+            this.errorMessage = null;
+        },
+
+        showMnemonicPassphrasePopup() {
+            this.mnemonicPassphrase = '';
+            this.mnemonicPassphraseError = ''
+        },
+
+        clearMnemonicPassphrasePopup() {
+            this.mnemonicPassphrase = '';
+            this.mnemonicPassphraseError = null;
+            this.showMnemonicPassphrasePopup = false;
+        },
+
+        async tryShowMnemonicRecoveryPhrase() {
+            if (this.showDetail === 'mnemonic') return;
+            console.log(this.showDetail);
+
+            try {
+                this.mnemonicWords = await $daemon.showMnemonics(this.mnemonicPassphrase);
+                this.clearMnemonicPassphrasePopup();
+                this.showDetail = 'mnemonic';
+            } catch (e) {
+                this.mnemonicPassphrase = '';
+                if (e instanceof IncorrectPassphrase) {
+                    this.mnemonicPassphraseError = 'Incorrect Passphrase';
+                } else {
+                    this.mnemonicPassphraseError = `${e}`;
+                }
+            }
+        },
+
+        showPassphraseInput() {
+            this.showDetail = 'passphrase';
+        },
 
         async changePassphrase() {
             if (!this.canChangePassphrase) {
@@ -121,27 +194,18 @@ export default {
 
             try {
                 await $daemon.setPassphrase(this.currentPassphrase, this.newPassphrase);
+                this.newPassphrase = '';
+                this.confirmNewPassphrase = '';
+                this.successMessage = 'Passphrase Changed!'
             } catch (e) {
                 if (e instanceof IncorrectPassphrase) {
-                    this.error = 'Incorrect Passphrase';
+                    this.errorMessage = 'Incorrect Passphrase';
                 } else {
-                    this.error = `${e}`;
+                    this.errorMessage = `${e}`;
                 }
             }
 
             this.currentPassphrase = '';
-            this.newPassphrase = '';
-            this.confirmNewPassphrase = '';
-        },
-
-        async closeMnemonicDialog() {
-            this.showMnemonicSetting = false;
-        },
-
-        // This also needs to be called on popover auto-close to cleanup data.
-        closePassphrasePopover() {
-            this.changePassphraseError = '';
-            this.openPassphrasePopover = false;
         },
 
         async openBackupDialog() {
@@ -161,22 +225,13 @@ export default {
 
             try {
                 await $daemon.backup(backupDirectory);
-                this.popoverStep = 'success';
+                this.successMessage = 'Your wallet.dat has been backed up.';
             } catch (e) {
                 this.errorMessage = (e.error && e.error.message) ? e.error.message : String(e);
-                this.popoverStep = 'error';
             }
         },
 
-        openMnemonicSettings() {
-            this.showMnemonicSetting = true;
-        },
-
-        closePopover() {
-            this.popoverStep = 'initial';
-        },
-
-        async showSetupScreenAgain() {
+        async redoSetup() {
             if (!confirm("Are you sure you want to reset the configuration?")) {
                 return;
             }
@@ -189,88 +244,106 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.version {
-    font: {
-        style: italic;
-        weight: normal;
-        size: 0.5em;
-    }
-}
+@import "src/renderer/styles/sizes";
+@import "src/renderer/styles/colors";
+@import "src/renderer/styles/typography";
+@import "src/renderer/styles/inputs";
 
 .settings-page {
-    box-sizing: border-box;
-    overflow-y: auto;
-}
+    padding: $size-main-margin;
+    display: grid;
+    grid-template-columns: 2fr 4fr 1fr;
+    grid-template-areas: "header         header"
+                         "hr1            hr1"
+                         "pure-buttons   tor-settings"
+                         "hr2            hr2"
+                         "detail-buttons detail";
 
-.settings-page-inner {
-    padding: emRhythm(5) emRhythm(8) emRhythm(5) emRhythm(4);
-}
-
-.interface .form {
-    .language-settings {
-        .control {
-            margin-left: emRhythm(-2);
-        }
-    }
-}
-
-.passphrase {
-    display: table;
-
-    .line {
-        display: table-row;
-
-        .left, .right {
-            display: table-cell;
-            width: max-content;
-        }
+    .pure-buttons, .detail-buttons {
+        padding-right: $size-main-margin;
     }
 
-    .form {
-        width: max-content;
+    .tor-settings, .detail {
+        padding-left: $size-main-margin;
+    }
 
-        .field {
-            display: table-row;
+    button {
+        width: $size-medium-button-width;
+    }
 
-            label, input {
-                display: table-cell;
+    label {
+        @include label();
+    }
+
+    hr {
+        width: 100%;
+        margin: {
+            top: $size-medium-space;
+            bottom: $size-medium-space
+        }
+
+        &.hr1 {
+            grid-area: hr1;
+        }
+
+        &.hr2 {
+            grid-area: hr2;
+        }
+    }
+
+    .header {
+        grid-area: header;
+    }
+
+    .pure-buttons {
+        grid-area: pure-buttons;
+        @include buttons-vertical-container();
+    }
+
+    .tor-settings {
+        grid-area: tor-settings;
+
+        .guidance {
+            @include guidance();
+            margin-bottom: $size-between-field-space-medium;
+        }
+    }
+
+    .detail-buttons {
+        grid-area: detail-buttons;
+        @include buttons-vertical-container();
+    }
+
+    .detail {
+        grid-area: detail;
+
+        .change-passphrase {
+            .passphrase-inputs {
+                display: grid;
+                grid-row-gap: $size-between-field-space-medium;
+                grid-template-columns: 1fr 2fr;
             }
 
-            label {
-                padding-right: 2em;
+            input[type="password"] {
+                @include rounded-input();
             }
 
-            input {
-                background-color: $color--comet-medium;
-                border: none;
-                height: 1.5em;
-                width: 30em;
+            .change-passphrase-error {
+                text-align: center;
+                margin-top: $size-between-field-space-medium;
+                @include error();
+            }
 
-                &.non-matching {
-                    outline-style: auto;
-                    outline-color: red;
+            .buttons {
+                margin-top: $size-between-field-space-medium;
+                @include buttons-vertical-container;
+
+                button {
+                    width: fit-content;
+                    margin: auto;
                 }
             }
         }
     }
-}
-
-.close-dialog-button {
-    margin-top: 0.5em;
-    margin-right: 1em;
-    margin-bottom: -2em;
-    text-align: right;
-    a {
-        color: white;
-    }
-}
-
-.mnemonic-setting {
-    margin-top: 20px;
-    margin-bottom: 20px;
-}
-
-.show-setup-screen-again {
-    margin-top: 1em;
 }
 </style>

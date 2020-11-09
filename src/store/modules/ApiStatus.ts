@@ -27,7 +27,7 @@ const getters = {
     // Do we have an apiStatus?
     hasApiStatus: (state): boolean => state.apiStatus && !!state.apiStatus.data,
     // Can our wallet be recovered from a mnemonic?
-    hasMnemonic: (state): boolean => state.apiStatus && state.apiStatus.data && state.apiStatus.hasMnemonic,
+    hasMnemonic: (state): boolean => state.apiStatus && state.apiStatus.data && state.apiStatus.data.hasMnemonic,
     // Is the wallet locked? Returns undefined if not yet loaded.
     isLocked: (state): boolean | undefined => (state.apiStatus && state.apiStatus.data) ? state.apiStatus.data.walletLock : undefined,
     isReindexing: (state): boolean => state.apiStatus && state.apiStatus.data && state.apiStatus.data.reindexing,

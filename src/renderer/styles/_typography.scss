@@ -42,6 +42,10 @@ a {
     font-size: $font-size-normal * 1.5;
 }
 
+@mixin largeish {
+    font-size: $font-size-normal * 1.1;
+}
+
 @mixin small {
     font-size: $font-size-normal * 0.8;
 }
@@ -78,6 +82,12 @@ a {
     user-select: text;
     font-weight: bold;
     margin-bottom: $size-tiny-space;
+}
+
+@mixin guidance {
+    user-select: text;
+    font-style: italic;
+    opacity: 0.9;
 }
 
 @mixin optional-action {

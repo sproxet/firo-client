@@ -1444,10 +1444,10 @@ export class Zcoind {
         }
     }
 
-    async showMnemonics(auth: string): Promise<string> {
+    async showMnemonics(auth: string): Promise<string[]> {
         const data = await this.send(auth, 'create', 'showMnemonics', {});
         if (typeof data === 'string') {
-            return data;
+            return data.split(' ');
         }
 
         throw new UnexpectedZcoindResponse('create/showMnemonics', data);
