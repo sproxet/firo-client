@@ -226,6 +226,10 @@ export default {
 
 @include popup()
 
+.recover-from-mnemonic {
+    user-select: none;
+}
+
 .content {
     .mnemonic-length-question {
         @include label();

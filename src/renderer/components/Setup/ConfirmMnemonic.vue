@@ -97,6 +97,10 @@ export default {
 
 @include popup()
 
+.confirm-mnemonic * {
+    user-select: none;
+}
+
 .content {
     @include mnemonic();
 }

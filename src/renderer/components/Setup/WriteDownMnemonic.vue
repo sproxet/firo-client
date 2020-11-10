@@ -50,6 +50,10 @@ export default {
 
 @include popup()
 
+.title {
+    user-select: none;
+}
+
 .content {
     user-select: text;
     @include mnemonic();

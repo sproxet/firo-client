@@ -6,46 +6,42 @@
         </div>
 
         <div class="content">
-            <div class="passphrase-input">
-                <div class="guidance">
-                    Your wallet will be encrypted with your chosen passphrase. It is <span class="emphasis">IMPOSSIBLE</span> to
-                    recover your funds if you forget your passphrase.
-                </div>
+            <div class="guidance">
+                Your wallet will be encrypted with your chosen passphrase. It is <span class="emphasis">IMPOSSIBLE</span> to
+                recover your funds if you forget your passphrase.
+            </div>
 
-                <div class="input-groups">
-                    <div class="input-group">
-                        <label for="passphrase">
-                            Enter Your Passphrase
-                        </label>
+            <div class="input-group">
+                <label for="passphrase">
+                    Enter Your Passphrase
+                </label>
 
-                        <div class="passphrase-input-and-meter">
-                            <input
-                                type="password"
-                                id="passphrase"
-                                v-model="passphrase"
-                                @focus="() => passphraseInputIsFocused = true"
-                                @blur="() => passphraseInputIsFocused = false"
-                            />
-                            <div id="passphrase-strength-meter" :class="`strength-${passphraseStrength}`" />
-                        </div>
-                    </div>
-
-                    <div class="input-group">
-                        <label for="confirm-passphrase">
-                            Confirm Your Passphrase
-                        </label>
-
-                        <input
-                            :class="hasMismatchedPassphrase ? 'mismatched' : 'matched'"
-                            v-model="confirmPassphrase"
-                            type="password"
-                            id="confirm-passphrase"
-                        />
-                    </div>
+                <div class="passphrase-input-and-meter">
+                    <input
+                        type="password"
+                        id="passphrase"
+                        v-model="passphrase"
+                        @focus="() => passphraseInputIsFocused = true"
+                        @blur="() => passphraseInputIsFocused = false"
+                    />
+                    <div id="passphrase-strength-meter" :class="`strength-${passphraseStrength}`" />
                 </div>
             </div>
 
-            <div v-if="isExistingWallet" class="existing-wallet-confirmation-input">
+            <div class="input-group">
+                <label for="confirm-passphrase">
+                    Confirm Your Passphrase
+                </label>
+
+                <input
+                    :class="hasMismatchedPassphrase ? 'mismatched' : 'matched'"
+                    v-model="confirmPassphrase"
+                    type="password"
+                    id="confirm-passphrase"
+                />
+            </div>
+
+            <div v-if="isExistingWallet" class="existing-wallet-confirmation">
                 <div class="guidance">
                     You are locking an existing wallet, which already has private keys in it. It will be
                     <span class="emphasis">IMPOSSIBLE</span> to access this wallet again unless you have the passphrase
@@ -107,10 +103,6 @@ export default {
     // // Are we going to lock a preexisting wallet.dat? If this is set, onStart MUST be set, mnemonic MUST NOT be, and
     // // window.$daemon MUST be set (and already started).
     // isExistingWallet?: boolean
-    //
-    // // A callback to call when zcoind has been fully started, set to $daemon, and has run its initializers. This MUST
-    // // be set iff isExistingWallet is set. If this is not set, we will redirect to /main instead.
-    // onStart: () => void
 
     watch: {
         passphrase: {
@@ -162,8 +154,7 @@ export default {
         },
 
         async lockWallet() {
-            if ((this.isExistingWallet && (this.mnemonic || typeof this.onStart !== 'function' || !$daemon)) ||
-                (this.mnemonic && this.onStart) ||
+            if ((this.isExistingWallet && (this.mnemonic || !$daemon)) ||
                 (!this.mnemonic && !this.isExistingWallet)) {
                 await $quitApp("Zcoin Client failed an internal sanity check. Report this to the Zcoin team.");
             }
@@ -201,10 +192,12 @@ export default {
 
             await $startDaemon();
 
-            if (this.mnemonic) {
+            if (!this.isExistingWallet) {
                 $setWaitingReason("Sanity checking mnemonic...");
-                const mnemonicSanityCheck = await $daemon.showMnemonics(this.passphrase);
+                const mnemonicSanityCheck = (await $daemon.showMnemonics(this.passphrase)).join(' ');
                 if (mnemonicSanityCheck !== this.mnemonic.mnemonic) {
+                    console.log(this.mnemonic.mnemonic);
+                    console.log(mnemonicSanityCheck);
                     // This should never happen.
                     await $quitApp("Mnemonic sanity check failed. This is a bug. Seek help from the Zcoin team; do not try to use the client again.");
                 }
@@ -216,11 +209,7 @@ export default {
             this.$log.info("Marking app as initialized...");
             this.$store.commit('App/setIsInitialized', true);
 
-            if (this.isExistingWallet) {
-                this.onStart();
-            } else {
-                this.$router.push('/main');
-            }
+            await this.$router.push('/main');
         }
     }
 }
@@ -236,13 +225,11 @@ export default {
 @include popup();
 
 .lock-wallet {
-    width: fit-content;
+    width: $size-large-field-width * 2 !important;
 }
 
 .guidance {
-    text-align: center;
     font-style: italic;
-    padding-bottom: $size-medium-space;
 
     .emphasis {
         font-weight: bold;
@@ -251,71 +238,66 @@ export default {
 }
 
 .content {
-    width: $size-large-field-width;
+    width: fit-content;
+    margin: auto;
 
-    .passphrase-input {
-        .input-groups {
-            .input-group {
-                &:first-child {
-                    margin-bottom: $size-between-field-space-big;
-                }
-                
-                label {
-                    display: block;
+    .input-group {
+        margin-top: $size-between-field-space-big;
 
-                    @include label();
-                    @include large();
-                }
+        label {
+            display: block;
 
-                input {
-                    @include wide-rounded-input();
-                }
+            @include label();
+            @include large();
+        }
 
-                .passphrase-input-and-meter {
-                    width: fit-content;
+        input {
+            @include wide-rounded-input();
+        }
 
-                    .passphrase-strength-meter {
-                        height: 0.4em;
-                        border-radius: 10px;
+        .passphrase-input-and-meter {
+            width: fit-content;
 
-                        &.strength-0 {
-                            width: 3%;
-                            background-color: red;
-                        }
+            .passphrase-strength-meter {
+                height: 0.4em;
+                border-radius: 10px;
 
-                        &.strength-1 {
-                            width: 25%;
-                            background-color: red;
-                        }
-
-                        &.strength-2 {
-                            width: 50%;
-                            background-color: orange;
-                        }
-
-                        &.strength-3 {
-                            width: 75%;
-                            background-color: yellowgreen;
-                        }
-
-                        &.strength-4 {
-                            width: 100%;
-                            background-color: green;
-                        }
-                    }
+                &.strength-0 {
+                    width: 3%;
+                    background-color: red;
                 }
 
-                #confirm-passphrase {
-                    &.mismatched {
-                        box-shadow: 0 0 0 3px red;
-                    }
+                &.strength-1 {
+                    width: 25%;
+                    background-color: red;
                 }
+
+                &.strength-2 {
+                    width: 50%;
+                    background-color: orange;
+                }
+
+                &.strength-3 {
+                    width: 75%;
+                    background-color: yellowgreen;
+                }
+
+                &.strength-4 {
+                    width: 100%;
+                    background-color: green;
+                }
+            }
+        }
+
+        #confirm-passphrase {
+            &.mismatched {
+                box-shadow: 0 0 0 3px red;
             }
         }
     }
 
-    .existing-wallet-confirmation-input {
-        margin-top: $size-between-field-space-small;
+    .existing-wallet-confirmation {
+        margin-top: $size-small-space;
 
         .confirm-existing-wallet {
             margin-top: $size-tiny-space;
@@ -326,9 +308,9 @@ export default {
             }
         }
     }
+}
 
-    .buttons {
-        width: fit-content;
-    }
+.buttons {
+    margin-top: $size-small-space;
 }
 </style>

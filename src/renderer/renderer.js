@@ -264,18 +264,16 @@ window.$startDaemon = () => new Promise(resolve => {
                 store.commit('App/setIsInitialized', true);
                 resolve();
             } else {
-                // Direct the user to the lock wallet screen. The lock wallet screen will call resolve() when it has
-                // successfully started zcoind.
+                // Direct the user to the lock wallet screen. We will never resolve(), but that shouldn't matter.
 
                 router.push({
                     path: '/setup/lock-wallet',
                     query: {
-                        isExistingWallet: true,
-                        onStart: resolve
+                        isExistingWallet: true
                     }
                 }).then(() => {
                     $setWaitingReason(undefined);
-                })
+                });
             }
         })
         .catch(async e => {

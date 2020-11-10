@@ -50,7 +50,7 @@ app.once('ready', async () => {
         height: 780,
         width: 1400,
         minWidth: 1200,
-        minHeight: 550,
+        minHeight: 650,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true
