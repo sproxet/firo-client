@@ -273,6 +273,7 @@ export default {
     computed: {
         ...mapGetters({
             network: 'ApiStatus/network',
+            isLelantusAllowed: 'ApiStatus/isLelantusAllowed',
             availablePrivate: 'Balance/available',
             availablePublic: 'Balance/availablePublic',
             maxPrivateSend: 'Balance/maxPrivateSend',
@@ -329,10 +330,14 @@ export default {
         },
 
         amountValidations () {
-            return this.isPrivate ?
-                'amountIsWithinAvailableBalance|privateAmountIsValid|privateAmountIsWithinBounds|privateAmountDoesntViolateInputLimits'
-                :
-                'amountIsWithinAvailableBalance|publicAmountIsValid'
+            if (!this.isPrivate) {
+                return 'amountIsWithinAvailableBalance|publicAmountIsValid';
+            } else if (this.isLelantusAllowed) {
+                return 'amountIsWithinAvailableBalance|publicAmountIsValid';
+            } else {
+                return 'amountIsWithinAvailableBalance|privateAmountIsValid|privateAmountIsWithinBounds|privateAmountDoesntViolateInputLimits'
+            }
+
         },
 
         getValidationTooltip () {
@@ -507,7 +512,11 @@ export default {
 
             let p;
             if (this.isPrivate) {
-                p = $daemon.calcPrivateTxFee(satoshiAmount, subtractFeeFromAmount);
+                if (await $daemon.isLelantusAllowed()) {
+                    p = $daemon.calcLelantusTxFee(satoshiAmount, subtractFeeFromAmount);
+                } else {
+                    p = $daemon.calcSigmaTxFee(satoshiAmount, subtractFeeFromAmount);
+                }
             } else {
                 p = $daemon.calcPublicTxFee(satoshiAmount, subtractFeeFromAmount, txFeePerKb);
             }
