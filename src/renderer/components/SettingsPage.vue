@@ -1,14 +1,14 @@
 <template>
     <div class="settings-page">
         <Popup v-if="errorMessage">
-            <ErrorStep :error="errorMessage" @ok="clearErrorMessage" />
+            <ErrorStep :error="errorMessage" @ok="() => errorMessage = null" />
         </Popup>
 
         <Popup v-if="successMessage">
-            <SuccessMessage :message="successMessage" @ok="clearSuccessMessage" />
+            <SuccessMessage :message="successMessage" @ok="() => successMessage = null" />
         </Popup>
 
-        <Popup v-if="shouldShowMnemonicPassphrasePopup">
+        <Popup v-if="showMnemonicPassphrasePopup">
             <SendStepPassphrase
                 v-model="mnemonicPassphrase"
                 :error="mnemonicPassphraseError"
@@ -49,11 +49,11 @@
         <hr class="hr2" />
 
         <div class="detail-buttons">
-            <button :class="{active: showDetail === 'passphrase'}" @click="showPassphraseInput">
+            <button :class="{active: showDetail === 'passphrase'}" @click="showPassphrase">
                 Change Passphrase
             </button>
 
-            <button v-if="hasMnemonic" :class="{active: showDetail === 'mnemonic'}" @click="showMnemonicPassphrasePopup">
+            <button v-if="hasMnemonic" :class="{active: showDetail === 'mnemonic'}" @click="() => showMnemonicPassphrasePopup = true">
                 Show Mnemonic Recovery Phrase
             </button>
         </div>
@@ -72,7 +72,7 @@
                 </div>
 
                 <div class="buttons">
-                    <button :disabled="!canChangePassphrase" :class="{active: canChangePassphrase}" @click="changePassphrase">
+                    <button :disabled="!canChangePassphrase" :class="{active: canChangePassphrase}" @click="() => showMnemonicPassphrasePopup = true">
                         Change Passphrase
                     </button>
                 </div>
@@ -127,7 +127,7 @@ export default {
             newPassphrase: '',
             confirmNewPassphrase: '',
             changePassphraseError: null,
-            shouldShowMnemonicPassphrasePopup: false,
+            showMnemonicPassphrasePopup: false,
             mnemonicPassphrase: '',
             mnemonicPassphraseError: null,
             mnemonicWords: [],
@@ -146,17 +146,9 @@ export default {
     },
 
     methods: {
-        clearSuccessMessage() {
-            this.successMessage = null;
-        },
-
-        clearErrorMessage() {
-            this.errorMessage = null;
-        },
-
-        showMnemonicPassphrasePopup() {
-            this.mnemonicPassphrase = '';
-            this.mnemonicPassphraseError = ''
+        showPassphrase() {
+            this.showDetail = 'passphrase';
+            this.mnemonicWords = [];
         },
 
         clearMnemonicPassphrasePopup() {
@@ -167,7 +159,6 @@ export default {
 
         async tryShowMnemonicRecoveryPhrase() {
             if (this.showDetail === 'mnemonic') return;
-            console.log(this.showDetail);
 
             try {
                 this.mnemonicWords = await $daemon.showMnemonics(this.mnemonicPassphrase);
@@ -181,10 +172,6 @@ export default {
                     this.mnemonicPassphraseError = `${e}`;
                 }
             }
-        },
-
-        showPassphraseInput() {
-            this.showDetail = 'passphrase';
         },
 
         async changePassphrase() {
