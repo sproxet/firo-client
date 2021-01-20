@@ -257,7 +257,7 @@ if (!process.env.USE_EXISTING_WALLET_FOR_TEST) {
         it('has the correct balance after generating FIRO from the debug console', async function (this: This) {
             await this.app.client.waitUntilTextExists('.public .amount', '38343');
             await this.app.client.waitUntilTextExists('.pending .amount', '4300');
-        })
+        });
     });
 }
 
@@ -269,61 +269,31 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
         this.slow(20e3);
 
         // Check that there are existing payments.
-        const paymentStatusElement = await this.app.client.$('.vuetable-td-component-transaction-status');
+        const paymentStatusElement = await this.app.client.$('td');
         await paymentStatusElement.waitForExist({timeout: 20e3});
     });
 
+    it('has a non-zero balance', async function (this: This) {
+        // This value doesn't actually _have_ to be above 1 if we're testing with an existing firod, but in a test
+        // environment we've probably made some error and it's best to check for that now.
+        const balanceElements = await this.app.client.$$('.balance .amount');
+        const balance = (await Promise.all(balanceElements.map(async e =>
+            Number(await e.getText())
+        ))).reduce((a, x) => a + x, 0);
+        assert.isAbove(balance, 1);
+    });
+
     it('displays and updates the receiving address', async function (this: This) {
-        const receiveAddressElement = await this.app.client.$('#receive-address');
+        this.timeout(10e3);
+
+        await (await this.app.client.$('a[href="#/receive"]')).click();
+
+        const receiveAddressElement = await this.app.client.$('a.address');
         await receiveAddressElement.waitForExist();
 
         let originalReceiveAddress = await receiveAddressElement.getText();
         await this.app.client.executeAsyncScript(`$daemon.legacyRpc('generatetoaddress 1 ${originalReceiveAddress}').then(arguments[0])`, []);
         await this.app.client.waitUntil(async () => (await receiveAddressElement.getText()) !== originalReceiveAddress);
-    });
-
-    it('suggests anonymization', async function (this: This) {
-        this.timeout(10e3);
-
-        await this.app.client.executeScript("$store.dispatch('Settings/SET_PERCENTAGE_TO_HOLD_IN_ZEROCOIN', 100)", []);
-
-        const reviewMintSuggestionsButton = await this.app.client.$('#review-auto-mint-suggestions');
-        await reviewMintSuggestionsButton.waitForExist();
-        await reviewMintSuggestionsButton.click();
-
-        await (await this.app.client.$('.denomination-selector')).waitForExist();
-        const suggestions = await Promise.all(
-            (await this.app.client.$$('.denomination-value'))
-                .map(async el => {
-                    const denomination = Number((await el.getAttribute('id')).match(/^denomination-(\d+)-value$/)[1]);
-                    const value = Number(await el.getText());
-
-                    return [denomination, value];
-                })
-        );
-
-        let totalSuggested = 0;
-        let totalMints = 0;
-        for (const [denomination, value] of suggestions) {
-            totalMints += value;
-            totalSuggested += denomination * value;
-        }
-
-        const MINT_FEE = 0.001e8;
-        const availableForAnonymization = convertToSatoshi(
-            (await (await this.app.client.$('#available-xzc')).getText())
-            .split(' ')
-            [0]
-        );
-        assert.approximately(totalSuggested + totalMints * MINT_FEE, availableForAnonymization, 0.05e8);
-
-        // Turn off mint suggestions.
-        await this.app.client.executeAsyncScript("$daemon.legacyRpc('generate 1').then(arguments[0])", []);
-        await reviewMintSuggestionsButton.waitForExist();
-        await this.app.client.executeScript("$store.dispatch('Settings/SET_PERCENTAGE_TO_HOLD_IN_ZEROCOIN', 0)", []);
-        // There is a bug in WebdriverIO that makes it difficult to check if an element has disappeared.
-        await new Promise(r => setTimeout(r, 1000));
-        assert.isFalse(await reviewMintSuggestionsButton.isDisplayed());
     });
 
     it('sends and receives a public payment', async function (this: This) {
