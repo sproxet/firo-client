@@ -61,8 +61,8 @@
                 Cancel
             </button>
 
-            <button class="continue" @click="$emit('confirm')">
-                Continue
+            <button class="confirm" @click="$emit('confirm')">
+                Confirm
             </button>
         </div>
     </div>

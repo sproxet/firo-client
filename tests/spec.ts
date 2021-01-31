@@ -4,7 +4,7 @@ import fs from 'fs';
 import {assert} from 'chai';
 import {Application} from 'spectron';
 import electron from 'electron';
-import {convertToSatoshi} from "../src/lib/convert";
+import {convertToCoin} from "../src/lib/convert";
 import {TransactionOutput} from "../src/daemon/firod";
 
 interface This extends Mocha.Context {
@@ -18,7 +18,7 @@ if (process.env.BUILD_FIRO_CLIENT !== 'false') {
     });
 }
 
-const passphrase = 'passphrase';
+const passphrase = 'sloth';
 let mnemonicWords: string[];
 
 function scaffold(this: Mocha.Suite, reinitializeFiroClient: boolean) {
@@ -300,8 +300,9 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
         this.timeout(60e3);
         this.slow(30e3);
 
-        let nonce = String(Math.random());
-        let receiveAddress = await this.app.client.executeAsyncScript(`$daemon.getUnusedAddress().then(arguments[0])`, []);
+        const sendAddress = await this.app.client.executeAsyncScript(`$daemon.getUnusedAddress().then(arguments[0])`, []);
+        const satoshiAmountToSend = Math.floor(1e8 * Math.random());
+        const amountToSend = convertToCoin(satoshiAmountToSend);
 
         await (await this.app.client.$('a[href="#/send')).click();
         await (await this.app.client.$('#send-page')).waitForExist();
@@ -313,9 +314,8 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
 
         // Set up a valid form.
 
-        await label.setValue(nonce);
-        await address.setValue(receiveAddress);
-        await amount.setValue('1');
+        await address.setValue(sendAddress);
+        await amount.setValue(amountToSend);
         await sendButton.waitForEnabled();
 
         // Check validations
@@ -323,33 +323,33 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
         await amount.setValue('0.0000000001');
         await sendButton.waitForEnabled({reverse: true});
         // There is a WebdriverIO bug where the old value is not cleared if we're changed too quickly.
-        await new Promise(r => setTimeout(r, 100));
-        await amount.setValue('1');
+        await new Promise(r => setTimeout(r, 300));
+        await amount.setValue(amountToSend);
         await sendButton.waitForEnabled();
 
         await amount.setValue('99999999999999');
         await sendButton.waitForEnabled({reverse: true});
-        await amount.setValue('1');
+        await amount.setValue(amountToSend);
         await sendButton.waitForEnabled();
 
         await address.setValue('invalid-address');
         await sendButton.waitForEnabled({reverse: true});
         // There is a WebdriverIO bug where the old value is not cleared if we're changed too quickly.
-        await new Promise(r => setTimeout(r, 100));
-        await address.setValue(receiveAddress);
+        await new Promise(r => setTimeout(r, 300));
+        await address.setValue(sendAddress);
         await sendButton.waitForEnabled();
 
         await sendButton.click();
 
         const cancelButton = await this.app.client.$('button.cancel');
-        await sendButton.waitForEnabled({reverse: true});
+        await cancelButton.waitForExist();
         await cancelButton.click();
+        await cancelButton.waitForExist({reverse: true});
 
-        await sendButton.waitForEnabled({reverse: true});
         await sendButton.click();
 
         const confirmButton = await this.app.client.$('button.confirm');
-        await sendButton.waitForEnabled();
+        await confirmButton.waitForExist();
         await confirmButton.click();
 
         const passphraseInput = await this.app.client.$('input[type="password"]');
@@ -367,67 +367,27 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
         const realSendButton2 = await this.app.client.$('button.confirm');
         await realSendButton2.click();
 
-        // The type signature of timeout on waitUntilTextExists is incorrect.
-        await this.app.client.waitUntilTextExists('.spendOut-label', nonce, <any>{timeout: 10e3});
-        await this.app.client.waitUntilTextExists('.spendIn-label', nonce, <any>{timeout: 10e3});
+        const waiting = await this.app.client.$('#wait-overlay');
+        await waiting.waitForExist();
+        await waiting.waitForExist({reverse: true, timeout: 10e3});
+
+        await (await this.app.client.$('a[href="#/transactions')).click();
 
         const txOut: TransactionOutput = await this.app.client.executeScript(
-            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.label === arguments[0] && tx.category === 'spendOut' && !tx.isChange)",
-            [nonce]
+            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.amount === arguments[0] && tx.category === 'spendOut' && !tx.isChange)",
+            [satoshiAmountToSend]
         );
-        assert.equal(txOut.fee + txOut.amount, 1e8);
+        assert.exists(txOut);
 
         const txIn: TransactionOutput = await this.app.client.executeScript(
-            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.label === arguments[0] && tx.category === 'spendIn' && !tx.isChange)",
-            [nonce]
+            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.amount === arguments[0] && tx.category === 'spendIn' && !tx.isChange)",
+            [satoshiAmountToSend]
         );
-        assert.equal(txIn.amount, 1e8 - txOut.fee);
-    });
+        assert.exists(txIn);
 
-    it('sends with a custom tx fee not subtracted from amount', async function (this: This) {
-        this.timeout(30e3);
-        this.slow(20e3);
-
-        await this.app.client.executeAsyncScript("$daemon.legacyRpc('generate 1').then(arguments[0])", []);
-
-        const nonce = String(Math.random());
-
-        await (await this.app.client.$('a[href="#/send/public')).click();
-        await (await this.app.client.$('.send-firo-form')).waitForExist();
-
-        await (await this.app.client.$('#label')).setValue(nonce);
-        await (await this.app.client.$('#address')).setValue('TAczBFWtiP8mNstdLn1Z383z51rZ1vHk5N');
-        await (await this.app.client.$('#amount')).setValue('1');
-        await (await this.app.client.$('#subtract-fee-from-amount-checkbox')).click();
-        await (await this.app.client.$('#use-custom-fee-checkbox')).click();
-        // There is a bug in WebdriverIO where the default text will not be erased, so this will end up as a 1111
-        // satoshi fee. The test logic will work whether or not that bug is fixed.
-        await (await this.app.client.$('#custom-fee')).setValue('111');
-
-        const sendButton = await this.app.client.$('#send-button');
-        // There is a WebdriverIO bug where this call takes a couple seconds to complete after the element is enabled.
-        await sendButton.waitForEnabled();
-        sendButton.click();
-
-        const confirmButton = await this.app.client.$('#confirm-button');
-        await confirmButton.waitForEnabled();
-        await confirmButton.click();
-
-        const passphraseInput = await this.app.client.$('#passphrase');
-        await passphraseInput.waitForExist();
-        await passphraseInput.setValue(passphrase);
-
-        await (await this.app.client.$('#confirm-passphrase-send-button')).click();
-
-        // The type signature of waitUntilTextExists is incorrect.
-        await this.app.client.waitUntilTextExists('.send-label', nonce, <any>{timeout: 10e3});
-
-        const tx: TransactionOutput = await this.app.client.executeScript(
-            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.label === arguments[0] && !tx.isChange)",
-            [nonce]
-        );
-        assert.isAtLeast(tx.fee, 111);
-        assert.equal(tx.amount, 1e8);
+        // The type signature of timeout on waitUntilTextExists is incorrect.
+        await this.app.client.waitUntilTextExists('.vuetable-td-component-amount .incoming', amountToSend, <any>{timeout: 10e3});
+        await this.app.client.waitUntilTextExists('.vuetable-td-component-amount .outgoing', amountToSend, <any>{timeout: 10e3});
     });
 
     it('changes the passphrase', async function (this: This) {
