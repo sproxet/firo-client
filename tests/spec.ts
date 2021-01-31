@@ -50,9 +50,9 @@ function scaffold(this: Mocha.Suite, reinitializeFiroClient: boolean) {
 
         if (this.currentTest.state === 'failed') {
             console.error('Main process logs:');
-            console.error(mainLogs);
+            console.error(mainLogs.join("\n"));
             console.error('Renderer process logs:');
-            console.error(rendererLogs);
+            console.error(rendererLogs.join("\n"));
         }
     });
 
@@ -296,26 +296,29 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
         await this.app.client.waitUntil(async () => (await receiveAddressElement.getText()) !== originalReceiveAddress);
     });
 
-    it('sends and receives a public payment', async function (this: This) {
+    it('sends and receives a private payment', async function (this: This) {
         this.timeout(60e3);
         this.slow(30e3);
 
         let nonce = String(Math.random());
         let receiveAddress = await this.app.client.executeAsyncScript(`$daemon.getUnusedAddress().then(arguments[0])`, []);
 
-        await (await this.app.client.$('a[href="#/send/public')).click();
-        await (await this.app.client.$('.send-firo-form')).waitForExist();
+        await (await this.app.client.$('a[href="#/send')).click();
+        await (await this.app.client.$('#send-page')).waitForExist();
 
         const sendButton = await this.app.client.$('#send-button');
         const label = await this.app.client.$('#label')
         const address = await this.app.client.$('#address');
         const amount = await this.app.client.$('#amount');
 
+        // Set up a valid form.
+
         await label.setValue(nonce);
         await address.setValue(receiveAddress);
         await amount.setValue('1');
-        // Using waitForClickable() causes a weird bug where the entire page moves out of frame.
         await sendButton.waitForEnabled();
+
+        // Check validations
 
         await amount.setValue('0.0000000001');
         await sendButton.waitForEnabled({reverse: true});
@@ -326,8 +329,6 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
 
         await amount.setValue('99999999999999');
         await sendButton.waitForEnabled({reverse: true});
-        // There is a WebdriverIO bug where the old value is not cleared if we're changed too quickly.
-        await new Promise(r => setTimeout(r, 100));
         await amount.setValue('1');
         await sendButton.waitForEnabled();
 
@@ -340,43 +341,47 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
 
         await sendButton.click();
 
-        const cancelButton = await this.app.client.$('#cancel-button');
-        await cancelButton.waitForEnabled();
+        const cancelButton = await this.app.client.$('button.cancel');
+        await sendButton.waitForEnabled({reverse: true});
         await cancelButton.click();
 
-        await sendButton.waitForEnabled();
+        await sendButton.waitForEnabled({reverse: true});
         await sendButton.click();
 
-        const confirmButton = await this.app.client.$('#confirm-button');
-        await confirmButton.waitForEnabled();
+        const confirmButton = await this.app.client.$('button.confirm');
+        await sendButton.waitForEnabled();
         await confirmButton.click();
 
-        const passphraseInput = await this.app.client.$('#passphrase');
+        const passphraseInput = await this.app.client.$('input[type="password"]');
         await passphraseInput.waitForExist();
         await passphraseInput.setValue(passphrase + '-invalid');
 
-        const realSendButton = await this.app.client.$('#confirm-passphrase-send-button');
+        const realSendButton = await this.app.client.$('button.confirm');
         await realSendButton.click();
 
-        const tryAgainButton = await this.app.client.$('#try-again-button');
-        await tryAgainButton.waitForExist();
-        await tryAgainButton.click();
+        await (await this.app.client.$('.passphrase-input .error')).waitForExist();
 
-        await passphraseInput.waitForExist();
-        await passphraseInput.setValue(passphrase);
-        await realSendButton.click();
+        const passphraseInput2 = await this.app.client.$('input[type="password"]');
+        await passphraseInput2.setValue(passphrase);
 
-        // - The new transaction MUST be the first element in the list, which is only guaranteed if it is the first
-        // transaction to occur after a block is generated.
-        // - The type signature of timeout on waitUntilTextExists is incorrect.
-        await this.app.client.waitUntilTextExists('.send-label', nonce, <any>{timeout: 10e3});
-        await (await this.app.client.$('span.ok.is-incoming')).waitForExist();
+        const realSendButton2 = await this.app.client.$('button.confirm');
+        await realSendButton2.click();
 
-        const tx: TransactionOutput = await this.app.client.executeScript(
-            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.label === arguments[0] && tx.category === 'send' && !tx.isChange)",
+        // The type signature of timeout on waitUntilTextExists is incorrect.
+        await this.app.client.waitUntilTextExists('.spendOut-label', nonce, <any>{timeout: 10e3});
+        await this.app.client.waitUntilTextExists('.spendIn-label', nonce, <any>{timeout: 10e3});
+
+        const txOut: TransactionOutput = await this.app.client.executeScript(
+            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.label === arguments[0] && tx.category === 'spendOut' && !tx.isChange)",
             [nonce]
         );
-        assert.equal(tx.fee + tx.amount, 1e8);
+        assert.equal(txOut.fee + txOut.amount, 1e8);
+
+        const txIn: TransactionOutput = await this.app.client.executeScript(
+            "return Object.values($store.getters['Transactions/transactions']).find(tx => tx.label === arguments[0] && tx.category === 'spendIn' && !tx.isChange)",
+            [nonce]
+        );
+        assert.equal(txIn.amount, 1e8 - txOut.fee);
     });
 
     it('sends with a custom tx fee not subtracted from amount', async function (this: This) {
@@ -423,66 +428,6 @@ describe('Opening an Existing Wallet', function (this: Mocha.Suite) {
         );
         assert.isAtLeast(tx.fee, 111);
         assert.equal(tx.amount, 1e8);
-    });
-
-    it('anonymizes XZC', async function (this: This) {
-        this.timeout(40e3);
-        this.slow(20e3);
-
-        // Make sure we have enough coins to anonymize.
-        await this.app.client.executeAsyncScript("$daemon.legacyRpc('generate 10').then(arguments[0])", []);
-        // TODO: It's easiest, if a bit racy, to just use a setTimeout to make sure the balance is updated, as we don't
-        //  know what it should be, and it's a PITA to figure it out. It's also necessary for our balance to stop
-        //  changing before we click on /anonymize, so the timeout here should be suitably long.
-        await new Promise(r => setTimeout(r, 2e3));
-
-        await (await this.app.client.$('a[href="#/anonymize')).click();
-        await (await this.app.client.$('.mint-zerocoin')).waitForExist();
-
-        for (const denomination of [100e8, 25e8, 10e8, 1e8, 0.5e8, 0.1e8, 0.05e8]) {
-            await (await this.app.client.$(`#increase-${denomination}-button`)).click();
-            await (await this.app.client.$(`#decrease-${denomination}-button`)).click();
-            await (await this.app.client.$(`#increase-${denomination}-button`)).click();
-        }
-
-        const total = convertToSatoshi(await (await this.app.client.$('.amount > .value')).getText());
-        assert.equal(total, 136.657e8);
-
-        await (await this.app.client.$('#autoMintAmount')).setValue('137');
-        await (await this.app.client.$('.automint-button')).click();
-        // Autominting is implemented in a hackish way so just using a timer is easiest.
-        await new Promise(r => setTimeout(r, 500));
-
-        const total2 = convertToSatoshi(await (await this.app.client.$('.amount > .value')).getText());
-        assert.equal(total2, 137.005e8)
-
-        const anonymizeNowButton = await this.app.client.$('#anonymize-now-button');
-        const confirmButton = await this.app.client.$('#confirm-button');
-        const cancelButton = await this.app.client.$('#cancel-button');
-        const passphraseInput = await this.app.client.$('#passphrase');
-        const mintButton = await this.app.client.$('#mint-button');
-
-        await anonymizeNowButton.waitForEnabled();
-        await anonymizeNowButton.click();
-
-        await confirmButton.waitForEnabled();
-        await confirmButton.click();
-
-        await cancelButton.click();
-
-        await anonymizeNowButton.click()
-
-        await confirmButton.waitForEnabled();
-        await confirmButton.click();
-
-        await passphraseInput.setValue(passphrase);
-        await mintButton.click();
-
-        // pendingPrivateXzc will consist solely of what was minted in this function due to the blocks we minted above.
-        const pendingPrivateXzcElement = await this.app.client.$('#pending-private-xzc');
-        await pendingPrivateXzcElement.waitForDisplayed();
-        const pendingPrivateXzc = Number((await pendingPrivateXzcElement.getText()).match(/\d+/)[0]);
-        assert.equal(pendingPrivateXzc, 137);
     });
 
     it('changes the passphrase', async function (this: This) {

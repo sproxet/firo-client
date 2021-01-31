@@ -57,11 +57,11 @@
         </div>
 
         <div class="buttons">
-            <button class="disrecommended" @click="$emit('cancel')">
+            <button class="cancel disrecommended" @click="$emit('cancel')">
                 Cancel
             </button>
 
-            <button @click="$emit('confirm')">
+            <button class="continue" @click="$emit('confirm')">
                 Continue
             </button>
         </div>
